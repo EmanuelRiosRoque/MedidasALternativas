@@ -54,3 +54,32 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+/* Colores del dropzone */
+@media (prefers-color-scheme: dark) {
+    .filepond--root {
+        background-color: #232323; /* slate-800 */
+        color: #f1f5f9; /* slate-100 */
+        border-color: #3a424d; /* slate-700 */
+        border-radius: 25px;
+    }
+
+    .filepond--drop-label {
+        color: #4a4b4c; /* slate-300 */
+    }
+
+    .filepond--panel-root {
+        background-color: transparent !important;
+    }
+
+    .filepond--file {
+        background-color: #009767 !important;
+    }
+
+    .filepond--file-info {
+        color: #e2e8f0; /* slate-200 */
+    }
+
+    .filepond--file-status {
+        color: #e2e8f0; /* slate-400 */
+    }
+}
