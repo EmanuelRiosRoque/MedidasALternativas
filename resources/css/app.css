@@ -55,31 +55,64 @@ select:focus[data-flux-control] {
     @apply size-4;
 } */
 /* Colores del dropzone */
-@media (prefers-color-scheme: dark) {
-    .filepond--root {
-        background-color: #232323; /* slate-800 */
-        color: #f1f5f9; /* slate-100 */
-        border-color: #3a424d; /* slate-700 */
-        border-radius: 25px;
-    }
-
-    .filepond--drop-label {
-        color: #4a4b4c; /* slate-300 */
-    }
-
-    .filepond--panel-root {
-        background-color: transparent !important;
-    }
-
-    .filepond--file {
-        background-color: #009767 !important;
-    }
-
-    .filepond--file-info {
-        color: #e2e8f0; /* slate-200 */
-    }
-
-    .filepond--file-status {
-        color: #e2e8f0; /* slate-400 */
-    }
+/* Light Theme */
+.light .filepond--root {
+    background-color: #009966;
+    color: #fff !important;
+    border-color: #4e5763;
+    border-radius: 25px;
 }
+
+.light .filepond--drop-label {
+    color: #334155;
+}
+
+.light .filepond--panel-root {
+    background-color: transparent !important;
+}
+
+.light .filepond--file {
+    background-color: #34d399 !important;
+}
+
+.light .filepond--file-info {
+    color: #1e293b;
+}
+
+.light .filepond--file-status {
+    color: #475569;
+}
+
+.light .filepond--credits {
+    display: none; /* oculta el "Powered by FilePond" */
+}
+
+
+/* Dark Theme */
+.dark .filepond--root {
+    background-color: #232323;
+    color: #f1f5f9;
+    border-color: #3a424d;
+    border-radius: 25px;
+}
+
+.dark .filepond--drop-label {
+    color: #f1f5f9;
+}
+
+.dark .filepond--panel-root {
+    background-color: transparent !important;
+}
+
+.dark .filepond--file {
+    background-color: #3a424d !important;
+}
+
+.dark .filepond--file-info {
+    color: #e2e8f0;
+}
+
+.dark .filepond--file-status {
+    color: #e2e8f0;
+}
+

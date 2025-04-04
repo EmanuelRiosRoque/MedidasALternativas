@@ -1,7 +1,8 @@
 @props(['prefix' => 'solicitante'])
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 animate__animated animate__fadeIn" wire:key="{{ $key }}"> 
 
     <flux:input
-        wire:model="nombre_{{ $prefix }}"
+        wire:model="nombre_solicitante"
         :label="__('Nombre del '. $prefix )"
         type="text"
         required
@@ -12,14 +13,14 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Sexo del {{ $prefix }}
         </label>
-        <flux:select wire:model="sexo_solcitante" placeholder="Elige sexo del {{ $prefix }}...">
+        <flux:select wire:model="sexo_solicitante" placeholder="Elige sexo del {{ $prefix }}...">
             <flux:select.option>Femenino</flux:select.option>
             <flux:select.option>Masculino</flux:select.option>
         </flux:select>
     </div>
 
     <flux:input
-        wire:model="edad_{{ $prefix }}"
+        wire:model="edad_solicitante"
         :label="__('Edad del '. $prefix )"
         type="text"
         required
@@ -27,7 +28,7 @@
     />
 
     <flux:input
-        wire:model="fecha_nacimiento_solcitante"
+        wire:model="fecha_nacimiento_solicitante"
         :label="__('Fecha de nacimiento')"
         type="date"
         required
@@ -37,7 +38,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Escolaridad del {{ $prefix }}
         </label>
-        <flux:select wire:model="escolaridad_{{ $prefix }}" placeholder="Elige escolaridad del {{ $prefix }}...">
+        <flux:select wire:model="escolaridad_solicitante" placeholder="Elige escolaridad del {{ $prefix }}...">
             <flux:select.option>Sin escolaridad</flux:select.option>
             <flux:select.option>Primaria</flux:select.option>
             <flux:select.option>Secundaria</flux:select.option>
@@ -48,7 +49,7 @@
     </div>
 
     <flux:input
-        wire:model="ocupacion_{{ $prefix }}"
+        wire:model="ocupacion_solicitante"
         :label="__('Ocupacion')"
         type="text"
         required
@@ -56,7 +57,7 @@
     />
 
     <flux:input
-        wire:model="nacionalidad_{{ $prefix }}"
+        wire:model="nacionalidad_solicitante"
         :label="__('Nacionalidad')"
         type="text"
         required
@@ -67,7 +68,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Tipo domicilio
         </label>
-        <flux:select wire:model="tipo_domicilio_{{ $prefix }}" placeholder="Elige tipo domicilio del {{ $prefix }}...">
+        <flux:select wire:model="tipo_domicilio_solicitante" placeholder="Elige tipo domicilio del {{ $prefix }}...">
             <flux:select.option>Casa</flux:select.option>
             <flux:select.option>Oficina</flux:select.option>
             <flux:select.option>Otro</flux:select.option>
@@ -75,7 +76,7 @@
     </div>
 
     <flux:input
-        wire:model="calle_{{ $prefix }}"
+        wire:model="calle_solicitante"
         :label="__('Calle')"
         type="text"
         required
@@ -83,7 +84,7 @@
     />
 
     <flux:input
-        wire:model="colonia_{{ $prefix }}"
+        wire:model="colonia_solicitante"
         :label="__('Colonia')"
         type="text"
         required
@@ -91,7 +92,7 @@
     />
 
     <flux:input
-        wire:model="municipio_{{ $prefix }}"
+        wire:model="municipio_solicitante"
         :label="__('Municipio')"
         type="text"
         required
@@ -102,9 +103,18 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Entidad federativa
         </label>
-        <flux:select wire:model="entidad_federativa_{{ $prefix }}" placeholder="Elige entidad federativa del {{ $prefix }}...">
+        <flux:select wire:model="entidad_federativa_solicitante" placeholder="Elige entidad federativa del {{ $prefix }}...">
             <flux:select.option>Casa</flux:select.option>
             <flux:select.option>Oficina</flux:select.option>
             <flux:select.option>Otro</flux:select.option>
         </flux:select>
     </div>
+
+    <flux:input
+        wire:model="correo_solicitante"
+        :label="__('Correo electronico del '. $prefix )"
+        type="email"
+        required
+        placeholder="Correo electronico de {{ $prefix }}"
+    />
+</div>

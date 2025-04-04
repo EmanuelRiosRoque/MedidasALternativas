@@ -130,5 +130,6 @@
         {{ $slot }}
         @filepondScripts
         @fluxScripts
+
     </body>
 </html>

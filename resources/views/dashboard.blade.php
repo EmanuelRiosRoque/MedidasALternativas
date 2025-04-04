@@ -3,7 +3,7 @@
 
         {{-- 🔵 Círculo con blur tipo glow teal justo detrás del contenedor --}}
         <div class="absolute w-[500px] h-[500px] bg-teal-500/40 blur-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 animate__animated animate__bounceIn"></div>
-
+        
         {{-- Contenedor principal con fondo sólido --}}
         <div class="relative z-10 w-full max-w-4xl rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeIn">
             <div class="text-center space-y-6">

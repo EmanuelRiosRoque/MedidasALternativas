@@ -1,60 +1,3 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="flex flex-wrap gap-x-6">
-        @if ($materia === 'mercantil')
-        <div class="animate__animated animate__fadeIn">
-            <flux:radio.group wire:model.live="persona" label="Persona" >
-                <flux:radio value="fisica" label="Física" />
-                <flux:radio value="moral" label="Moral" />
-            </flux:radio.group>
-        </div>
-        @endif
-    </div>
-</div>
-<button 
-    wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('solicitante')" }}"
-    type="button"
-    class="absolute bottom-6 right-6 z-50 bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
->
-    {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
-</button>
-
-
-@if (!empty($persona) && $persona === 'fisica')
-    @include('convenio.formularioPersonaFisica', ['key' => 'fisica'])
-@elseif (!empty($persona) && $persona === 'moral')
-    @include('convenio.formularioPersonaMoral', ['key' => 'moral'])
-@endif
-
-@if ($materia === 'familiar')
-    @include('convenio.formularioMateriaFamiliar')
-@endif
-
-{{-- Dropzone y representante --}}
-@include('convenio.complements.datosGeneralesDropzones')
-
-{{-- Tabla donde se visualizan los participantes agregados --}}
-@if (!empty($solicitanteArray))
-
-    @if(collect($solicitanteArray)->where('persona', 'fisica')->count())
-        @include('convenio.complements.tablaParticipantes', [
-            'heading' => 'Solicitantes Persona Física',
-            'solicitantes' => collect($solicitanteArray)->where('persona', 'fisica'),
-            'tipo' => 'solicitante'
-        ])
-    @endif
-
-    @if(collect($solicitanteArray)->where('persona', 'moral')->count())
-        @include('convenio.complements.tablaParticipantes', [
-            'heading' => 'Solicitantes Persona Moral',
-            'solicitantes' => collect($solicitanteArray)->where('persona', 'moral'),
-            'tipo' => 'solicitante'
-        ])
-    @endif
-
-@endif
-
-
-@if (!empty($detalleSeleccionado))
 <flux:modal wire:model="mostrarModal" name="edit-profile" class="md:w-[40rem]">
     <div class="space-y-6">
         <div>
@@ -64,7 +7,6 @@
             <flux:text class="mt-2">Consulta la información del registro seleccionado.</flux:text>
         </div>
 
-        {{-- 🔷 Datos para Persona Moral --}}
         @if($detalleSeleccionado['persona'] === 'moral')
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-300">
                 <p><span class="font-semibold text-neutral-100">Razón social:</span> {{ $detalleSeleccionado['razon_social'] ?? '-' }}</p>
@@ -75,7 +17,6 @@
             </div>
         @endif
 
-        {{-- 🔷 Datos para Persona Física --}}
         @if($detalleSeleccionado['persona'] === 'fisica')
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-300">
                 <p><span class="font-semibold text-neutral-100">Nombre:</span> {{ $detalleSeleccionado['nombre'] ?? '-' }}</p>
@@ -88,7 +29,6 @@
             </div>
         @endif
 
-        {{-- 🔷 Datos Comunes --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-300">
             <p><span class="font-semibold text-neutral-100">Correo:</span> {{ $detalleSeleccionado['correo'] ?? '-' }}</p>
             <p><span class="font-semibold text-neutral-100">Municipio:</span> {{ $detalleSeleccionado['municipio'] ?? '-' }}</p>
@@ -109,6 +49,3 @@
         
     </div>
 </flux:modal>
-@endif
-
-
