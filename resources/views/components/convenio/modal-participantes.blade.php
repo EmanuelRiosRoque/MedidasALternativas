@@ -2,7 +2,7 @@
     <div class="space-y-6">
         <div>
             <flux:heading size="lg">
-                Detalles del {{ $detalleSeleccionado['persona'] === 'moral' ? 'Solicitante Moral' : 'Solicitante Físico' }}
+                Detalles del {{ $heading }}
             </flux:heading>
             <flux:text class="mt-2">Consulta la información del registro seleccionado.</flux:text>
         </div>
@@ -28,15 +28,27 @@
                 <p><span class="font-semibold text-neutral-100">Nacionalidad:</span> {{ $detalleSeleccionado['nacionalidad'] ?? '-' }}</p>
             </div>
         @endif
+        
+        @if ($materia === "familiar")
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-300">
+                <p><span class="font-semibold text-neutral-100">Correo:</span> {{ $detalleSeleccionado['correo'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Edad:</span> {{ $detalleSeleccionado['edad'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Ocupacion:</span> {{ $detalleSeleccionado['ocupacion'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Domicilio:</span> {{ $detalleSeleccionado['domicilio'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Estado civil:</span> {{ $detalleSeleccionado['estado_civil'] ?? '-' }}</p>
+            </div>
+        @else
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-300">
+                <p><span class="font-semibold text-neutral-100">Correo:</span> {{ $detalleSeleccionado['correo'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Municipio:</span> {{ $detalleSeleccionado['municipio'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Colonia:</span> {{ $detalleSeleccionado['colonia'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Calle:</span> {{ $detalleSeleccionado['calle'] ?? '-' }}</p>
+                <p><span class="font-semibold text-neutral-100">Entidad federativa:</span> {{ $detalleSeleccionado['entidad_federativa'] ?? '-' }}</p>
+            </div>
+        @endif
+        
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-300">
-            <p><span class="font-semibold text-neutral-100">Correo:</span> {{ $detalleSeleccionado['correo'] ?? '-' }}</p>
-            <p><span class="font-semibold text-neutral-100">Municipio:</span> {{ $detalleSeleccionado['municipio'] ?? '-' }}</p>
-            <p><span class="font-semibold text-neutral-100">Colonia:</span> {{ $detalleSeleccionado['colonia'] ?? '-' }}</p>
-            <p><span class="font-semibold text-neutral-100">Calle:</span> {{ $detalleSeleccionado['calle'] ?? '-' }}</p>
-            <p><span class="font-semibold text-neutral-100">Entidad federativa:</span> {{ $detalleSeleccionado['entidad_federativa'] ?? '-' }}</p>
-        </div>
-     
+    
         <div class="flex justify-end pt-4">
             <button 
                 type="button"

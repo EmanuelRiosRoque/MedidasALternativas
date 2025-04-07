@@ -19,7 +19,6 @@
     @include('convenio.formulario.personaMoral', ['key' => 'moral'])
 @endif
 
-{{-- TODO: Manejar logica de datos familiares  --}}
 @if ($materia === 'familiar')
     @include('convenio.formulario.materiaFamiliar')
 @endif
@@ -55,13 +54,23 @@
             tipo="solicitante"
         />
     @endif
+
+    @if ($materia === "familiar")
+    <x-convenio.tabla-participantes
+        heading="Solicitantes"
+        :solicitantes="$solicitanteArray"
+        tipo="solicitante"
+    />
+    @endif
 @endif
 
 {{--* Modal para visualizar datos extras --}}
 @if (!empty($detalleSeleccionado))
     <x-convenio.modal-participantes 
+        heading="Solicitante"
         :detalleSeleccionado="$detalleSeleccionado" 
         :modoEdicion="$modoEdicion" 
+        :materia="$materia"
     />
 @endif
 

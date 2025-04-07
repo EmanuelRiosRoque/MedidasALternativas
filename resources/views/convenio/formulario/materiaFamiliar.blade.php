@@ -53,7 +53,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Sexo del {{ $prefix }}
         </label>
-        <flux:select wire:model="sexo_solcitante" placeholder="Elige sexo del {{ $prefix }}...">
+        <flux:select wire:model="sexo_{{ $prefix }}" placeholder="Elige sexo del {{ $prefix }}...">
             <flux:select.option>Femenino</flux:select.option>
             <flux:select.option>Masculino</flux:select.option>
         </flux:select>

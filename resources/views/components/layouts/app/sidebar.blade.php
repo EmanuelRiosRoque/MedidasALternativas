@@ -130,6 +130,14 @@
         {{ $slot }}
         @filepondScripts
         @fluxScripts
-
+        <script>
+            async function URLtoFile(url) {
+                const response = await fetch(url);
+                const data = await response.blob();
+                const filename = url.split('/').pop();
+                return new File([data], filename, { type: data.type });
+            }
+            </script>
+            
     </body>
 </html>

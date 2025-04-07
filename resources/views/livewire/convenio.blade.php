@@ -28,6 +28,14 @@
             >
                 Invitado
             </flux:navbar.item>
+
+            <flux:navbar.item 
+                wire:click.prevent="$set('tab', 4)" 
+                icon="users" 
+                :current="$tab === 4"
+            >
+                Documentos
+            </flux:navbar.item>
         </flux:navbar>
 
 
@@ -41,6 +49,8 @@
                 @include('convenio.datosSolicitante')
             @elseif ($tab === 3)
                 @include('convenio.datosInvitado')
+            @elseif ($tab === 4)
+                @include('convenio.complements.combosDocumentos')
             @endif
         </div>
     </div>

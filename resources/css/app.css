@@ -1,3 +1,4 @@
+
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 
@@ -115,4 +116,3 @@ select:focus[data-flux-control] {
 .dark .filepond--file-status {
     color: #e2e8f0;
 }
-

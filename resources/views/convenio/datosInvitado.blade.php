@@ -19,17 +19,16 @@
     @include('convenio.formulario.personaMoral', ['prefix' => 'invitado', 'key' => 'moral'])
 @endif
 
-{{-- TODO: Manejar logica de datos familiares  --}}
 @if ($materia === 'familiar')
     @include('convenio.formulario.materiaFamiliar')
 @endif
 
 {{--** Boton para enviar datos --}}
-<div class="flex justify-end">
+<div class="flex justify-end mt-2">
     <button 
         wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('invitado')" }}"
         type="button"
-        class=" bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
+        class="bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
     >
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
     </button>
@@ -52,13 +51,22 @@
             tipo="invitado"
         />
     @endif
+    @if ($materia === "familiar")
+    <x-convenio.tabla-participantes
+        heading="Invitados"
+        :solicitantes="$invitadoArray"
+        tipo="invitado"
+    />
+    @endif
 @endif
 
 {{--* Modal para visualizar datos extras --}}
 @if (!empty($detalleSeleccionado))
     <x-convenio.modal-participantes 
+        heading="Invitado"
         :detalleSeleccionado="$detalleSeleccionado" 
-        :modoEdicion="$modoEdicion" 
+        :modoEdicion="$modoEdicion"
+        :materia="$materia"
     />
 @endif
 

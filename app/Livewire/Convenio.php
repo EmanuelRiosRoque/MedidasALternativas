@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
+use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use Livewire\Component;
 use Spatie\LivewireFilepond\WithFilePond;
 
@@ -44,9 +45,15 @@ class Convenio extends Component
 	public string $fecha_instrumento_solicitante = '';
 	public string $telefono_solicitante = '';
 
+	// Familiar
+	public string $domicilio_solicitante = '';
+	public string $estado_civil_solicitante = '';
+
 	// Documento
 	public $identificacion;
 	public $acta_notarial;
+	public $acta_de_nacimiento;
+	public $resolucion_judicial;
 
 	public $detalleSeleccionado = [];
 	public $mostrarModal = false;
@@ -54,7 +61,9 @@ class Convenio extends Component
 	public bool $modoEdicion = false;
 	public ?int $indiceEdicion = null;
 
-
+	public $identificacionUrlTemporal;
+	public $identificacionNombreOriginal;
+	public $identificacionMime;
 	
 	public function mount() {
 		// $this->solicitanteArray = [
@@ -294,11 +303,8 @@ class Convenio extends Component
 		// ];
 	}
 
-	public function updatedPersona()
-	{
-		$this->limpiarCamposPersona(preservarPersona: true);
-	}
-
+	// Actualizaciones logicos
+	use HandleUpdatedConvenio;
 
 	// Crud-logico para solicitante y invitados
 	use HandleCrudLogicoPersonas;
@@ -335,6 +341,8 @@ class Convenio extends Component
 			'telefono_solicitante',
 			'identificacion',
 			'acta_notarial',
+			'domicilio_solicitante',
+			'estado_civil_solicitante',
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');
