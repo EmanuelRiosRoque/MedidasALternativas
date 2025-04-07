@@ -104,9 +104,9 @@
             Entidad federativa
         </label>
         <flux:select wire:model="entidad_federativa_solicitante" placeholder="Elige entidad federativa del {{ $prefix }}...">
-            <flux:select.option>Casa</flux:select.option>
-            <flux:select.option>Oficina</flux:select.option>
-            <flux:select.option>Otro</flux:select.option>
+            <flux:select.option>Entidad 1</flux:select.option>
+            <flux:select.option>Entidad 2</flux:select.option>
+            <flux:select.option>Entidad 3</flux:select.option>
         </flux:select>
     </div>
 
