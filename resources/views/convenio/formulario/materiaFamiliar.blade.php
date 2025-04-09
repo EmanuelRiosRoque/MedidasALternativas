@@ -9,14 +9,49 @@
         required
         placeholder="Nombre de {{ $prefix }}"
     />
-
     <flux:input
-        wire:model="domicilio_{{ $prefix }}"
-        :label="__('Domicilio del '. $prefix )"
+        wire:model="calle_solicitante"
+        :label="__('Calle')"
         type="text"
         required
-        placeholder="Domicilio de {{ $prefix }}"
+        placeholder="Calle del {{ $prefix }}"
     />
+
+    <flux:input
+        wire:model="colonia_solicitante"
+        :label="__('Colonia')"
+        type="text"
+        required
+        placeholder="Colonia del {{ $prefix }}"
+    />
+
+    <flux:input
+        wire:model="cp_solicitante"
+        :label="__('CP')"
+        type="text"
+        required
+        placeholder="Codigo postal del {{ $prefix }}"
+    />
+
+    <flux:input
+        wire:model="municipio_solicitante"
+        :label="__('Municipio')"
+        type="text"
+        required
+        placeholder="Municipio del {{ $prefix }}"
+    />
+
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+            Entidad federativa
+        </label>
+        <flux:select wire:model="entidad_federativa_solicitante" placeholder="Elige entidad federativa del {{ $prefix }}...">
+            <flux:select.option>Entidad 1</flux:select.option>
+            <flux:select.option>Entidad 2</flux:select.option>
+            <flux:select.option>Entidad 3</flux:select.option>
+        </flux:select>
+    </div>
+
 
     <flux:input
         wire:model="edad_{{ $prefix }}"

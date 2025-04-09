@@ -2,14 +2,15 @@
 
 namespace App\Livewire;
 
-use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
-use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use Livewire\Component;
-use Spatie\LivewireFilepond\WithFilePond;
+use Livewire\WithFileUploads;
+use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
+use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
+use App\Traits\ConvenioTraits\HandleDocumentos;
 
 class Convenio extends Component
 {
-	use WithFilePond;
+    use WithFileUploads;
 
 	public int $tab = 1;
 	// Input Radios
@@ -17,11 +18,16 @@ class Convenio extends Component
 	public  $materia;
 	public  $tipo_convenio;
 
-	//Datos solicitante
+	//Datos por tipo de usuario
 	public array $solicitanteArray = [];
 	public array $invitadoArray = [];
-
+	
+	// Generales
 	public $persona;
+	public $derivado_canalizado;
+	public string $como_se_entero = '';
+	public string $numero_ticket = '';
+
 	// Fisica
 	public $representante;
 	public string $nombre_solicitante = '';
@@ -37,7 +43,7 @@ class Convenio extends Component
 	public string $municipio_solicitante = '';
 	public string $entidad_federativa_solicitante = '';
 	public string $correo_solicitante = '';
-
+    public string $cp_solicitante = '';
 	// Moral
 	public string $razon_social_solicitante = '';
 	public string $rfc_solicitante= '';
@@ -60,248 +66,54 @@ class Convenio extends Component
 
 	public bool $modoEdicion = false;
 	public ?int $indiceEdicion = null;
-
-	public $identificacionUrlTemporal;
-	public $identificacionNombreOriginal;
-	public $identificacionMime;
 	
-	public function mount() {
-		// $this->solicitanteArray = [
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'moral',
-		// 		'representante' => '1',
-		// 		'nombre' => '',
-		// 		'sexo' => '',
-		// 		'edad' => '',
-		// 		'fecha_nacimiento' => '',
-		// 		'escolaridad' => '',
-		// 		'ocupacion' => '',
-		// 		'nacionalidad' => '',
-		// 		'tipo_domicilio' => 'Oficina',
-		// 		'calle' => 'Av. Revolución 321',
-		// 		'colonia' => 'Tacubaya',
-		// 		'municipio' => 'Miguel Hidalgo',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'contacto@empresamoral.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => 'Grupo Moral S.A. de C.V.',
-		// 		'rfc' => 'GMS850101ABC',
-		// 		'instrumento' => 'Acta Constitutiva No. 1001',
-		// 		'fecha_instrumento' => '2020-04-10',
-		// 		'telefono' => '555-123-4567',
-		// 	]
-		// ];
-		
-		// $this->invitadoArray = [
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'fisica',
-		// 		'representante' => '0',
-		// 		'nombre' => 'Carlos Ramírez Díaz',
-		// 		'sexo' => 'Masculino',
-		// 		'edad' => '28',
-		// 		'fecha_nacimiento' => '1996-01-10',
-		// 		'escolaridad' => 'Universidad',
-		// 		'ocupacion' => 'Ingeniero Civil',
-		// 		'nacionalidad' => 'Mexicana',
-		// 		'tipo_domicilio' => 'Casa',
-		// 		'calle' => 'Calle Río Lerma 45',
-		// 		'colonia' => 'Cuauhtémoc',
-		// 		'municipio' => 'Cuauhtémoc',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'carlos.ramirez@example.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => '',
-		// 		'rfc' => '',
-		// 		'instrumento' => '',
-		// 		'fecha_instrumento' => '',
-		// 		'telefono' => '',
-		// 	],
-		// 	[
-		// 		'persona' => 'moral',
-		// 		'representante' => '1',
-		// 		'nombre' => '',
-		// 		'sexo' => '',
-		// 		'edad' => '',
-		// 		'fecha_nacimiento' => '',
-		// 		'escolaridad' => '',
-		// 		'ocupacion' => '',
-		// 		'nacionalidad' => '',
-		// 		'tipo_domicilio' => 'Oficina',
-		// 		'calle' => 'Av. Revolución 321',
-		// 		'colonia' => 'Tacubaya',
-		// 		'municipio' => 'Miguel Hidalgo',
-		// 		'entidad_federativa' => 'CDMX',
-		// 		'correo' => 'contacto@empresamoral.com',
-		// 		'identificacion' => null,
-		// 		'razon_social' => 'Grupo Moral S.A. de C.V.',
-		// 		'rfc' => 'GMS850101ABC',
-		// 		'instrumento' => 'Acta Constitutiva No. 1001',
-		// 		'fecha_instrumento' => '2020-04-10',
-		// 		'telefono' => '555-123-4567',
-		// 	]
-		// ];
-	}
+
+	public $tipo = '';
+	public $documentoSeleccionado = '';
+	public $documentosOpcionales = [];
+	public $tiposDisponibles = [];
+	public $archivosSubidos = [];
+	public $documentosCargados = []; 
+	
+
+	public $temaFamiliar = '';
+	public $documentosFamiliarSeleccionado = '';
+	public $documentosFamiliarOpcionales = [];
+	public $temasFamiliaresDisponibles = [];
+	public $documentosFamiliaresCargados = [];
+	public $archivosFamiliaresSubidos = [];
+
+    public function mount()
+    {
+        $this->tiposDisponibles = array_keys($this->documentosOpcionalesPorTipo());
+        $this->temasFamiliaresDisponibles = array_keys($this->documentosPorTemaFamiliar());
+
+    }
+
+    public function guardarArchivos()
+    {
+        $documentosConArchivos = [];
+
+        foreach ($this->documentosCargados as $index => $documento) {
+            // Verifica si se cargó algún archivo para este documento
+            if (isset($this->archivosSubidos[$index]) && !empty($this->archivosSubidos[$index])) {
+                $documentosConArchivos[] = [
+                    'documento' => $documento,
+                    'archivo' => $this->archivosSubidos[$index]
+                ];
+            } else {
+                $documentosConArchivos[] = [
+                    'documento' => $documento,
+                    'archivo' => 'No se subió archivo'
+                ];
+            }
+        }
+
+        dd($documentosConArchivos);
+    }
+
+    //Documentos
+    use HandleDocumentos;
 
 	// Actualizaciones logicos
 	use HandleUpdatedConvenio;
@@ -309,48 +121,7 @@ class Convenio extends Component
 	// Crud-logico para solicitante y invitados
 	use HandleCrudLogicoPersonas;
 	
-
 	
-
-	// Limpiar despues de cada accion
-	public function limpiarCamposPersona(bool $preservarPersona = false)
-	{
-		if (!$preservarPersona) {
-			$this->reset('persona');
-		}
-
-		$this->reset([
-			'representante',
-			'nombre_solicitante',
-			'sexo_solicitante',
-			'edad_solicitante',
-			'fecha_nacimiento_solicitante',
-			'escolaridad_solicitante',
-			'ocupacion_solicitante',
-			'nacionalidad_solicitante',
-			'tipo_domicilio_solicitante',
-			'calle_solicitante',
-			'colonia_solicitante',
-			'municipio_solicitante',
-			'entidad_federativa_solicitante',
-			'correo_solicitante',
-			'razon_social_solicitante',
-			'rfc_solicitante',
-			'instrumento_solicitante',
-			'fecha_instrumento_solicitante',
-			'telefono_solicitante',
-			'identificacion',
-			'acta_notarial',
-			'domicilio_solicitante',
-			'estado_civil_solicitante',
-		]);
-
-		$this->dispatch('filepond-reset-identificacion');
-		$this->dispatch('filepond-reset-acta_notarial');
-	}
-
-
-
 
 	public function render()
 	{

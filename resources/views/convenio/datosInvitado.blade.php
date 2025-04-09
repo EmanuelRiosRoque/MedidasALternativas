@@ -23,6 +23,9 @@
     @include('convenio.formulario.materiaFamiliar')
 @endif
 
+{{--* Dropzone y representante --}}
+@include('convenio.complements.datosGeneralesDropzones')
+
 {{--** Boton para enviar datos --}}
 <div class="flex justify-end mt-2">
     <button 

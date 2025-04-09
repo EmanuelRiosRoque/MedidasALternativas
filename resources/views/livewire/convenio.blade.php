@@ -31,18 +31,25 @@
 
             <flux:navbar.item 
                 wire:click.prevent="$set('tab', 4)" 
-                icon="users" 
+                icon="paper-clip" 
                 :current="$tab === 4"
             >
                 Documentos
             </flux:navbar.item>
-        </flux:navbar>
 
+            <flux:navbar.item 
+                wire:click.prevent="$set('tab', 5)" 
+                icon="bookmark-square" 
+                :current="$tab === 5"
+            >
+                Finalizar
+            </flux:navbar.item>
+        </flux:navbar>
 
 
         
         <!-- Contenido del tab -->
-        <div class="p-4 rounded-md  dark:bg-neutral-900 shadow">
+        <div class="p-4 rounded-md  dark:bg-neutral-900 ">
             @if ($tab === 1)
                 @include('convenio.datosGenerales')
             @elseif ($tab === 2)
@@ -50,7 +57,9 @@
             @elseif ($tab === 3)
                 @include('convenio.datosInvitado')
             @elseif ($tab === 4)
-                @include('convenio.complements.combosDocumentos')
+                @include('convenio.combosDocumentos')
+            @elseif ($tab === 5)
+                <h1>Fin</h1>
             @endif
         </div>
     </div>

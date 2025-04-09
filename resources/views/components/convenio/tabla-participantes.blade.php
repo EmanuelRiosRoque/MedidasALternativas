@@ -17,11 +17,11 @@
             {{-- Card del solicitante --}}
             <div
                 wire:click="seleccionarPersona({{ $index }}, '{{ $tipo }}')"
-                class="cursor-pointer bg-neutral-900 border border-neutral-700 rounded-2xl p-5 shadow-md 
+                class="cursor-pointer dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-5 shadow-md 
                        transition-all duration-300 ease-in-out 
                        hover:shadow-2xl hover:ring-2 hover:ring-emerald-500 hover:scale-[1.01]"
             >
-                <p class="text-base font-semibold text-neutral-100 mb-1">
+                <p class="text-base font-semibold text-neutral-800 dark:text-neutral-100 mb-1">
                     {{ $solicitante['persona'] === 'moral' ? $solicitante['razon_social'] : $solicitante['nombre'] }}
                 </p>
 

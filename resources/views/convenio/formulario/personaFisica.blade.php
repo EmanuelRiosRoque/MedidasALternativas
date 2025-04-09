@@ -92,6 +92,14 @@
     />
 
     <flux:input
+        wire:model="cp_solicitante"
+        :label="__('CP')"
+        type="text"
+        required
+        placeholder="Codigo postal del {{ $prefix }}"
+    />
+
+    <flux:input
         wire:model="municipio_solicitante"
         :label="__('Municipio')"
         type="text"
