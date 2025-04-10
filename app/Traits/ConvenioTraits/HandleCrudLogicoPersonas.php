@@ -50,7 +50,7 @@ trait HandleCrudLogicoPersonas
         } else {
             $this->invitadoArray[] = $datos;
         }
-        Toaster::success('User created!'); // 👈
+        Toaster::success('Participante agregado !');
 
         $this->limpiarCamposPersona(preservarPersona: false);
     }

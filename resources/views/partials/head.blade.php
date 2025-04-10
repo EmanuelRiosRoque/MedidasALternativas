@@ -5,6 +5,15 @@
 
 <link rel="preconnect" href="https://fonts.bunny.net">
 
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+{{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+
+{{-- @php
+$user="lector"    
+@endphp
+@if ($user === "admin" ) --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+{{-- @else
+    @vite(['resources/css/appFac.css', 'resources/js/app.js'])
+@endif --}}
 
 @fluxAppearance

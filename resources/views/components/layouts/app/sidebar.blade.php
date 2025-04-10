@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
+        {{-- @php
+        $user="lector"    
+        @endphp --}}
         @include('partials.head')
+        {{-- {!! ToastMagic::styles() !!} --}}
+
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
@@ -14,7 +19,11 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    {{-- @if($user==="admin") --}}
                     <flux:navlist.item icon="document-plus" :href="route('convenio.index')" :current="request()->routeIs('convenio.index')"  wire:navigate>{{ __('Convenio') }}</flux:navlist.item>
+                    {{-- @endif --}}
+                    <flux:navlist.item icon="briefcase" :href="route('facilitadores.index')" :current="request()->routeIs('facilitadores.index')"  wire:navigate>{{ __('Facilitadores') }}</flux:navlist.item> 
+
                 </flux:navlist.group>
                 
             </flux:navlist>
@@ -129,6 +138,8 @@
 
         {{ $slot }}
         @fluxScripts
+        
         <x-toaster-hub /> <!-- 👈 -->
+        {{-- {!! ToastMagic::scripts() !!} --}}
     </body>
 </html>

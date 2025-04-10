@@ -4,9 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Redirect;
+use App\Traits\ConvenioTraits\HandleDocumentos;
 use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
-use App\Traits\ConvenioTraits\HandleDocumentos;
 
 class Convenio extends Component
 {
@@ -27,7 +28,7 @@ class Convenio extends Component
 	public $derivado_canalizado;
 	public string $como_se_entero = '';
 	public string $numero_ticket = '';
-
+	public $doc_representante;
 	// Fisica
 	public $representante;
 	public string $nombre_solicitante = '';
@@ -121,6 +122,11 @@ class Convenio extends Component
 	// Crud-logico para solicitante y invitados
 	use HandleCrudLogicoPersonas;
 	
+
+	public function save () {
+		return Redirect::route('pre-mediacion.index')
+			->success('Convenio registrado correctamente !'); 
+	}
 	
 
 	public function render()

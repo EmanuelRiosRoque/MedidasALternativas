@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\Convenio;
+use App\Livewire\Facilitadores;
+use App\Livewire\PreMediacion;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -21,5 +23,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/convenio/form', Convenio::class)->name('convenio.index');
+Route::get('/facilitadores/form', Facilitadores::class)->name('facilitadores.index');
+Route::get('/pre-mediacion/table', PreMediacion::class)->name('pre-mediacion.index');
 
 require __DIR__.'/auth.php';

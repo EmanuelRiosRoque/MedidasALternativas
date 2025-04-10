@@ -1,5 +1,5 @@
 <div class="relative h-full place-items-center px-4 bg-gradient-to-br from-white to-neutral-100 dark:from-neutral-800 dark:to-neutral-900 overflow-hidden">
-    <div class="absolute w-[500px] h-[500px] bg-teal-500/40 blur-[90px] dark:blur-[120px] rounded-full top-1/2 left-2/2 -translate-x-1/2 -translate-y-1/2 z-0 animate__animated animate__bounceIn"></div>
+    <div class="absolute w-[500px] h-[500px] bg-emerald-500/40 blur-[90px] dark:blur-[120px] rounded-full top-1/2 left-2/2 -translate-x-1/2 -translate-y-1/2 z-0 animate__animated animate__bounceIn"></div>
 
     <div class="relative mt-2 mb-2 z-10 w-full max-w-4xl rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeIn">
 
@@ -59,7 +59,15 @@
             @elseif ($tab === 4)
                 @include('convenio.combosDocumentos')
             @elseif ($tab === 5)
-                <h1>Fin</h1>
+            <div class="flex justify-end">
+                <button 
+                    wire:click="save"
+                    type="button"
+                    class="bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 mt-5 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
+                >
+                    Guardar Registro
+                </button>
+            </div>
             @endif
         </div>
     </div>
