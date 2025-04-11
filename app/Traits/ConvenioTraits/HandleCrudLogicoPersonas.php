@@ -36,6 +36,7 @@ trait HandleCrudLogicoPersonas
         $this->mostrarModal = true;
     }
 
+
     public function agregarPersona(string $tipo = 'solicitante')
     {
         $datos = [];
@@ -54,6 +55,20 @@ trait HandleCrudLogicoPersonas
 
         $this->limpiarCamposPersona(preservarPersona: false);
     }
+
+    // public function agregarPersona($payload)
+    // {
+    //     $tipo = $payload['tipo']; // 'solicitante' o 'invitado'
+    //     $datos = $payload['datos'];
+
+    //     if ($tipo === 'solicitante') {
+    //         $this->solicitanteArray[] = $datos;
+    //     } else {
+    //         $this->invitadoArray[] = $datos;
+    //     }
+
+    //      Toaster::success('Participante agregado !');
+    // }
 
     public function cargarEdicion()
     {

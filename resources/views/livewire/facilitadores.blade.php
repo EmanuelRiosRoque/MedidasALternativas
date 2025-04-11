@@ -12,6 +12,14 @@
             >
                 Datos generales
             </flux:navbar.item>
+
+            <flux:navbar.item 
+                wire:click.prevent="$set('tab', 2)" 
+                icon="document" 
+                :current="$tab === 2"
+            >
+                Datos adicionales
+            </flux:navbar.item>
         </flux:navbar>
 
         <!-- Contenido del tab -->
@@ -21,13 +29,19 @@
                     <flux:radio value="publico" label="Público" />
                     <flux:radio value="privado" label="Privado" />
                 </flux:radio.group>
-
-                @if ($tipo_facilitador === "publico")
-                    @include('facilitadores.formulario.publico')
-                @elseif($tipo_facilitador === "privado")
-                    @include('facilitadores.formulario.privado')
+                @if ($tipo_facilitador != '')
+                @include('facilitadores.formulario.datosGenerales')
                 @endif
+            @elseif ($tab === 2)
+            @if ($tipo_facilitador === "publico")
+                @include('facilitadores.formulario.publico')
+            @elseif($tipo_facilitador === "privado")
+                @include('facilitadores.formulario.privado')
             @endif
+            @elseif ($tab === 3)
+
+            @endif
+
         </div>
     </div>
 </div>
