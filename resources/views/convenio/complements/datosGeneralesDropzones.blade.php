@@ -22,7 +22,9 @@
     <livewire:dropzone
         wire:model="identificacion"
         :rules="['mimes:pdf','max:10420']"
-        :multiple="false" />
+        :multiple="false"
+        wire:key="identificacion"
+        />
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
