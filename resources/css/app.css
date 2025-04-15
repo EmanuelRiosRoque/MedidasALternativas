@@ -54,7 +54,12 @@ select:focus[data-flux-control] {
 }
 
 
+@keyframes float {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+}
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
