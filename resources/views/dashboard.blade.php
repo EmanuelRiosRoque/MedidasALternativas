@@ -1,9 +1,9 @@
 <x-layouts.app :title="__('Dashboard')">
-    {{-- @php
-        $user="lector"    
-    @endphp
 
-    @if ($user==="admin")   --}}
+    <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
+
+    {{-- @if ($user==="admin")   
+ --}}
         @include('dashboard.medidas')
     {{-- @else
         @include('dashboard.facilitadores')

@@ -1,7 +1,7 @@
 <div class="relative grid min-h-[95vh] place-items-center px-4 bg-gradient-to-br from-white to-neutral-100 dark:from-neutral-800 dark:to-neutral-900 overflow-hidden">
 
     {{-- 🔵 Círculo con blur tipo glow emerald --}}
-    <div class="absolute w-[500px] h-[500px] bg-emerald-500/40 blur-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0"></div>
+    <div class="absolute w-[500px] h-[500px] bg-emerald-500/40 blur-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 animate__animated animate__bounceIn"></div>
 
     <section class="relative z-10 w-full">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">

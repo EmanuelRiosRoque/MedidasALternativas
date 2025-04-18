@@ -1,16 +1,16 @@
 <div class="relative inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-    <div class="absolute w-[500px] h-[500px] bg-emerald-500/40 blur-[90px] dark:blur-[120px] rounded-full top-1/2 rigth-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"></div>
+    <div class="absolute w-[500px] h-[500px] bg-emerald-500/40 blur-[90px] dark:blur-[120px] rounded-full top-1/2 rigth-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none animate__animated animate__backInRight"></div>
     
     <!-- component -->
     <div class="overflow-hidden  z-10 relative">
 
-    <section class="container px-4 mx-auto z-20">
+    <section class="container px-4 mx-auto z-20 animate__animated animate__fadeInUp">
         <div class="sm:flex sm:items-center sm:justify-between">
             <div>
                 <div class="flex items-center gap-x-3">
                     <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Convenios</h2>
 
-                    <span class="px-3 py-1 text-xs text-emerald-600 bg-emerald-100 rounded-full dark:bg-neutral-800 dark:text-emerald-400">240 vendors</span>
+                    <span class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">240 vendors</span>
                 </div>
 
                 <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-300">Cantidad total de convenios registrados.</p>
@@ -18,13 +18,13 @@
 
             <div class="flex items-center mt-4 gap-x-3">
                 
-                <button class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-emerald-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:bg-emerald-600">
+                <a wire:navigate href={{ route('convenio.index') }} class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-emerald-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:bg-emerald-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
 
                     <span>Nuevo Convenio</span>
-                </button>
+                </a>
             </div>
         </div>
 
@@ -122,7 +122,7 @@
                                     </td>
 
                                     <td class="px-4 py-4 text-sm whitespace-nowrap">
-                                        <button class="px-1 py-1 text-neutral-500 transition-colors duration-200 rounded-lg dark:text-neutral-300 hover:bg-neutral-100">
+                                        <button class="px-1 py-1 text-neutral-500 transition-colors duration-200 rounded-lg dark:text-neutral-300  cursor-pointer hover:text-emerald-600">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                                             </svg>
