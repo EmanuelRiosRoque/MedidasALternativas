@@ -1,11 +1,15 @@
+@props(['prefix'])
+
 <div class="mt-5 mb-2 animate__animated animate__fadeIn tetx">
     <flux:heading class="flex items-center gap-1 mb-1">
         Identificacion
-        <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
+        <div class="{{ $prefix === "solicitante" ? '' : 'hidden' }}">
+            <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
+        </div>
         <flux:tooltip toggleable>
             <flux:button icon="information-circle" size="xs" variant="ghost" />
             <flux:tooltip.content class="max-w-[20rem] space-y-2">
-                <p>Idnetificaciones:</p>
+                <p>Identificaciones:</p>
                 <ul>
                     <li>INE</li>
                     <li>Pasaporte</li>
@@ -27,6 +31,20 @@
         />
 </div>
 
+<div>
+    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+        ¿Cómo se enteró?
+    </label>
+    <flux:select wire:model="como_se_entero" placeholder="¿Como se entero?">
+        <flux:select.option>Fiscalía</flux:select.option>
+        <flux:select.option>Juzgado</flux:select.option>
+        <flux:select.option>Comisión de Derechos humanos de la CDMX</flux:select.option>
+        <flux:select.option>Secretaría de mujeres. (LUNAS)</flux:select.option>
+        <flux:select.option>Juzgado de registro civil</flux:select.option>
+        <flux:select.option>Otro</flux:select.option>
+    </flux:select>
+</div>
+
 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
     <flux:radio.group wire:model.live="representante" label="¿Es usted el representante?">
         <flux:radio value="1" label="Sí" />
@@ -41,7 +59,7 @@
 
     <flux:checkbox.group wire:model.live="doc_representante" label="Documento(s)">
         <flux:checkbox label="Acta notarial" value="1" />
-        <flux:checkbox label="Acta de nacimiento" value="2"  />
+        <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2"  />
         <flux:checkbox label="Resolucion judicial" value="3" />
     </flux:checkbox.group>
     @endif
@@ -65,7 +83,7 @@
         <div class="col-span-2 sm:col-span-1 animate__animated animate__fadeIn"
             @if(!is_array($doc_representante) || !in_array(2, $doc_representante)) style="display: none;" @endif>
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
-                Acta de Nacimiento
+                Acta de registro civil
             </label>
             <livewire:dropzone
                 wire:model="acta_de_nacimiento"

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
+use App\Traits\ConvenioTraits\HandleValidaciones;
 
 class Convenio extends Component
 {
@@ -25,10 +26,12 @@ class Convenio extends Component
 	
 	// Generales
 	public $persona;
+	public $persona_invitado;
 	public $derivado_canalizado;
 	public string $como_se_entero = '';
 	public string $numero_ticket = '';
 	public $doc_representante;
+	public $institucion= '';
 	// Fisica
 	public $representante;
 	public string $nombre_solicitante = '';
@@ -83,37 +86,18 @@ class Convenio extends Component
 	public $temasFamiliaresDisponibles = [];
 	public $documentosFamiliaresCargados = [];
 	public $archivosFamiliaresSubidos = [];
-
+	public $entidades;
+	
     public function mount()
     {
         $this->tiposDisponibles = array_keys($this->documentosOpcionalesPorTipo());
         $this->temasFamiliaresDisponibles = array_keys($this->documentosPorTemaFamiliar());
-
+		$this->entidades = $this->entidadesFederativas();
     }
 	
-
-    public function guardarArchivos()
-    {
-        $documentosConArchivos = [];
-
-        foreach ($this->documentosCargados as $index => $documento) {
-            // Verifica si se cargó algún archivo para este documento
-            if (isset($this->archivosSubidos[$index]) && !empty($this->archivosSubidos[$index])) {
-                $documentosConArchivos[] = [
-                    'documento' => $documento,
-                    'archivo' => $this->archivosSubidos[$index]
-                ];
-            } else {
-                $documentosConArchivos[] = [
-                    'documento' => $documento,
-                    'archivo' => 'No se subió archivo'
-                ];
-            }
-        }
-
-        dd($documentosConArchivos);
-    }
-
+	// Validaciones por pasos
+	use HandleValidaciones;
+    
     //Documentos
     use HandleDocumentos;
 

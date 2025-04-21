@@ -17,9 +17,9 @@
         </flux:radio.group> --}}
 
         
-        <flux:radio.group wire:model.live="derivado_canalizado" label="Herencia">
-            <flux:radio value="derivado" label="Derivado" />
-            <flux:radio value="canalizado" label="Canalizado" />
+        <flux:radio.group wire:model.live="derivado_canalizado" label="¿Canalizado?">
+            <flux:radio value="1" label="Si" />
+            <flux:radio value="2" label="No" />
         </flux:radio.group>
     </div>
 
@@ -31,8 +31,29 @@
         </div>
         @endif
     </div>
-    <div class="animate__animated animate__fadeIn">
-        <flux:input wire:model="como_se_entero" :label="__('¿Como se entero?')" type="text" required 
-            placeholder="Escriba como se entero de este servicio" />
+
+    <div>
+        @if ($derivado_canalizado == 1)
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+                Institución
+            </label>
+            <flux:select wire:model.live="institucion" placeholder="Elige una institución">
+                <flux:select.option>Fiscalía</flux:select.option>
+                <flux:select.option>Juzgado</flux:select.option>
+                <flux:select.option>Comisión de Derechos humanos de la CDMX</flux:select.option>
+                <flux:select.option>Secretaría de mujeres. (LUNAS)</flux:select.option>
+                <flux:select.option>Juzgado de registro civil</flux:select.option>
+                <flux:select.option>Otro</flux:select.option>
+            </flux:select>
+        @endif
+    </div>  
+    
+    <div>
+        @if ($institucion === "Otro")
+        <div class="animate__animated animate__fadeIn">
+            <flux:input wire:model="cual-otro" :label="__('Otro:')" type="text" required 
+                placeholder="Mencione cuál otro" />
+        </div>        
+        @endif
     </div>
 </div>

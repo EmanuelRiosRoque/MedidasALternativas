@@ -11,7 +11,7 @@ trait HandleCrudLogicoPersonas
      * Se puede agregar/quitar campos fácilmente aquí.
      */
     protected array $camposPersona = [
-        'persona', 'representante',
+        'persona', 'representante', 'persona_invitado',
         'nombre_solicitante', 'sexo_solicitante', 'edad_solicitante', 'fecha_nacimiento_solicitante',
         'escolaridad_solicitante', 'ocupacion_solicitante', 'nacionalidad_solicitante',
         'tipo_domicilio_solicitante', 'calle_solicitante', 'colonia_solicitante',
@@ -122,7 +122,7 @@ trait HandleCrudLogicoPersonas
             unset($this->solicitanteArray[$index]);
             $this->solicitanteArray = array_values($this->solicitanteArray);
         }
-        Toaster::warning('Eliminado correctamente!'); // 👈
+        Toaster::warning('Eliminado correctamente!');
 
     }
 
@@ -131,6 +131,7 @@ trait HandleCrudLogicoPersonas
 	{
 		if (!$preservarPersona) {
 			$this->reset('persona');
+            $this->reset('persona_invitado');
 		}
 
 		$this->reset([
@@ -163,4 +164,6 @@ trait HandleCrudLogicoPersonas
 		$this->dispatch('filepond-reset-identificacion');
 		$this->dispatch('filepond-reset-acta_notarial');
 	}
+
+    
 }

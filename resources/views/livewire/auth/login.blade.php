@@ -79,7 +79,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+    <x-auth-header :title="__('Iniciar Sesión')" :description="__('Ingresa tu N° Empleado o Correo electronico')" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
@@ -88,7 +88,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         <!-- Email Address -->
         <flux:input
             wire:model="n_empleado"
-            :label="__('Email o N_Empleado')"
+            :label="__('Email o N° Empleado')"
             type="text"
             required
             autofocus

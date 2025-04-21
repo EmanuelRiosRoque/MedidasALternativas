@@ -1,97 +1,173 @@
-@props(['prefix' => 'solicitante'])
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 animate__animated animate__fadeIn" wire:key="{{ $key }}"> 
+@props(['prefix'])
 
-    <flux:input
-        wire:model="razon_social_solicitante"
-        :label="__('Razon social del '. $prefix)"
-        type="text"
-        required
-        placeholder="Razon social de {{ $prefix }}"
-    />
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 animate__animated animate__fadeIn" wire:key="{{ $key }}">
 
-    <flux:input
-        wire:model="rfc_solicitante"
-        :label="__('RFC')"
-        type="text"
-        required
-        placeholder="RFC"
-    />
+    {{-- Razón social --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Razón social del {{ $prefix }}
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input
+            wire:model="razon_social_solicitante"
+            type="text"
+            required
+            placeholder="Razón social de {{ $prefix }}"
+        />
+    </div>
 
-    <flux:input
-        wire:model="instrumento_solicitante"
-        :label="__('Instrumento notarial')"
-        type="text"
-        required
-        placeholder="Razon social de {{ $prefix }}"
-    />
+    {{-- RFC --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            RFC
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input
+            wire:model="rfc_solicitante"
+            type="text"
+            required
+            placeholder="RFC"
+        />
+    </div>
 
-    
-    <flux:input
-        wire:model="fecha_instrumento_solicitante"
-        :label="__('Fecha del Instrumento Notarial')"
-        type="date"
-        required
-        placeholder="Razon social de {{ $prefix }}"
-    />
+    {{-- Instrumento notarial --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Instrumento notarial
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="instrumento_solicitante"
+            type="text"
+            required
+            placeholder="Instrumento notarial"
+        />
+    </div>
 
-    <flux:input
-        wire:model="telefono_solicitante"
-        :label="__('Telefono')"
-        type="tel"
-        required
-        placeholder="Telefono {{ $prefix }}"
-    />
+    {{-- Fecha del instrumento --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Fecha del Instrumento Notarial
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="fecha_instrumento_solicitante"
+            type="date"
+            required
+        />
+    </div>
 
+    {{-- Teléfono --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Teléfono del {{ $prefix }}
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="telefono_solicitante"
+            type="tel"
+            required
+            placeholder="Teléfono del {{ $prefix }}"
+        />
+    </div>
 
-    <flux:input
-        wire:model="calle_solicitante"
-        :label="__('Calle')"
-        type="text"
-        required
-        placeholder="Calle del {{ $prefix }}"
-    />
+    {{-- Calle --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Calle del {{ $prefix }}
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="calle_solicitante"
+            type="text"
+            required
+            placeholder="Calle del {{ $prefix }}"
+        />
+    </div>
 
-    <flux:input
-        wire:model="colonia_solicitante"
-        :label="__('Colonia')"
-        type="text"
-        required
-        placeholder="Colonia del {{ $prefix }}"
-    />
+    {{-- Colonia --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Colonia del {{ $prefix }}
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="colonia_solicitante"
+            type="text"
+            required
+            placeholder="Colonia del {{ $prefix }}"
+        />
+    </div>
 
-    <flux:input
-        wire:model="cp_solicitante"
-        :label="__('CP')"
-        type="text"
-        required
-        placeholder="Codigo postal del {{ $prefix }}"
-    />
+    {{-- CP --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Código postal del {{ $prefix }}
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="cp_solicitante"
+            type="text"
+            required
+            placeholder="Código postal del {{ $prefix }}"
+        />
+    </div>
 
+    {{-- Municipio --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Municipio del {{ $prefix }}
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
+        </label>
+        <flux:input
+            wire:model="municipio_solicitante"
+            type="text"
+            required
+            placeholder="Municipio del {{ $prefix }}"
+        />
+    </div>
 
-    <flux:input
-        wire:model="municipio_solicitante"
-        :label="__('Municipio')"
-        type="text"
-        required
-        placeholder="Municipio del {{ $prefix }}"
-    />
-
+    {{-- Entidad federativa --}}
     <div>
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Entidad federativa
+            @if($prefix === 'solicitante')
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
         </label>
         <flux:select wire:model="entidad_federativa_solicitante" placeholder="Elige entidad federativa del {{ $prefix }}...">
-            <flux:select.option>Entidad 1</flux:select.option>
-            <flux:select.option>Entidad 2</flux:select.option>
-            <flux:select.option>Entidad 3</flux:select.option>
+            @foreach ($entidades as $entidad)
+                <flux:select.option>{{ $entidad }}</flux:select.option>
+            @endforeach
         </flux:select>
     </div>
 
-    <flux:input
-        wire:model="correo_solicitante"
-        :label="__('Correo electronico del '. $prefix )"
-        type="email"
-        required
-        placeholder="Correo electronico de {{ $prefix }}"
-    />
+    {{-- Correo --}}
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Correo electrónico del {{ $prefix }}
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input
+            wire:model="correo_solicitante"
+            type="email"
+            required
+            placeholder="Correo electrónico de {{ $prefix }}"
+        />
+    </div>
+
 </div>

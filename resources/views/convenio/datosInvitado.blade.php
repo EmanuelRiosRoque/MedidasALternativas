@@ -20,11 +20,11 @@
 @endif
 
 @if ($materia === 'familiar')
-    @include('convenio.formulario.materiaFamiliar')
+    @include('convenio.formulario.materiaFamiliar', ['prefix' => 'invitado', 'key' => 'familiar'])
 @endif
 
 {{--* Dropzone y representante --}}
-@include('convenio.complements.datosGeneralesDropzones')
+@include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'invitado'])
 
 {{--** Boton para enviar datos --}}
 <div class="flex justify-end mt-2">

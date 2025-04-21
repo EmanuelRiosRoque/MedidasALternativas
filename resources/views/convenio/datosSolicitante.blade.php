@@ -14,17 +14,17 @@
 
 {{--* Formularios por TIPO PERSONA --}}
 @if ($persona === 'fisica')
-    @include('convenio.formulario.personaFisica', ['key' => 'fisica'])
+    @include('convenio.formulario.personaFisica', ['prefix' => 'solicitante', 'key' => 'fisica'])
 @elseif ($persona === 'moral')
-    @include('convenio.formulario.personaMoral', ['key' => 'moral'])
+    @include('convenio.formulario.personaMoral', ['prefix' => 'solicitante', 'key' => 'moral'])
 @endif
 
 @if ($materia === 'familiar')
-    @include('convenio.formulario.materiaFamiliar')
+    @include('convenio.formulario.materiaFamiliar', ['prefix' => 'solicitante', 'key' => 'familiar'])
 @endif
 
 {{--* Dropzone y representante --}}
-@include('convenio.complements.datosGeneralesDropzones')
+@include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 
 {{--** Boton para enviar datos --}}
 <div class="flex justify-end">

@@ -29,18 +29,30 @@
                     </h1>
                     
                     
-                    
+                    @php
+                        $prueba = true;
+                    @endphp
 
                     <p class="text-lg text-neutral-600 dark:text-neutral-300 max-w-xl mx-auto lg:mx-0">
-                        Plataforma exclusiva para el Poder Judicial de la Ciudad de México que permite la gestión eficiente, segura y transparente de las medidas alternativas.
+                        @if ($prueba)
+                        Esta es una versión de prueba sin funcionalidades activas. Actualmente, la plataforma es meramente visual.  
+                        Es posible que algunas partes tarden un poco en cargar, ya que el sitio no se encuentra aún en un servidor exclusivo para este proyecto.
+                        @else
+                            Plataforma exclusiva para el Poder Judicial de la Ciudad de México que permite la gestión eficiente, segura y transparente de las medidas alternativas.
+                        @endif
                     </p>
+
 
                     <div class="flex justify-center lg:justify-start gap-4">
                         <a
                             href="{{ route('convenio.index') }}"
                             class="inline-flex items-center justify-center bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-6 py-3 mt-5 rounded-lg shadow-lg hover:scale-105 transition-all duration-300 text-sm"
-                        >
-                            Ingresar al Panel
+                        >                      
+                            @if ($prueba)
+                                Ver demo
+                            @else
+                                Empezar Ahora !
+                            @endif
                         </a>
 
                         <a
@@ -52,7 +64,8 @@
                     </div>
                 </div>
 
-                {{-- Imagen de interfaz --}}
+                {{-- Imagen de interfaz --}}  
+                
                 <div class="relative animate__animated animate__fadeInUp">
                     <div class="mx-auto w-full max-w-xl overflow-hidden animate-float">
                         <img src="{{ asset('img/hero/mediador2.png') }}" alt="Vista previa del sistema" class="w-full h-auto">

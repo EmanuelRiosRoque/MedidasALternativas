@@ -187,6 +187,7 @@ trait HandleDocumentos
             ]
         ];
     }
+
     public function documentosPorTemaFamiliar(): array
     {
         return [
@@ -227,6 +228,45 @@ trait HandleDocumentos
             ],
         ];
     }
+
+    public function entidadesFederativas(): array 
+    {
+        return [
+            'Aguascalientes',
+            'Baja California',
+            'Baja California Sur',
+            'Campeche',
+            'Chiapas',
+            'Chihuahua',
+            'Ciudad de México',
+            'Coahuila',
+            'Colima',
+            'Durango',
+            'Estado de México',
+            'Guanajuato',
+            'Guerrero',
+            'Hidalgo',
+            'Jalisco',
+            'Michoacán',
+            'Morelos',
+            'Nayarit',
+            'Nuevo León',
+            'Oaxaca',
+            'Puebla',
+            'Querétaro',
+            'Quintana Roo',
+            'San Luis Potosí',
+            'Sinaloa',
+            'Sonora',
+            'Tabasco',
+            'Tamaulipas',
+            'Tlaxcala',
+            'Veracruz',
+            'Yucatán',
+            'Zacatecas',
+        ];
+    }
+
     public function updatedTipo($value)
     {
         $this->documentosOpcionales = $this->documentosOpcionalesPorTipo()[$value] ?? [];
@@ -253,5 +293,27 @@ trait HandleDocumentos
             $this->documentosFamiliaresCargados[] = $value;
         }
         $this->documentosFamiliarSeleccionado = '';
+    }
+
+    public function guardarArchivos()
+    {
+        $documentosConArchivos = [];
+
+        foreach ($this->documentosCargados as $index => $documento) {
+            // Verifica si se cargó algún archivo para este documento
+            if (isset($this->archivosSubidos[$index]) && !empty($this->archivosSubidos[$index])) {
+                $documentosConArchivos[] = [
+                    'documento' => $documento,
+                    'archivo' => $this->archivosSubidos[$index]
+                ];
+            } else {
+                $documentosConArchivos[] = [
+                    'documento' => $documento,
+                    'archivo' => 'No se subió archivo'
+                ];
+            }
+        }
+
+        dd($documentosConArchivos);
     }
 }
