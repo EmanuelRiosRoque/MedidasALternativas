@@ -64,12 +64,9 @@
             @endif
         </label>
         <flux:select wire:model="escolaridad_solicitante" placeholder="Elige escolaridad del {{ $prefix }}...">
-            <flux:select.option>Sin escolaridad</flux:select.option>
-            <flux:select.option>Primaria</flux:select.option>
-            <flux:select.option>Secundaria</flux:select.option>
-            <flux:select.option>Media Superior</flux:select.option>
-            <flux:select.option>Superior</flux:select.option>
-            <flux:select.option>Posgrado</flux:select.option>
+            @foreach ($escolaridades as $escolaridad)
+                <flux:select.option>{{ $escolaridad }}</flux:select.option>
+            @endforeach
         </flux:select>
     </div>
 
@@ -79,13 +76,14 @@
             @if($prefix === 'solicitante')
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
+            <flux:select wire:model="ocupacion_solicitante" placeholder="Elige escolaridad del {{ $prefix }}...">
+                @foreach ($ocupaciones as $ocupacion)
+                    <flux:select.option>{{ $ocupacion }}</flux:select.option>
+                @endforeach
+            </flux:select>
+            
         </label>
-        <flux:input
-            wire:model="ocupacion_solicitante"
-            type="text"
-            required
-            placeholder="Ocupación del {{ $prefix }}"
-        />
+        
     </div>
 
     <div class="space-y-1">
@@ -95,12 +93,10 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:input
-            wire:model="nacionalidad_solicitante"
-            type="text"
-            required
-            placeholder="Nacionalidad del {{ $prefix }}"
-        />
+        <flux:select wire:model="nacionalidad_solicitante" placeholder="Elige tipo domicilio del {{ $prefix }}...">
+            <flux:select.option>Méxicana</flux:select.option>
+            <flux:select.option>Extranjera</flux:select.option>
+        </flux:select>
     </div>
 
     <div>

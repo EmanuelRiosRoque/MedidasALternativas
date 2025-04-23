@@ -267,6 +267,87 @@ trait HandleDocumentos
         ];
     }
 
+    public function ocupaciones(): array 
+    {
+        return [
+            'Comerciante',
+            'Desempleado',
+            'Empleado',
+            'Estudiante',
+            'Hogar',
+            'Jubilado',
+            'Oficio independiente',
+            'Profesionista independiente',
+            'Servidor Público',
+            'Otra',
+        ];
+    }
+
+    public function escolaridades(): array 
+    {
+        return [
+            'Primaria inconclusa',
+            'Primaria terminada',
+            'Secundaria inconclusa',
+            'Secundaria terminada',
+            'Media superior',
+            'Carrera técnica inconclusa',
+            'Carrera técnica terminada',
+            'Carrera comercial inconclusa',
+            'Carrera comercial terminada',
+            'Licenciatura inconclusa',
+            'Licenciatura terminada',
+            'Maestría inconclusa',
+            'Maestría terminada',
+            'Doctorado inconcluso',
+            'Doctorado terminado',
+            'Otra',
+        ];
+    }
+
+    public function difucionSolicitante(): array
+    {
+        return [
+            'Alcaldía',
+            'Cartel',
+            'Comisión de Derechos Humanos de la CDMX',
+            'Comisión Nacional de Derechos Humanos',
+            'Fiscalía de la CDMX',
+            'Folleto',
+            'Juzgado (tipo)',
+            'Locatel',
+            'Consejo Ciudadano',
+            'Internet',
+            'Persona',
+            'Periódico',
+            'Radio',
+            'Televisión',
+            'Otro',
+        ];
+    }
+
+    public function difucionInvitado(): array
+    {
+        return [
+            'Alcaldía',
+            'Cartel',
+            'Comisión de Derechos Humanos de la CDMX',
+            'Comisión Nacional de Derechos Humanos',
+            'Fiscalía de la CDMX',
+            'Folleto',
+            'Juzgado (tipo)',
+            'Locatel',
+            'Consejo Ciudadano',
+            'Internet',
+            'Invitación CJA',
+            'Persona',
+            'Periódico',
+            'Radio',
+            'Televisión',
+        ];
+    }
+    
+
     public function updatedTipo($value)
     {
         $this->documentosOpcionales = $this->documentosOpcionalesPorTipo()[$value] ?? [];
@@ -316,4 +397,26 @@ trait HandleDocumentos
 
         dd($documentosConArchivos);
     }
+
+    public function eliminarDocumentoFamiliar($doc)
+    {
+        if (($key = array_search($doc, $this->documentosFamiliaresCargados)) !== false) {
+            unset($this->documentosFamiliaresCargados[$key]);
+            unset($this->archivosFamiliaresSubidos[$key]);
+            $this->documentosFamiliaresCargados = array_values($this->documentosFamiliaresCargados);
+            $this->archivosFamiliaresSubidos = array_values($this->archivosFamiliaresSubidos);
+        }
+    }
+
+
+    public function eliminarDocumento($doc)
+    {
+        if (($key = array_search($doc, $this->documentosCargados)) !== false) {
+            unset($this->documentosCargados[$key]);
+            unset($this->archivosSubidos[$key]);
+            $this->documentosCargados = array_values($this->documentosCargados);
+            $this->archivosSubidos = array_values($this->archivosSubidos);
+        }
+    }
+
 }

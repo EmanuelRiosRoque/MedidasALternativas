@@ -15,7 +15,7 @@
                 </svg>
     
                 {{-- Texto falso simulado --}}
-                <div class="h-4 w-24 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                <div class="h-4 w-24 bg-neutral-600 dark:bg-neutral-500 rounded"></div>
             </div>
         </div>
     </div>

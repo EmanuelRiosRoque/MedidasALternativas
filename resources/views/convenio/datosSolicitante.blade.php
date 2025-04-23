@@ -10,6 +10,16 @@
         </div>
         @endif
     </div>
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+            ¿Cómo se enteró?
+        </label>
+        <flux:select wire:model="como_se_entero" placeholder="¿Como se entero?">
+            @foreach ($mediosInvitado as $medio)
+                <flux:select.option>{{ $medio }}</flux:select.option>
+            @endforeach
+        </flux:select>
+    </div>
 </div>
 
 {{--* Formularios por TIPO PERSONA --}}
@@ -27,7 +37,7 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 
 {{--** Boton para enviar datos --}}
-<div class="flex justify-end">
+{{-- <div class="flex justify-end">
     <button 
         wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('solicitante')" }}"
         type="button"
@@ -35,7 +45,7 @@
     >
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
     </button>
-</div>
+</div> --}}
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($solicitanteArray))

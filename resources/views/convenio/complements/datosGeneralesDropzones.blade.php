@@ -9,7 +9,7 @@
         <flux:tooltip toggleable>
             <flux:button icon="information-circle" size="xs" variant="ghost" />
             <flux:tooltip.content class="max-w-[20rem] space-y-2">
-                <p>Identificaciones:</p>
+                <p>Identificaciones (Con fotografía):</p>
                 <ul>
                     <li>INE</li>
                     <li>Pasaporte</li>
@@ -32,18 +32,34 @@
 </div>
 
 <div>
-    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
-        ¿Cómo se enteró?
-    </label>
-    <flux:select wire:model="como_se_entero" placeholder="¿Como se entero?">
-        <flux:select.option>Fiscalía</flux:select.option>
-        <flux:select.option>Juzgado</flux:select.option>
-        <flux:select.option>Comisión de Derechos humanos de la CDMX</flux:select.option>
-        <flux:select.option>Secretaría de mujeres. (LUNAS)</flux:select.option>
-        <flux:select.option>Juzgado de registro civil</flux:select.option>
-        <flux:select.option>Otro</flux:select.option>
-    </flux:select>
+    <flux:heading class="flex items-center gap-1 mb-1">
+        Formato Privacidad
+        <flux:badge color="red" inset="top bottom" size="sm">Firmado</flux:badge>
+    </flux:heading>
+
+    <div class="mb-3">
+        <flux:button
+            variant="outline"
+            size="sm"
+            icon="link"
+            @click.prevent="window.open('{{ asset('pdfs/formato-privacidad.pdf') }}', '_blank')"
+        >
+            Formato de privacidad
+        </flux:button>
+    </div>
+
+    <div>
+        <livewire:dropzone
+            wire:model="formatoPrivacidad"
+            :rules="['mimes:pdf','max:10420']"
+            :multiple="false"
+            wire:key="formatoPrivacidad"
+        />
+    </div>
 </div>
+
+
+
 
 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
     <flux:radio.group wire:model.live="representante" label="¿Es usted el representante?">

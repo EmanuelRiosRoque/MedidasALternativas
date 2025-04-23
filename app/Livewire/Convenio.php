@@ -86,15 +86,42 @@ class Convenio extends Component
 	public $temasFamiliaresDisponibles = [];
 	public $documentosFamiliaresCargados = [];
 	public $archivosFamiliaresSubidos = [];
+
+
 	public $entidades;
+	public $ocupaciones;
+	public $escolaridades;
+	public $mediosSolicitante;
+	public $mediosInvitado;
 	
     public function mount()
     {
         $this->tiposDisponibles = array_keys($this->documentosOpcionalesPorTipo());
         $this->temasFamiliaresDisponibles = array_keys($this->documentosPorTemaFamiliar());
 		$this->entidades = $this->entidadesFederativas();
+		$this->ocupaciones = $this->ocupaciones();
+		$this->escolaridades = $this->escolaridades();
+		$this->mediosSolicitante = $this->difucionSolicitante();
+		$this->mediosInvitado = $this->difucionInvitado();
     }
 	
+
+	public function cambiarTab($nuevoTab)
+	{
+		// Limpiar solicitante si sales del tab 2
+		if ($this->tab === 2) {
+			$this->limpiarCamposPersona();
+		}
+	
+		// Limpiar invitado si sales del tab 3
+		if ($this->tab === 3) {
+			$this->limpiarCamposPersona(); // si manejas campos distintos, crea otra función
+		}
+	
+		$this->tab = $nuevoTab;
+	}
+	
+
 	// Validaciones por pasos
 	use HandleValidaciones;
     

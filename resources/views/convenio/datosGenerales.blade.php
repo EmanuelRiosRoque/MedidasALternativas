@@ -45,6 +45,20 @@
                 <flux:select.option>Juzgado de registro civil</flux:select.option>
                 <flux:select.option>Otro</flux:select.option>
             </flux:select>
+
+            <div class="mt-5">
+                <flux:heading class="flex items-center gap-1 mb-1">
+                    Oficio
+                    <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
+                </flux:heading>
+            
+                <livewire:dropzone
+                    wire:model="oficio"
+                    :rules="['mimes:pdf','max:10420']"
+                    :multiple="false"
+                    wire:key="oficio"
+                    />
+            </div>
         @endif
     </div>  
     

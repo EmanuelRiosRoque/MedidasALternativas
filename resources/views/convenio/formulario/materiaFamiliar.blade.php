@@ -108,12 +108,11 @@
             @endif
         </label>
         <flux:select wire:model="escolaridad_solicitante" placeholder="Elige escolaridad del {{ $prefix }}...">
-            <flux:select.option>Sin escolaridad</flux:select.option>
-            <flux:select.option>Primaria</flux:select.option>
-            <flux:select.option>Secundaria</flux:select.option>
-            <flux:select.option>Media Superior</flux:select.option>
-            <flux:select.option>Superior</flux:select.option>
-            <flux:select.option>Posgrado</flux:select.option>
+            @foreach ($escolaridades as $escolaridad)
+            <flux:select.option>
+                {{ $escolaridad }}
+            </flux:select.option>
+            @endforeach
         </flux:select>
     </div>
 
@@ -125,12 +124,11 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:input
-            wire:model="ocupacion_solicitante"
-            type="text"
-            required
-            placeholder="Ocupación del {{ $prefix }}"
-        />
+        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige escolaridad del {{ $prefix }}...">
+            @foreach ($ocupaciones as $ocupacion)
+                <flux:select.option>{{ $ocupacion }}</flux:select.option>
+            @endforeach
+        </flux:select>
     </div>
 
     {{-- Sexo --}}

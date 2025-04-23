@@ -135,6 +135,7 @@ trait HandleCrudLogicoPersonas
 		}
 
 		$this->reset([
+            'modoEdicion',
 			'representante',
 			'nombre_solicitante',
 			'sexo_solicitante',
