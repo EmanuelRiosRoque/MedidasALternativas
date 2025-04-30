@@ -124,7 +124,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige escolaridad del {{ $prefix }}...">
+        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupacion...">
             @foreach ($ocupaciones as $ocupacion)
                 <flux:select.option>{{ $ocupacion }}</flux:select.option>
             @endforeach
@@ -139,7 +139,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:select wire:model="sexo_solicitante" placeholder="Elige sexo del {{ $prefix }}...">
+        <flux:select wire:model="sexo_solicitante" placeholder="Elige sexo...">
             <flux:select.option>Femenino</flux:select.option>
             <flux:select.option>Masculino</flux:select.option>
         </flux:select>
@@ -153,7 +153,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:select wire:model="estado_civil_solicitante" placeholder="Elige estado civil del {{ $prefix }}...">
+        <flux:select wire:model="estado_civil_solicitante" placeholder="Elige estado civil  ...">
             <flux:select.option>Soltero</flux:select.option>
             <flux:select.option>Casado</flux:select.option>
             <flux:select.option>Unión libre</flux:select.option>
@@ -174,7 +174,7 @@
             wire:model="correo_solicitante"
             type="text"
             required
-            placeholder="Correo electrónico de {{ $prefix }}"
+            placeholder="Correo electrónico"
         />
     </div>
 
