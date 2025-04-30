@@ -9,6 +9,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="razon_social_solicitante"
             type="text"
             required
@@ -20,9 +21,10 @@
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             RFC
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                {{-- <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge> --}}
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="rfc_solicitante"
             type="text"
             required
@@ -39,6 +41,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="instrumento_solicitante"
             type="text"
             required
@@ -55,6 +58,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="fecha_instrumento_solicitante"
             type="date"
             required
@@ -70,6 +74,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="telefono_solicitante"
             type="tel"
             required
@@ -86,6 +91,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="calle_solicitante"
             type="text"
             required
@@ -102,6 +108,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="colonia_solicitante"
             type="text"
             required
@@ -118,6 +125,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="cp_solicitante"
             type="text"
             required
@@ -134,6 +142,7 @@
             @endif
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="municipio_solicitante"
             type="text"
             required
@@ -163,6 +172,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
         </label>
         <flux:input
+            oninput="this.value = this.value.toUpperCase()"
             wire:model="correo_solicitante"
             type="email"
             required

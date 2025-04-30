@@ -13,6 +13,7 @@
             type="text"
             required
             placeholder="Nombre de {{ $prefix }}"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
@@ -27,6 +28,7 @@
             type="text"
             required
             placeholder="Calle del {{ $prefix }}"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
@@ -41,6 +43,7 @@
             type="text"
             required
             placeholder="Colonia del {{ $prefix }}"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
@@ -55,6 +58,7 @@
             type="text"
             required
             placeholder="Código postal del {{ $prefix }}"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
@@ -69,6 +73,7 @@
             type="text"
             required
             placeholder="Municipio del {{ $prefix }}"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
@@ -96,6 +101,7 @@
             type="text"
             required
             placeholder="Edad del {{ $prefix }}"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
@@ -167,14 +173,20 @@
     {{-- Correo --}}
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Correo electrónico del {{ $prefix }}
-            <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            Correo electrónico
+            @if (
+                ($modalidad === 'presencial') ||
+                ($modalidad === 'linea' && $prefix === 'solicitante')
+            )
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
         </label>
         <flux:input
             wire:model="correo_solicitante"
             type="text"
             required
             placeholder="Correo electrónico"
+            oninput="this.value = this.value.toUpperCase()"
         />
     </div>
 
