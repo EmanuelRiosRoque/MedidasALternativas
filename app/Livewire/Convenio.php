@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\SepomexColonia;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Redirect;
@@ -19,6 +20,13 @@ class Convenio extends Component
 	public  $modalidad;
 	public  $materia;
 	public  $tipo_convenio;
+
+	public $codigo_postal = '';
+	/** @var \Illuminate\Support\Collection|\App\Models\SepomexColonia[] */
+    public $colonias = [];
+    public $colonia = '';
+    public $estado = '';
+    public $municipio = '';
 
 	//Datos por tipo de usuario
 	public array $solicitanteArray = [];
@@ -47,7 +55,7 @@ class Convenio extends Component
 	public string $municipio_solicitante = '';
 	public string $entidad_federativa_solicitante = '';
 	public string $correo_solicitante = '';
-    public string $cp_solicitante = '';
+    public $cp_solicitante = '';
 	// Moral
 	public string $razon_social_solicitante = '';
 	public string $rfc_solicitante= '';
@@ -105,6 +113,21 @@ class Convenio extends Component
 		$this->mediosInvitado = $this->difucionInvitado();
     }
 	
+	public function updatedCpSolicitante()
+    {
+        $this->colonias = SepomexColonia::where('codigo_postal', $this->cp_solicitante)
+            ->get();
+
+        if ($this->colonias->isNotEmpty()) {
+            $this->entidad_federativa_solicitante = $this->colonias->first()->estado;
+            $this->municipio_solicitante = $this->colonias->first()->municipio;
+        } else {
+            $this->entidad_federativa_solicitante = '';
+            $this->municipio_solicitante = '';
+        }
+
+        $this->colonia = '';
+    }
 
 	public function cambiarTab($nuevoTab)
 	{

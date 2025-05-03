@@ -1,54 +1,57 @@
 @props(['prefix'])
 
-<div class="mt-5 mb-2 animate__animated animate__fadeIn tetx">
-    <flux:heading class="flex items-center gap-1 mb-1">
-        Identificacion
-        <div class="{{ $prefix === "solicitante" ? '' : 'hidden' }}">
-            <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
+<div class="grid grid-cols-2 gap-6 mb-10 mt-5">
+    {{-- Identificación --}}
+    <div class="space-y-1">
+        <div class="flex items-center justify-between ">
+            <div class="flex items-center gap-2">
+                <span class="font-medium text-zinc-100 text-sm">Identificación</span>
+                @if($prefix === 'solicitante')
+                    <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
+                @endif
+            </div>
+            <flux:tooltip toggleable>
+                <flux:button icon="information-circle" size="xs" variant="ghost" />
+                <flux:tooltip.content class="max-w-[20rem] space-y-2">
+                    <p>Identificaciones (Con fotografía):</p>
+                    <ul class="list-disc list-inside text-xs text-zinc-600 dark:text-zinc-300">
+                        <li>INE</li>
+                        <li>Pasaporte</li>
+                        <li>Cédula profesional</li>
+                        <li>Licencia de conducir</li>
+                        <li>Cartilla del servicio militar</li>
+                        <li>INAPAM</li>
+                        <li>Documento migratorio</li>
+                    </ul>
+                </flux:tooltip.content>
+            </flux:tooltip>
         </div>
-        <flux:tooltip toggleable>
-            <flux:button icon="information-circle" size="xs" variant="ghost" />
-            <flux:tooltip.content class="max-w-[20rem] space-y-2">
-                <p>Identificaciones (Con fotografía):</p>
-                <ul>
-                    <li>INE</li>
-                    <li>Pasaporte</li>
-                    <li>Cédula profecional</li>
-                    <li>Licencia de conducir</li>
-                    <li>Cartilla del servicio militar</li>
-                    <li>Inapam</li>
-                    <li>Documento migratorio</li>
-                </ul>
-            </flux:tooltip.content>
-        </flux:tooltip>
-    </flux:heading>
 
-    <livewire:dropzone
-        wire:model="identificacion"
-        :rules="['mimes:pdf','max:10420']"
-        :multiple="false"
-        wire:key="identificacion"
+        <livewire:dropzone
+            wire:model="identificacion"
+            :rules="['mimes:pdf','max:10420']"
+            :multiple="false"
+            wire:key="identificacion"
         />
-</div>
-
-<div>
-    <flux:heading class="flex items-center gap-1 mb-1">
-        Formato Privacidad
-        <flux:badge color="red" inset="top bottom" size="sm">Firmado</flux:badge>
-    </flux:heading>
-
-    <div class="mb-3">
-        <flux:button
-            variant="outline"
-            size="sm"
-            icon="link"
-            @click.prevent="window.open('{{ asset('pdfs/formato-privacidad.pdf') }}', '_blank')"
-        >
-            Formato de privacidad
-        </flux:button>
     </div>
 
-    <div>
+    {{-- Formato de privacidad --}}
+    <div class="space-y-1">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-zinc-100">Formato de Privacidad</span>
+                <flux:badge color="red" inset="top bottom" size="sm">Firmado</flux:badge>
+            </div>
+            <flux:button
+                variant="outline"
+                size="xs"
+                icon="link"
+                @click.prevent="window.open('{{ asset('pdfs/formato-privacidad.pdf') }}', '_blank')"
+            >
+                Formato
+            </flux:button>
+        </div>
+
         <livewire:dropzone
             wire:model="formatoPrivacidad"
             :rules="['mimes:pdf','max:10420']"
@@ -61,12 +64,14 @@
 
 
 
+
 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
-    <flux:radio.group wire:model.live="representante" label="¿Es usted el representante?">
+    <flux:radio.group wire:model.live="representante" label="¿Es usted el representante legal o albacea?">
         <flux:radio value="1" label="Sí" />
         <flux:radio value="0" label="No" />
     </flux:radio.group>
     @if ($representante == 1)    
+    
     {{-- <flux:radio.group wire:model.live="doc_representante" label="¿Seleccione documento del representante?">
         <flux:radio value="1" label="Acta notarial" />
         <flux:radio value="2" label="Acata de nacimiento" />
@@ -78,6 +83,17 @@
         <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2"  />
         <flux:checkbox label="Resolucion judicial" value="3" />
     </flux:checkbox.group>
+
+        @if ($materia == 'mercantil')
+            <div class="animate__animated animate__fadeIn col-span-2 space-y-1">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                    Nombre representante
+                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                </label>
+                <flux:input wire:model="nombre_representante"  type="text" required 
+                    placeholder="Nombre" />
+            </div>
+        @endif
     @endif
 
 
