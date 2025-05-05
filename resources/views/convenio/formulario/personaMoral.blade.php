@@ -11,11 +11,37 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
         </label>
         <flux:input
-            oninput="this.value = this.value.toUpperCase()"
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
             wire:model="razon_social_solicitante"
             type="text"
             required
             placeholder="Razón social"
+        />
+    </div>
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Apellido paterno 
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input
+            wire:model="apellido_p_solicitante"
+            type="text"
+            required
+            placeholder="Apelliod paterno"
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+        />
+    </div>
+    <div class="space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Apellido materno 
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input
+            wire:model="apellido_m_solicitante"
+            type="text"
+            required
+            placeholder="Apelliod materno"
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
         />
     </div>
 
@@ -26,7 +52,7 @@
                 {{-- <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge> --}}
         </label>
         <flux:input
-            oninput="this.value = this.value.toUpperCase()"
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
             wire:model="rfc_solicitante"
             type="text"
             required
@@ -53,7 +79,7 @@
             </flux:tooltip>
         </label>
         <flux:input
-            oninput="this.value = this.value.toUpperCase()"
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
             wire:model="instrumento_solicitante"
             type="text"
             required
@@ -70,43 +96,94 @@
             @endif
         </label>
         <flux:input
-            oninput="this.value = this.value.toUpperCase()"
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
             wire:model="fecha_instrumento_solicitante"
             type="date"
             required
         />
     </div>
 
-    {{-- Teléfono --}}
+    <!-- Correos electrónicos -->
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Teléfono
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
+            Correos electrónicos
+            <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
         </label>
-        <flux:input
-            oninput="this.value = this.value.toUpperCase()"
-            wire:model="telefono_solicitante"
-            type="tel"
-            required
-            placeholder="Teléfono"
-        />
+
+        <div class="flex gap-2">
+            <flux:input
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model.defer="correo_temp"
+                type="email"
+                placeholder="Agregar correo"
+            />
+            <button
+                type="button"
+                wire:click="agregarCorreo"
+                class="px-3 py-2 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
+            >
+                Agregar
+            </button>
+        </div>
+
+        @if (!empty($correos))
+            <ul class="mt-2 space-y-1">
+                @foreach ($correos as $i => $correo)
+                    <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
+                        <span class="truncate">{{ $correo }}</span>
+                        <button
+                            wire:click="eliminarCorreo({{ $i }})"
+                            class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
+                            title="Eliminar"
+                        >
+                            ×
+                        </button>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+
     </div>
 
-    {{-- Correo --}}
+    <!-- Teléfonos -->
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Correo electrónico
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            Teléfonos
+            <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
         </label>
-        <flux:input
-            oninput="this.value = this.value.toUpperCase()"
-            wire:model="correo_solicitante"
-            type="email"
-            required
-            placeholder="Correo electrónico"
-        />
+
+        <div class="flex gap-2">
+            <flux:input
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model.defer="telefono_temp"
+                type="tel"
+                placeholder="Agregar teléfono"
+            />
+            <button
+                type="button"
+                wire:click="agregarTelefono"
+                class="px-3 py-2 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
+            >
+                Agregar
+            </button>
+        </div>
+
+        @if (!empty($telefonos))
+            <ul class="mt-2 space-y-1">
+                @foreach ($telefonos as $i => $tel)
+                    <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
+                        <span class="truncate">{{ $tel }}</span>
+                        <button
+                            wire:click="eliminarTelefono({{ $i }})"
+                            class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
+                            title="Eliminar"
+                        >
+                            ×
+                        </button>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     </div>
     </div>
     
@@ -140,7 +217,7 @@
                 @endif
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase()"
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                 wire:model="calle_solicitante"
                 type="text"
                 required
@@ -161,7 +238,7 @@
                 type="text"
                 required
                 placeholder="Código postal"
-                oninput="this.value = this.value.toUpperCase()"
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
             />
         </div>
         

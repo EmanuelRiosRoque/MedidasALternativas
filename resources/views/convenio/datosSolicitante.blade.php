@@ -9,12 +9,18 @@
             </flux:radio.group>
         </div>
         @endif
+            @if ($modalidad === 'linea')
+            <flux:radio.group wire:model.live="acudiran_juntos" label="¿Acudiran juntos?" >
+                <flux:radio value="1" label="Si" />
+                <flux:radio value="2" label="No" />
+            </flux:radio.group>
+            @endif
     </div>
     <div>
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             ¿Cómo se enteró?
         </label>
-        <flux:select wire:model="como_se_entero" placeholder="¿Como se entero?">
+        <flux:select wire:model="como_se_entero" placeholder="¿Cómo se enteró?">
             @foreach ($mediosInvitado as $medio)
                 <flux:select.option>{{ $medio }}</flux:select.option>
             @endforeach

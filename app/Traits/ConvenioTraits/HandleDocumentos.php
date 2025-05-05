@@ -192,40 +192,58 @@ trait HandleDocumentos
     {
         return [
             'Pensión alimenticia' => [
-                'Acta de nacimiento del menor',
-                'Comprobante de ingresos del deudor alimentario',
-                'Identificación oficial',
+                'Acta de registro civil: matrimonio, nacimiento',
                 'Recibo de nomina',
+                'Resolución judicial previa',
+                'Oficio de descuento de pensión alimenticia',
             ],
-            'Guarda / Custodia de los hijos' => [
-                'Acta de nacimiento del menor',
-                'Si existió juicio sobre custodia, copias simples del mismo',
+            'Guarda y Custodia' => [
+                'Acta de registro civil: matrimonio, nacimiento',
+                'Resolución judicial previa',
             ],
-            'Visitas supervisadas' => [
-                'Acta de nacimiento del menor',
-                'Si existió juicio, copias simples del mismo',
+            'Visitas y convivencias' => [
+                'Acta de registro civil: matrimonio, nacimiento',
+                'Resolución judicial previa',
             ],
-            'Cuestiones patrimoniales' => [
-                'Documentos que acrediten propiedad (actas, escrituras, etc)',
+            'Cuestiones patrimoniales derivadas de juicio sucesorio' => [
+                'Resolucion judicial',
+                'Acta notarial',
+            ],
+            'Derivados de la disolución de la sociedad conyugal' => [
                 'Acta de matrimonio',
+                'Resolucion judicial',
+                'Documentos a través de los cuales acrediten la propiedad de los bienes',
             ],
-            'Derivados de la sociedad conyugal' => [
-                'Acta de matrimonio',
-                'Juicio previo (si existe), copias simples',
+            'Elaboración de convenio regulador de divorcio o separación' => [
+                'Acta de registro civil: matrimonio, nacimiento',
+                'Recibo de nomina',
+                'Resolución judicial previa',
+                'Documentos a través de los cuales acrediten la propiedad de los bienes de la sociedad conyugal o para compensación de bienes',
+
             ],
-            'Elaboración de convenio' => [
-                'Identificación oficial de ambos',
+
+            'Modificación de los términos de resolución judicial' => [
+                'Acta de registro civil: matrimonio, nacimiento',
+                'Recibo de nomina',
+                'Resolución judicial previa',
+                'Oficio de descuento de pensión alimenticia',
             ],
-            'Modificación de términos de resolución judicial' => [
-                'Resolución judicial que se desea modificar',
+
+            'Modificación de los términos de resolución judicial' => [
+                'Acta de registro civil: matrimonio, nacimiento',
+                'Recibo de nomina',
+                'Resolución judicial previa',
+                'Oficio de descuento de pensión alimenticia',
             ],
-            'Reconocimiento del vínculo' => [
-                'Identificación de ambos',
+
+            'Crisis de la convivencia' => [
+                
             ],
-            'Separación' => [
-                'Acta de matrimonio',
-                'Documento de separación si existe',
+
+            'Otros' => [
+                
             ],
+
         ];
     }
 

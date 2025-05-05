@@ -25,12 +25,12 @@
         <!-- Contenido del tab -->
         <div class="p-4 rounded-md  dark:bg-gray-900 ">
             @if ($tab === 1)
-                <flux:radio.group wire:model.live="tipo_facilitador" label="Faclitador">
+                <flux:radio.group wire:model.live="tipo_facilitador" label="Persona facilitadora">
                     <flux:radio value="publico" label="Público" />
                     <flux:radio value="privado" label="Privado" />
                 </flux:radio.group>
                 @if ($tipo_facilitador != '')
-                @include('facilitadores.formulario.datosGenerales')
+                    @include('facilitadores.formulario.datosGenerales')
                 @endif
             @elseif ($tab === 2)
             @if ($tipo_facilitador === "publico")

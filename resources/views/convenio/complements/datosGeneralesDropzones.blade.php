@@ -5,7 +5,7 @@
     <div class="space-y-1">
         <div class="flex items-center justify-between ">
             <div class="flex items-center gap-2">
-                <span class="font-medium text-zinc-100 text-sm">Identificación</span>
+                <span class="font-medium text-zinc-700 dark:text-zinc-200 text-sm">Identificación</span>
                 @if($prefix === 'solicitante')
                     <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
                 @endif
@@ -39,7 +39,7 @@
     <div class="space-y-1">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-zinc-100">Formato de Privacidad</span>
+                <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200">Formato de Privacidad</span>
                 <flux:badge color="red" inset="top bottom" size="sm">Firmado</flux:badge>
             </div>
             <flux:button
@@ -53,7 +53,7 @@
         </div>
 
         <livewire:dropzone
-            wire:model="formatoPrivacidad"
+            wire:model="formato_privacidad"
             :rules="['mimes:pdf','max:10420']"
             :multiple="false"
             wire:key="formatoPrivacidad"
@@ -85,13 +85,41 @@
     </flux:checkbox.group>
 
         @if ($materia == 'mercantil')
-            <div class="animate__animated animate__fadeIn col-span-2 space-y-1">
+            <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Nombre representante
                         <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
                 </label>
-                <flux:input wire:model="nombre_representante"  type="text" required 
-                    placeholder="Nombre" />
+                <flux:input 
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="nombre_representante"  
+                type="text" 
+                required  
+                placeholder="Nombre" />
+            </div>
+            <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                    Apellido paterno del representante
+                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                </label>
+                <flux:input 
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="apellido_p_representante"  
+                type="text" 
+                required 
+                placeholder="Apellido paterno" />
+            </div>
+            <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                    Apellido materno del representante
+                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                </label>
+                <flux:input 
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="apellido_m_representante"  
+                type="text" 
+                required 
+                placeholder="Apellido materno" />
             </div>
         @endif
     @endif

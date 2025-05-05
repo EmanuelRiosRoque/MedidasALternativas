@@ -23,7 +23,7 @@
                     <flux:navlist.item icon="document-plus" :href="route('convenio.index')" :current="request()->routeIs('convenio.index')"  wire:navigate>{{ __('Registro solicitud') }}</flux:navlist.item>
                     {{-- <flux:navlist.item icon="identification" :href="route('pre-mediacion.index')" :current="request()->routeIs('pre-mediacion.index')"  wire:navigate>{{ __('Registros') }}</flux:navlist.item> --}}
                     {{-- @endif --}}
-                    {{-- <flux:navlist.item icon="briefcase" :href="route('facilitadores.index')" :current="request()->routeIs('facilitadores.index')"  wire:navigate>{{ __('Facilitadores') }}</flux:navlist.item>  --}}
+                    <flux:navlist.item icon="briefcase" :href="route('facilitadores.index')" :current="request()->routeIs('facilitadores.index')"  wire:navigate>{{ __('Facilitadores') }}</flux:navlist.item> 
 
                 </flux:navlist.group>
                 

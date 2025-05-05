@@ -1,134 +1,58 @@
-@props(['prefix'])
-
-<div class="gap-4 mt-2 animate__animated animate__fadeIn" wire:key='{{ $key }}'> 
-
-    <div class="grid grid-cols-3 gap-4">
- {{-- Nombre --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Nombre 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-        </label>
+<div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 animate__animated animate__fadeIn"> 
+     
         <flux:input
-            wire:model="nombre_solicitante"
+            wire:model="nombre_facilitador"
+            :label="__('Nombre de la persona facilitadora')"
             type="text"
             required
-            placeholder="Nombre"
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            placeholder="Nombre de la persona facilitadora"
         />
-    </div>
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Apellido paterno 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-        </label>
+    
         <flux:input
-            wire:model="apellido_p_solicitante"
+            wire:model="clave_facilitador"
+            :label="__('Clave o número de registro')"
             type="text"
             required
-            placeholder="Apelliod paterno"
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            placeholder="Clave o número de registro de certificación del Sistema Nacional"
         />
-    </div>
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Apellido materno 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-        </label>
+    
         <flux:input
-            wire:model="apellido_m_solicitante"
+            wire:model="folio_facilitador"
+            :label="__('Folio único de registro')"
             type="text"
             required
-            placeholder="Apelliod materno"
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            placeholder="Folio único de registro como persona facilitadora certificada"
         />
-    </div>
-    {{-- Edad --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Edad 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-        </label>
+    
         <flux:input
-            wire:model="edad_solicitante"
+            wire:model="clave_unica_facilitador"
+            :label="__('Clave Única de Registro de Población')"
             type="text"
             required
-            placeholder="Edad "
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            placeholder="Clave Única de Registro de Población"
         />
-    </div>
-
-     {{-- Sexo --}}
-     <div>
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
-            Sexo 
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
-        </label>
-        <flux:select wire:model="sexo_solicitante" placeholder="Elige sexo...">
-            <flux:select.option>Femenino</flux:select.option>
-            <flux:select.option>Masculino</flux:select.option>
-        </flux:select>
-    </div>
-
-    {{-- Escolaridad --}}
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
-            Escolaridad 
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
-        </label>
-        <flux:select wire:model="escolaridad_solicitante" placeholder="Elige escolaridad ...">
-            @foreach ($escolaridades as $escolaridad)
-            <flux:select.option>
-                {{ $escolaridad }}
-            </flux:select.option>
-            @endforeach
-        </flux:select>
-    </div>
-
-    {{-- Ocupación --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Ocupación 
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
-        </label>
-        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupacion...">
-            @foreach ($ocupaciones as $ocupacion)
-                <flux:select.option>{{ $ocupacion }}</flux:select.option>
-            @endforeach
-        </flux:select>
-    </div>
-
-   
-    {{-- Estado civil --}}
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
-            Estado civil 
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
-        </label>
-        <flux:select wire:model="estado_civil_solicitante" placeholder="Elige estado civil  ...">
-            <flux:select.option>Soltero</flux:select.option>
-            <flux:select.option>Casado</flux:select.option>
-            <flux:select.option>Unión libre</flux:select.option>
-            <flux:select.option>Separado</flux:select.option>
-            <flux:select.option>Divorciado</flux:select.option>
-            <flux:select.option>Viudo</flux:select.option>
-            <flux:select.option>Otro</flux:select.option>
-        </flux:select>        
-    </div>
-
+     
+        <flux:input
+            wire:model="fecha_certificacion_facilitador"
+            :label="__('Fecha de certificación')"
+            type="date"
+            required
+            placeholder="Fecha de certificación de la persona facilitadora"
+        />
+    
+        <flux:input
+            wire:model="vigencia_certificacion_facilitador"
+            :label="__('Vigencia de la certificación')"
+            type="date"
+            required
+            placeholder="Vigencia de la certificación de la persona facilitadora"
+        />
     </div>
 
     <div class="grid grid-cols-2 gap-4 mt-2">
-        <!-- Correos electrónicos -->
-        <div class="space-y-1">
+         <!-- Correos electrónicos -->
+         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Correos electrónicos
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
@@ -220,9 +144,9 @@
         <div>
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
                 Tipo domicilio
-                @if($prefix === 'solicitante')
+                
                     <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
+                
             </label>
             <flux:select wire:model="tipo_domicilio_solicitante" placeholder="Elige tipo domicilio...">
                 <flux:select.option>Casa</flux:select.option>
@@ -234,9 +158,9 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Calle
-                @if($prefix === 'solicitante')
+                
                     <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
+                
             </label>
             <flux:input
                 oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
@@ -250,9 +174,9 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Código Postal
-                @if($prefix === 'solicitante')
+                
                     <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
+                
             </label>
             <flux:input
                 wire:model.live="cp_solicitante"
@@ -267,9 +191,9 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Colonia
-                @if($prefix === 'solicitante')
+                
                     <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
+                
             </label>
             <flux:select wire:model="colonia" placeholder="Selecciona una colonia...">
                 @foreach ($colonias as $col)
@@ -281,9 +205,9 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Municipio
-                @if($prefix === 'solicitante')
+                
                     <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
+                
             </label>
             <flux:input
                 wire:model="municipio_solicitante"
@@ -296,9 +220,9 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Entidad Federativa
-                @if($prefix === 'solicitante')
+                
                     <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
+                
             </label>
             <flux:input
                 wire:model="entidad_federativa_solicitante"
@@ -308,5 +232,16 @@
             />
         </div>
     </div>
-   
+
+    <div class="mt-5 mb-2 animate__animated animate__fadeIn text col-span-3">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+            Fotografía
+            <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
+        </label>
+    
+        <livewire:dropzone
+            wire:model="fotografia"
+            :rules="['mimes:jpg,png','max:10420']"
+            :multiple="false" />
+    </div>
 </div>
