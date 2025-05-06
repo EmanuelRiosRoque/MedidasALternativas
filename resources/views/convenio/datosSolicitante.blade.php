@@ -43,7 +43,7 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 
 {{--** Boton para enviar datos --}}
-<div class="flex justify-end">
+{{-- <div class="flex justify-end">
     <button 
         wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('solicitante')" }}"
         type="button"
@@ -51,7 +51,7 @@
     >
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
     </button>
-</div>
+</div> --}}
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($solicitanteArray))

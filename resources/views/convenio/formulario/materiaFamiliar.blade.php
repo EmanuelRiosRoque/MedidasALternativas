@@ -26,7 +26,7 @@
             wire:model="apellido_p_solicitante"
             type="text"
             required
-            placeholder="Apelliod paterno"
+            placeholder="Apelliodo paterno"
             oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
         />
     </div>
@@ -39,7 +39,7 @@
             wire:model="apellido_m_solicitante"
             type="text"
             required
-            placeholder="Apelliod materno"
+            placeholder="Apelliodo materno"
             oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
         />
     </div>
