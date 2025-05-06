@@ -27,7 +27,6 @@
 
                 @if ($solicitante['persona'] === 'moral')
                     <p class="text-sm text-neutral-400"><strong>RFC:</strong> {{ $solicitante['rfc'] }}</p>
-                    <p class="text-sm text-neutral-400"><strong>Teléfono:</strong> {{ $solicitante['telefono'] }}</p>
                 @else
                     <p class="text-sm text-neutral-400"><strong>Edad:</strong> {{ $solicitante['edad'] }}</p>
                     <p class="text-sm text-neutral-400"><strong>Sexo:</strong> {{ $solicitante['sexo'] }}</p>

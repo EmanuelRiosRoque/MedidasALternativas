@@ -12,7 +12,7 @@ trait HandleCrudLogicoPersonas
      */
     protected array $camposPersona = [
         'persona', 'representante', 'persona_invitado',
-        'nombre_solicitante', 'sexo_solicitante', 'edad_solicitante', 'fecha_nacimiento_solicitante',
+        'nombre_solicitante','apellido_p_solicitante','apellido_m_solicitante',  'sexo_solicitante', 'edad_solicitante', 'fecha_nacimiento_solicitante',
         'escolaridad_solicitante', 'ocupacion_solicitante', 'nacionalidad_solicitante',
         'tipo_domicilio_solicitante', 'calle_solicitante', 'colonia_solicitante',
         'municipio_solicitante', 'entidad_federativa_solicitante', 'correo_solicitante',
@@ -43,7 +43,13 @@ trait HandleCrudLogicoPersonas
 
         foreach ($this->camposPersona as $campo) {
             $key = str_replace('_solicitante', '', $campo);
-            $datos[$key] = $this->$campo;
+
+            // Evita que 'persona' y 'persona_invitado' se mezclen
+            if ($key === 'persona') {
+                $datos[$key] = $tipo === 'solicitante' ? $this->persona : $this->persona_invitado;
+            } else {
+                $datos[$key] = $this->$campo;
+            }
         }
 
         if ($tipo === 'solicitante') {
@@ -51,10 +57,11 @@ trait HandleCrudLogicoPersonas
         } else {
             $this->invitadoArray[] = $datos;
         }
-        Toaster::success('Participante agregado !');
 
+        Toaster::success('Participante agregado !');
         $this->limpiarCamposPersona(preservarPersona: false);
     }
+
 
     // public function agregarPersona($payload)
     // {

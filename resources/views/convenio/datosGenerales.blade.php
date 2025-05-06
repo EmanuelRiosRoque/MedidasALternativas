@@ -65,7 +65,7 @@
     <div>
         @if ($institucion === "Otro")
         <div class="animate__animated animate__fadeIn">
-            <flux:input wire:model="cual-otro" :label="__('Otro:')" type="text" required 
+            <flux:input wire:model="cual_otro" :label="__('Otro:')" type="text" required 
                 placeholder="Mencione cuál otro" />
         </div>        
         @endif

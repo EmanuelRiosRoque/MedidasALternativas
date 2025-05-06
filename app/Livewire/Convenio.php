@@ -2,18 +2,41 @@
 
 namespace App\Livewire;
 
-use App\Models\SepomexColonia;
 use Livewire\Component;
+use App\Models\Solicitud;
+use App\Models\PersonaMoral;
+use App\Models\PersonaFisica;
 use Livewire\WithFileUploads;
+use App\Models\PersonaFamiliar;
+use App\Models\PersonaSolicitud;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ConvenioTraits\HandleDocumentos;
+use App\Traits\ConvenioTraits\HandleValidaciones;
+use App\Traits\ConvenioTraits\HandleArreglosLogicos;
 use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
-use App\Traits\ConvenioTraits\HandleValidaciones;
+use App\Traits\ConvenioTraits\HandleAutoCompletarDomicilio;
 
 class Convenio extends Component
 {
     use WithFileUploads;
+	// Funcion para auto completar domicilio
+	use HandleAutoCompletarDomicilio;
+
+	// Validaciones por pasos
+	use HandleValidaciones;
+
+	//Documentos
+	use HandleDocumentos;
+
+	// Actualizaciones logicos
+	use HandleUpdatedConvenio;
+
+	// Crud-logico para solicitante y invitados
+	use HandleCrudLogicoPersonas;
+
+	// Funciones para crear / eliminar telefonos y correos
+	use HandleArreglosLogicos;
 
 	public int $tab = 1;
 	// Input Radios
@@ -40,9 +63,19 @@ class Convenio extends Component
 	public string $numero_ticket = '';
 	public $doc_representante;
 	public $institucion= '';
+	public $oficio;
+	public $cual_otro;
+
 	// Fisica
+	public $acudiran_juntos;
+	public $formato_privacidad;
 	public $representante;
 	public string $nombre_solicitante = '';
+	public string $apellido_p_solicitante = '';
+	public string $apellido_m_solicitante = '';
+	public string $nombre_representante = '';
+	public string $apellido_p_representante = '';
+	public string $apellido_m_representante = '';
 	public string $sexo_solicitante = '';
 	public string $edad_solicitante = '';
 	public string $fecha_nacimiento_solicitante = '';
@@ -105,9 +138,9 @@ class Convenio extends Component
 	
 
 	public string $correo_temp = '';
-public string $telefono_temp = '';
-public array $correos = [];
-public array $telefonos = [];
+	public string $telefono_temp = '';
+	public array $correos = [];
+	public array $telefonos = [];
 
     public function mount()
     {
@@ -120,21 +153,7 @@ public array $telefonos = [];
 		$this->mediosInvitado = $this->difucionInvitado();
     }
 	
-	public function updatedCpSolicitante()
-    {
-        $this->colonias = SepomexColonia::where('codigo_postal', $this->cp_solicitante)
-            ->get();
-
-        if ($this->colonias->isNotEmpty()) {
-            $this->entidad_federativa_solicitante = $this->colonias->first()->estado;
-            $this->municipio_solicitante = $this->colonias->first()->municipio;
-        } else {
-            $this->entidad_federativa_solicitante = '';
-            $this->municipio_solicitante = '';
-        }
-
-        $this->colonia = '';
-    }
+	
 
 	public function cambiarTab($nuevoTab)
 	{
@@ -150,61 +169,155 @@ public array $telefonos = [];
 	
 		$this->tab = $nuevoTab;
 	}
+
+	public function consulta() {
+		$solicitud = Solicitud::with([
+			'personas.personaFisica',
+			'personas.personaMoral',
+			'personas.personaFamiliar',
+		])->findOrFail(12);
+		
+		$extraerPersona = fn($rel) => match ($rel->tipo_persona) {
+			'fisica' => $rel->personaFisica,
+			'moral' => $rel->personaMoral,
+			'familiar' => $rel->personaFamiliar,
+			default => null,
+		};
+		
+		$respuesta = [
+			'datosGenerales' => $solicitud->only([
+				'id', 'modalidad', 'materia', 'derivado_canalizado',
+				'numero_ticket', 'institucion', 'oficio', 'cual_otro'
+			]),
+			'solicitantes' => $solicitud->personas
+				->where('rol', 'solicitante')
+				->map($extraerPersona)
+				->filter()
+				->values(),
+			'invitados' => $solicitud->personas
+				->where('rol', 'invitado')
+				->map($extraerPersona)
+				->filter()
+				->values(),
+		];
+		
+		dd($respuesta);
+		
+	}
+
+	public function guardado()
+	{
+
+		$this->consulta();
+
+
+		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
+		$solicitud = Solicitud::create([
+			"modalidad" => $this->modalidad,
+			"materia" => $this->materia,
+			"derivado_canalizado" => $this->derivado_canalizado,
+			"numero_ticket" => $this->numero_ticket,
+			"institucion" => $this->institucion,
+			"oficio" => "oficio",
+			"cual_otro" => $this->cual_otro
+		]);
+
+		 // 2. Procesar solicitantes
+		 foreach ($this->solicitanteArray as $datos) {
+			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
+		}
+		
+		foreach ($this->invitadoArray as $datos) {
+			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'invitado');
+		}
+		
 	
 
-	// Validaciones por pasos
-	use HandleValidaciones;
-    
-    //Documentos
-    use HandleDocumentos;
+		//  5. Confirmación de que todo fue guardado correctamente
+		dd("Guardado");
+	}
 
-	// Actualizaciones logicos
-	use HandleUpdatedConvenio;
+	protected function guardarPersonaRelacionada($solicitudId, $datos, string $rol = 'solicitante')
+	{
+		$tipoPersona = null; // inicializar
 
-	// Crud-logico para solicitante y invitados
-	use HandleCrudLogicoPersonas;
-	
+		if ($this->materia === "mercantil") {
+			$tipoPersona = $datos['persona']; // 'fisica' o 'moral'
 
-	public function agregarCorreo()
-{
-    $correo = trim($this->correo_temp);
+			if ($tipoPersona === 'fisica') {
+				$datosNormalizados = [
+					'nombre' => $datos['nombre'] ?? '',
+					'apellido_paterno' => $datos['apellido_p'] ?? null,
+					'apellido_materno' => $datos['apellido_m'] ?? null,
+					'sexo' => $datos['sexo'] ?? null,
+					'edad' => $datos['edad'] ?? null,
+					'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
+					'escolaridad' => $datos['escolaridad'] ?? null,
+					'ocupacion' => $datos['ocupacion'] ?? null,
+					'nacionalidad' => $datos['nacionalidad'] ?? null,
+					'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
+					'calle' => $datos['calle'] ?? null,
+					'colonia' => $datos['colonia'] ?? null,
+					'municipio' => $datos['municipio'] ?? null,
+					'entidad_federativa' => $datos['entidad_federativa'] ?? null,
+					'cp' => $datos['cp'] ?? null,
+					'rfc' => $datos['rfc'] ?? null,
+				];
 
-    if ($correo !== '' && filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        $this->correos[] = strtoupper($correo);
-        $this->correo_temp = '';
-    }
-}
+				$persona = PersonaFisica::create($datosNormalizados);
+			} else {
+				$datosMoral = [
+					'razon_social' => $datos['razon_social'] ?? 'SIN RAZÓN SOCIAL',
+					'rfc' => $datos['rfc'] ?? null,
+					'instrumento' => $datos['instrumento'] ?? null,
+					'fecha_instrumento' => $datos['fecha_instrumento'] ?? null,
+					'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
+					'calle' => $datos['calle'] ?? null,
+					'colonia' => $datos['colonia'] ?? null,
+					'municipio' => $datos['municipio'] ?? null,
+					'entidad_federativa' => $datos['entidad_federativa'] ?? null,
+					'cp' => $datos['cp'] ?? null,
+				];
 
-public function eliminarCorreo($index)
-{
-    unset($this->correos[$index]);
-    $this->correos = array_values($this->correos);
-}
+				$persona = PersonaMoral::create($datosMoral);
+			}
+		} else {
+			$tipoPersona = 'familiar'; // ⚠️ Se asigna manualmente
 
-public function agregarTelefono()
-{
-    $telefono = trim($this->telefono_temp);
+			$datosFamiliar = [
+				'nombre' => $datos['nombre'] ?? '',
+				'apellido_paterno' => $datos['apellido_p'] ?? null,
+				'apellido_materno' => $datos['apellido_m'] ?? null,
+				'sexo' => $datos['sexo'] ?? null,
+				'edad' => $datos['edad'] ?? null,
+				'escolaridad' => $datos['escolaridad'] ?? null,
+				'ocupacion' => $datos['ocupacion'] ?? null,
+				'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
+				'calle' => $datos['calle'] ?? null,
+				'colonia' => $datos['colonia'] ?? null,
+				'municipio' => $datos['municipio'] ?? null,
+				'entidad_federativa' => $datos['entidad_federativa'] ?? null,
+				'cp' => $datos['cp'] ?? null,
+				'estado_civil' => $datos['estado_civil'] ?? null,
+			];
 
-    if ($telefono !== '') {
-        $this->telefonos[] = $telefono;
-        $this->telefono_temp = '';
-    }
-}
+			$persona = PersonaFamiliar::create($datosFamiliar);
+		}
 
-public function eliminarTelefono($index)
-{
-    unset($this->telefonos[$index]);
-    $this->telefonos = array_values($this->telefonos);
-}
+		PersonaSolicitud::create([
+			'solicitud_id' => $solicitudId,
+			'persona_id' => $persona->id,
+			'tipo_persona' => $tipoPersona,
+			'rol' => $rol,
+		]);
+		
+	}
+
+
+
 
 	public function save () {
 		return Redirect::route('pre-mediacion.index')
 			->success('Convenio registrado correctamente !'); 
-	}
-	
-
-	public function render()
-	{
-		return view('livewire.convenio');
 	}
 }
