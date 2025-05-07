@@ -47,7 +47,9 @@
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             Edad 
+            @if($prefix === 'solicitante')
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            @endif
         </label>
         <flux:input
             wire:model="edad_solicitante"
