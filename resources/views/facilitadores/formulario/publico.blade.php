@@ -4,9 +4,15 @@
     <flux:input wire:model="numero_renovaciones_facilitador" :label="__('Número de renovaciones de certificación')" type="text" required placeholder="Número de renovaciones de certificación" />
     <flux:input wire:model="area_adscrito_facilitador" :label="__('Área de adscripción territorial')" type="number" required placeholder="Área de adscripción territorial" />
 </div>
-
+<flux:radio.group wire:model.live="apto" label="Dictamen">
+    <flux:radio value="1" label="Apto" />
+    <flux:radio value="2" label="No apto" />
+</flux:radio.group>
 <!-- Sección 2: Autoridades y documentos -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 animate__animated animate__fadeIn">
+
+
+
     <flux:radio.group wire:model.live="autoridad_certificacion_facilitador" label="Autoridad que otorgó la certificación">
         <flux:radio value="pjcdmx" label="PJCDMX" />
         <flux:radio value="pjfd" label="Poder Judicial Federal" />
@@ -89,7 +95,7 @@
     @endif
 
     <flux:input wire:model="infracciones_facilitador" :label="__('Infracciones cometidas')" type="text" required placeholder="Infracciones cometidas" />
-    <flux:input wire:model="sanciones_facilitador" :label="__('Sanciones cometidas')" type="number" required placeholder="Sanciones cometidas" />
+    <flux:input wire:model="sanciones_facilitador" :label="__('Sanciones recibidas')" type="number" required placeholder="Sanciones recibidas" />
 </div>
 
 <!-- Sección 4: Documentos clave -->

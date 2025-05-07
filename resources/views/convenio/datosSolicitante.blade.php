@@ -9,12 +9,14 @@
             </flux:radio.group>
         </div>
         @endif
-            @if ($modalidad === 'linea')
+        @if ($modalidad === 'linea')
+        <div class="animate__animated animate__fadeIn">
             <flux:radio.group wire:model.live="acudiran_juntos" label="¿Acudiran juntos?" >
                 <flux:radio value="1" label="Si" />
                 <flux:radio value="2" label="No" />
             </flux:radio.group>
-            @endif
+        </div>
+        @endif
     </div>
     <div>
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
