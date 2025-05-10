@@ -26,7 +26,7 @@
             wire:model="apellido_p_solicitante"
             type="text"
             required
-            placeholder="Apelliodo paterno"
+            placeholder="Apellido paterno"
             oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
         />
     </div>
@@ -39,7 +39,7 @@
             wire:model="apellido_m_solicitante"
             type="text"
             required
-            placeholder="Apelliodo materno"
+            placeholder="Apellido materno"
             oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
         />
     </div>
@@ -128,92 +128,105 @@
 
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mt-2">
-        <!-- Correos electrónicos -->
-        <div class="space-y-1">
-            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Correos electrónicos
-                @if (!($modalidad === 'presencial' && $prefix === 'invitado'))
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                @endif
-            </label>
-
-            <div class="flex gap-2">
-                <flux:input
-                    oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-                    wire:model.defer="correo_temp"
-                    type="email"
-                    placeholder="Agregar correo"
-                />
-                <button
-                    type="button"
-                    wire:click="agregarCorreo"
-                    class="px-3 py-2 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
-                >
-                    Agregar
-                </button>
-            </div>
-
-            @if (!empty($correos))
-                <ul class="mt-2 space-y-1">
-                    @foreach ($correos as $i => $correo)
-                        <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
-                            <span class="truncate">{{ $correo }}</span>
-                            <button
-                                wire:click="eliminarCorreo({{ $i }})"
-                                class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
-                                title="Eliminar"
-                            >
-                                ×
-                            </button>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-
-        </div>
-
-        <!-- Teléfonos -->
-        <div class="space-y-1">
-            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Teléfonos
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            </label>
-
-            <div class="flex gap-2">
-                <flux:input
-                    oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-                    wire:model.defer="telefono_temp"
-                    type="tel"
-                    placeholder="Agregar teléfono"
-                />
-                <button
-                    type="button"
-                    wire:click="agregarTelefono"
-                    class="px-3 py-2 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
-                >
-                    Agregar
-                </button>
-            </div>
-
-            @if (!empty($telefonos))
-                <ul class="mt-2 space-y-1">
-                    @foreach ($telefonos as $i => $tel)
-                        <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
-                            <span class="truncate">{{ $tel }}</span>
-                            <button
-                                wire:click="eliminarTelefono({{ $i }})"
-                                class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
-                                title="Eliminar"
-                            >
-                                ×
-                            </button>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-        </div>
+    <div class="mb-3 py-3">
+        <h1 class="text-xl border-b-2 border-emerald-700 inline-block pb-1">Datos de Contacto</h1>
     </div>
+
+    <flux:modal.trigger name="edit-profile">
+        <flux:button>Datos de Contacto</flux:button>
+    </flux:modal.trigger>
+
+    <flux:modal name="edit-profile" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Datos de contacto</flux:heading>
+            </div>
+
+             <!-- Correos electrónicos -->
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                    Correos electrónicos
+                    @if (!($modalidad === 'presencial' && $prefix === 'invitado'))
+                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    @endif
+
+                </label>
+
+                <div class="flex gap-2">
+                    <flux:input
+                        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                        wire:model.defer="correo_temp"
+                        type="email"
+                        placeholder="Agregar correo"
+                    />
+                    <x-boton-agregar wire-click="agregarCorreo" />
+                </div>
+
+                @if (!empty($correos))
+                    <ul class="mt-2 space-y-1">
+                        @foreach ($correos as $i => $correo)
+                            <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
+                                <span class="truncate">{{ $correo }}</span>
+                                <button
+                                    wire:click="eliminarCorreo({{ $i }})"
+                                    class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
+                                    title="Eliminar"
+                                >
+                                    ×
+                                </button>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+
+            </div>
+
+            <!-- Teléfonos -->
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                    Teléfonos
+                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                </label>
+
+                <div class="flex gap-2">
+                    <flux:input
+                        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                        wire:model.defer="telefono_temp"
+                        type="tel"
+                        placeholder="Agregar teléfono"
+                    />                    
+                    <x-boton-agregar wire-click="agregarTelefono" />
+
+                </div>
+
+                @if (!empty($telefonos))
+                    <ul class="mt-2 space-y-1">
+                        @foreach ($telefonos as $i => $tel)
+                            <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
+                                <span class="truncate">{{ $tel }}</span>
+                                <button
+                                    wire:click="eliminarTelefono({{ $i }})"
+                                    class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
+                                    title="Eliminar"
+                                >
+                                    ×
+                                </button>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+
+            <div class="flex">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cerrar</flux:button>
+                </flux:modal.close>
+            </div>
+        </div>
+    </flux:modal>
+
 
     <div class="mb-3 py-3">
         <h1 class="text-xl border-b-2 border-emerald-700 inline-block pb-1">Datos domicilio</h1>

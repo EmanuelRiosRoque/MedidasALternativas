@@ -1,5 +1,9 @@
 {{--* Radio para manejar tipo persona --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class=" flex justify-center col-span-2">
+        <h1 class="text-2xl border-b-2 border-emerald-600">Solicitante</h1>
+    </div>
+
     <div class="flex flex-wrap gap-x-6">
         @if ($materia === 'mercantil')
         <div class="animate__animated animate__fadeIn">
