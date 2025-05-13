@@ -63,68 +63,64 @@
 
 
 
-
-
-<div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
+<div class="mb-2">
     <flux:radio.group wire:model.live="representante" label="¿Es usted el representante legal o albacea?">
         <flux:radio value="1" label="Sí" />
         <flux:radio value="0" label="No" />
     </flux:radio.group>
-    @if ($representante == 1)    
-    
-    {{-- <flux:radio.group wire:model.live="doc_representante" label="¿Seleccione documento del representante?">
-        <flux:radio value="1" label="Acta notarial" />
-        <flux:radio value="2" label="Acata de nacimiento" />
-        <flux:radio value="0" label="Resolucion judicial" />
-    </flux:radio.group> --}}
+</div>
 
+@if ($representante == 1)  
+<div class="mb-2">
     <flux:checkbox.group wire:model.live="doc_representante" label="Documento(s)">
         <flux:checkbox label="Acta notarial" value="1" />
         <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2"  />
         <flux:checkbox label="Resolucion judicial" value="3" />
     </flux:checkbox.group>
+</div>  
+@if ($materia == 'mercantil')
+<div class=" grid grid-cols-3 gap-2">
+    <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Nombre 
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input 
+        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+        wire:model="nombre_representante"  
+        type="text" 
+        required  
+        placeholder="Nombre" />
+    </div>
+    <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Apellido paterno
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input 
+        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+        wire:model="apellido_p_representante"  
+        type="text" 
+        required 
+        placeholder="Apellido paterno" />
+    </div>
+    <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+            Apellido materno
+                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+        </label>
+        <flux:input 
+        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+        wire:model="apellido_m_representante"  
+        type="text" 
+        required 
+        placeholder="Apellido materno" />
+    </div>
+</div>
+@endif
+@endif
 
-        @if ($materia == 'mercantil')
-            <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
-                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                    Nombre representante
-                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                </label>
-                <flux:input 
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-                wire:model="nombre_representante"  
-                type="text" 
-                required  
-                placeholder="Nombre" />
-            </div>
-            <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
-                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                    Apellido paterno del representante
-                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                </label>
-                <flux:input 
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-                wire:model="apellido_p_representante"  
-                type="text" 
-                required 
-                placeholder="Apellido paterno" />
-            </div>
-            <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
-                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                    Apellido materno del representante
-                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                </label>
-                <flux:input 
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-                wire:model="apellido_m_representante"  
-                type="text" 
-                required 
-                placeholder="Apellido materno" />
-            </div>
-        @endif
-    @endif
-
-
+<div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
     <div @if($representante != 1) style="display: none;" @endif class="col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
     
         <div class="col-span-2 sm:col-span-1 animate__animated animate__fadeIn"
