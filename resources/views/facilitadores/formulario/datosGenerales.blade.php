@@ -60,7 +60,7 @@
 
             <div class="flex gap-2">
                 <flux:input
-                    oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                    oninput="this.value = this.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                     wire:model.defer="correo_temp"
                     type="email"
                     placeholder="Agregar correo"

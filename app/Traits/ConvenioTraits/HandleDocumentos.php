@@ -184,7 +184,10 @@ trait HandleDocumentos
                 "Poder notarial, en caso de representante legal",
                 "Nombramiento de albacea, tratándose de sucesiones",
                 "Acta constitutiva, para el caso de personas morales"
-            ]
+            ],
+            'Otros' => [
+                
+            ],
         ];
     }
 
