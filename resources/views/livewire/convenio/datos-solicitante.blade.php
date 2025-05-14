@@ -1,4 +1,5 @@
-{{--* Radio para manejar tipo persona --}}
+<div>
+    {{--* Radio para manejar tipo persona --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div class=" flex justify-center col-span-2">
         <h1 class="text-2xl border-b-2 border-emerald-600">Solicitante</h1>
@@ -47,7 +48,7 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 
 {{--** Boton para enviar datos --}}
-<div class="flex justify-end">
+{{-- <div class="flex justify-end">
     <button 
         wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('solicitante')" }}"
         type="button"
@@ -55,7 +56,7 @@
     >
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
     </button>
-</div>
+</div> --}}
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($solicitanteArray))
@@ -95,3 +96,5 @@
 @endif
 
 
+
+</div>

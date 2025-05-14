@@ -9,6 +9,7 @@ use App\Models\PersonaFisica;
 use Livewire\WithFileUploads;
 use App\Models\PersonaFamiliar;
 use App\Models\PersonaSolicitud;
+use App\Models\Solicitante;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 use App\Traits\ConvenioTraits\HandleValidaciones;
@@ -208,7 +209,9 @@ class Convenio extends Component
 	public function guardado()
 	{
 
-		$this->consulta();
+		// $this->consulta();
+
+		// dd($this->solicitanteArray);
 
 
 		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
@@ -224,6 +227,7 @@ class Convenio extends Component
 
 		 // 2. Procesar solicitantes
 		 foreach ($this->solicitanteArray as $datos) {
+			// dd($datos);
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
 		}
 		
@@ -238,6 +242,60 @@ class Convenio extends Component
 	}
 
 	protected function guardarPersonaRelacionada($solicitudId, $datos, string $rol = 'solicitante')
+	{
+		$tipoPersona = null;
+
+    if ($this->materia === "mercantil") {
+        $tipoPersona = $datos['persona']; // 'fisica' o 'moral'
+        $datosPersona = [
+            'tipo' => $tipoPersona,
+            'nombre' => $datos['nombre'] ?? '',
+            'apellido_p' => $datos['apellido_p'] ?? null,
+            'apellido_m' => $datos['apellido_m'] ?? null,
+            'sexo' => $datos['sexo'] ?? null,
+            'edad' => $datos['edad'] ?? null,
+            'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
+            'escolaridad' => $datos['escolaridad'] ?? null,
+            'ocupacion' => $datos['ocupacion'] ?? null,
+            'nacionalidad' => $datos['nacionalidad'] ?? null,
+            'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
+            'calle' => $datos['calle'] ?? null,
+            'colonia' => $datos['colonia'] ?? null,
+            'municipio' => $datos['municipio'] ?? null,
+            'entidad_federativa' => $datos['entidad_federativa'] ?? null,
+            'cp' => $datos['cp'] ?? null,
+            'rfc' => $datos['rfc'] ?? null,
+            'razon_social' => $datos['razon_social'] ?? null,
+            'instrumento' => $datos['instrumento'] ?? null,
+            'fecha_instrumento' => $datos['fecha_instrumento'] ?? null,
+        ];
+    } else {
+        $tipoPersona = 'familiar';
+
+        $datosPersona = [
+            'tipo' => $tipoPersona,
+            'nombre' => $datos['nombre'] ?? '',
+            'apellido_p' => $datos['apellido_p'] ?? null,
+            'apellido_m' => $datos['apellido_m'] ?? null,
+            'sexo' => $datos['sexo'] ?? null,
+            'edad' => $datos['edad'] ?? null,
+            'escolaridad' => $datos['escolaridad'] ?? null,
+            'ocupacion' => $datos['ocupacion'] ?? null,
+            'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
+            'calle' => $datos['calle'] ?? null,
+            'colonia' => $datos['colonia'] ?? null,
+            'municipio' => $datos['municipio'] ?? null,
+            'entidad_federativa' => $datos['entidad_federativa'] ?? null,
+            'cp' => $datos['cp'] ?? null,
+            'estado_civil' => $datos['estado_civil'] ?? null,
+        ];
+    }
+    
+		Solicitante::create($datosPersona);
+	}
+
+
+	protected function guardarPersonaRelacionadaOld($solicitudId, $datos, string $rol = 'solicitante')
 	{
 		$tipoPersona = null; // inicializar
 
@@ -312,7 +370,6 @@ class Convenio extends Component
 		]);
 		
 	}
-
 
 
 

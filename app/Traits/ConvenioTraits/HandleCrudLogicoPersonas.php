@@ -11,17 +11,16 @@ trait HandleCrudLogicoPersonas
      * Se puede agregar/quitar campos fácilmente aquí.
      */
     protected array $camposPersona = [
-        'persona', 'representante', 'persona_invitado',
+        'persona', 'representante', 'persona_invitado', 'materia',
         'nombre_solicitante','apellido_p_solicitante','apellido_m_solicitante',  'sexo_solicitante', 'edad_solicitante', 'fecha_nacimiento_solicitante',
         'escolaridad_solicitante', 'ocupacion_solicitante', 'nacionalidad_solicitante',
-        'tipo_domicilio_solicitante', 'calle_solicitante', 'colonia_solicitante',
+        'tipo_domicilio_solicitante', 'calle_solicitante', 'colonia',
         'municipio_solicitante', 'entidad_federativa_solicitante', 'correo_solicitante',
-        'identificacion', 'acta_notarial', 'acta_de_nacimiento', 'resolucion_judicial','cp_solicitante',
-
+        'identificacion', 'acta_notarial', 'acta_de_nacimiento', 'resolucion_judicial','cp_solicitante','formato_privacidad','como_se_entero',
         // Campos adicionales para moral o familiar
         'razon_social_solicitante', 'rfc_solicitante', 'instrumento_solicitante',
         'fecha_instrumento_solicitante', 'telefono_solicitante',
-        'domicilio_solicitante', 'estado_civil_solicitante',
+        'domicilio_solicitante', 'estado_civil_solicitante','correos', 'telefonos'
     ];
 
     public function seleccionarPersona($index, string $tipo = 'solicitante')
@@ -166,7 +165,12 @@ trait HandleCrudLogicoPersonas
 			'acta_notarial',
 			'domicilio_solicitante',
 			'estado_civil_solicitante',
-            'cp_solicitante'
+            'cp_solicitante',
+            'como_se_entero',
+            'formato_privacidad',
+            'apellido_p_solicitante',
+            'apellido_m_solicitante',
+            'colonia'
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');

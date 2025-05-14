@@ -235,11 +235,11 @@
         <h1 class="text-xl border-b-2 border-emerald-700 inline-block pb-1">Datos de Contacto</h1>
     </div>
 
-    <flux:modal.trigger name="edit-profile">
+    <flux:modal.trigger name="edit-contactos">
         <flux:button>Datos de Contacto</flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="edit-profile" class="md:w-96">
+    <flux:modal name="edit-contactos" class="md:w-96">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Datos de contacto</flux:heading>
