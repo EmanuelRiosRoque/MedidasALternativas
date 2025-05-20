@@ -1,5 +1,5 @@
 {{-- Select del tipo --}}
-@if ($materia === "mercantil")    
+@if ($materia === "mercantil" || $materia === "civil")    
     <div class="grid grid-cols-2 gap-2 animate__animated animate__fadeIn">
         <flux:select wire:model.live="tipo" placeholder="Selecciona un tema de mediación civil">
             @foreach($tiposDisponibles as $tipoItem)

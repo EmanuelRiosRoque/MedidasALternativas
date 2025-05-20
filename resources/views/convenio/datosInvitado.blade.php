@@ -6,7 +6,7 @@
     </div>
 
     <div class="flex flex-wrap gap-x-6">
-        @if ($materia === 'mercantil')
+        @if ($materia === 'mercantil' || $materia=== 'civil')
         <div class="animate__animated animate__fadeIn">
             <flux:radio.group wire:model.live="persona" label="Persona" >
                 <flux:radio value="fisica" label="Física" />
@@ -25,15 +25,22 @@
             @endforeach
         </flux:select>
     </div>
+    <div class="w-full flex justify-center col-span-2">
+        <div wire:loading.delay.shortest wire:target="persona" >
+            <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-600"></div>
+        </div>
+    </div>
 </div>
 
+
 {{--* Formularios por TIPO PERSONA --}}
+<div wire:loading.remove wire:target='persona'>
 @if (!empty($persona) && $persona === 'fisica')
     @include('convenio.formulario.personaFisica', ['prefix' => 'invitado', 'key' => 'fisica'])
 @elseif (!empty($persona) && $persona === 'moral')
     @include('convenio.formulario.personaMoral', ['prefix' => 'invitado', 'key' => 'moral'])
 @endif
-
+</div>
 @if ($materia === 'familiar')
     @include('convenio.formulario.materiaFamiliar', ['prefix' => 'invitado', 'key' => 'familiar'])
 @endif
@@ -42,7 +49,7 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'invitado'])
 
 {{--** Boton para enviar datos --}}
-<div class="flex justify-end mt-2">
+{{-- <div class="flex justify-end mt-2">
     <button 
         wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('invitado')" }}"
         type="button"
@@ -50,7 +57,7 @@
     >
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
     </button>
-</div>
+</div> --}}
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($invitadoArray))

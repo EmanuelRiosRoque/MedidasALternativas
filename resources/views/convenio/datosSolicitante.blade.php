@@ -5,7 +5,7 @@
     </div>
 
     <div class="flex flex-wrap gap-x-6">
-        @if ($materia === 'mercantil')
+        @if ($materia === 'mercantil' || $materia=== 'civil')
         <div class="animate__animated animate__fadeIn">
             <flux:radio.group wire:model.live="persona" label="Persona" >
                 <flux:radio value="fisica" label="Física" />
@@ -13,6 +13,7 @@
             </flux:radio.group>
         </div>
         @endif
+        
         <div class="animate__animated animate__fadeIn">
             <flux:radio.group wire:model.live="acudiran_juntos" label="¿Acudiran juntos?" >
                 <flux:radio value="1" label="Si" />
@@ -30,14 +31,23 @@
             @endforeach
         </flux:select>
     </div>
+    <div class="w-full flex justify-center col-span-2">
+        <div wire:loading.delay.shortest wire:target="persona" >
+            <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-600"></div>
+        </div>
+    </div>
 </div>
 
+
+
 {{--* Formularios por TIPO PERSONA --}}
-@if ($persona === 'fisica')
-    @include('convenio.formulario.personaFisica', ['prefix' => 'solicitante', 'key' => 'fisica'])
-@elseif ($persona === 'moral')
-    @include('convenio.formulario.personaMoral', ['prefix' => 'solicitante', 'key' => 'moral'])
-@endif
+<div wire:loading.remove wire:target='persona'>
+    @if ($persona === 'fisica')
+        @include('convenio.formulario.personaFisica', ['prefix' => 'solicitante', 'key' => 'fisica'])
+    @elseif ($persona === 'moral')
+        @include('convenio.formulario.personaMoral', ['prefix' => 'solicitante', 'key' => 'moral'])
+    @endif
+</div>
 
 @if ($materia === 'familiar')
     @include('convenio.formulario.materiaFamiliar', ['prefix' => 'solicitante', 'key' => 'familiar'])
@@ -47,7 +57,7 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 
 {{--** Boton para enviar datos --}}
-<div class="flex justify-end">
+{{-- <div class="flex justify-end">
     <button 
         wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('solicitante')" }}"
         type="button"
@@ -55,7 +65,7 @@
     >
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
     </button>
-</div>
+</div> --}}
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($solicitanteArray))

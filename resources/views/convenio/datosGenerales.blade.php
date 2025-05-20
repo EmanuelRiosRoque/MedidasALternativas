@@ -7,7 +7,8 @@
         </flux:radio.group>
 
         <flux:radio.group wire:model.live="materia" label="Materia">
-            <flux:radio value="mercantil" label="Civil Mercantil" />
+            <flux:radio value="civil" label="Civil" />
+            <flux:radio value="mercantil" label="Mercantil" />
             <flux:radio value="familiar" label="Familiar" />
         </flux:radio.group>
 
