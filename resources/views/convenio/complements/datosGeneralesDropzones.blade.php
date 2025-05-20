@@ -78,7 +78,7 @@
         <flux:checkbox label="Resolucion judicial" value="3" />
     </flux:checkbox.group>
 </div>  
-@if ($materia == 'mercantil')
+@if ($materia == 'mercantil' || $materia == 'civil')
 <div class=" grid grid-cols-3 gap-2">
     <div class="animate__animated animate__fadeIn col-span-1 space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
