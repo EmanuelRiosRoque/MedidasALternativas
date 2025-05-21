@@ -154,10 +154,35 @@ class Convenio extends Component
 		$this->mediosInvitado = $this->difucionInvitado();
     }
 	
-	
+	public function updated($propertyName)
+	{
+		$this->resetValidation([$propertyName]);
+	}
+
 
 	public function cambiarTab($nuevoTab)
 	{
+
+		if ($this->tab === 1 && $nuevoTab !== 1) {
+			$rules = [
+				'modalidad' => 'required',
+				'materia' => 'required',
+				'derivado_canalizado' => 'required',
+			];
+
+			// Validar el número de ticket si la modalidad es línea
+			if ($this->modalidad === 'linea') {
+				$rules['numero_ticket'] = 'required|string|max:255'; // ajusta según lo que necesites
+			}
+
+			if ($this->derivado_canalizado === '1') {
+				$rules['institucion'] = 'required';
+				$rules['oficio'] = 'required';
+			}
+
+			$this->validate($rules);
+		}
+
 		// Limpiar solicitante si sales del tab 2
 		if ($this->tab === 2) {
 			$this->limpiarCamposPersona();
@@ -171,48 +196,10 @@ class Convenio extends Component
 		$this->tab = $nuevoTab;
 	}
 
-	public function consulta() {
-		$solicitud = Solicitud::with([
-			'personas.personaFisica',
-			'personas.personaMoral',
-			'personas.personaFamiliar',
-		])->findOrFail(12);
-		
-		$extraerPersona = fn($rel) => match ($rel->tipo_persona) {
-			'fisica' => $rel->personaFisica,
-			'moral' => $rel->personaMoral,
-			'familiar' => $rel->personaFamiliar,
-			default => null,
-		};
-		
-		$respuesta = [
-			'datosGenerales' => $solicitud->only([
-				'id', 'modalidad', 'materia', 'derivado_canalizado',
-				'numero_ticket', 'institucion', 'oficio', 'cual_otro'
-			]),
-			'solicitantes' => $solicitud->personas
-				->where('rol', 'solicitante')
-				->map($extraerPersona)
-				->filter()
-				->values(),
-			'invitados' => $solicitud->personas
-				->where('rol', 'invitado')
-				->map($extraerPersona)
-				->filter()
-				->values(),
-		];
-		
-		dd($respuesta);
-		
-	}
+
 
 	public function guardado()
 	{
-
-		// $this->consulta();
-
-		// dd($this->solicitanteArray);
-
 
 		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
 		$solicitud = Solicitud::create([
@@ -294,82 +281,6 @@ class Convenio extends Component
 		Solicitante::create($datosPersona);
 	}
 
-
-	protected function guardarPersonaRelacionadaOld($solicitudId, $datos, string $rol = 'solicitante')
-	{
-		$tipoPersona = null; // inicializar
-
-		if ($this->materia === "mercantil") {
-			$tipoPersona = $datos['persona']; // 'fisica' o 'moral'
-
-			if ($tipoPersona === 'fisica') {
-				$datosNormalizados = [
-					'nombre' => $datos['nombre'] ?? '',
-					'apellido_paterno' => $datos['apellido_p'] ?? null,
-					'apellido_materno' => $datos['apellido_m'] ?? null,
-					'sexo' => $datos['sexo'] ?? null,
-					'edad' => $datos['edad'] ?? null,
-					'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
-					'escolaridad' => $datos['escolaridad'] ?? null,
-					'ocupacion' => $datos['ocupacion'] ?? null,
-					'nacionalidad' => $datos['nacionalidad'] ?? null,
-					'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
-					'calle' => $datos['calle'] ?? null,
-					'colonia' => $datos['colonia'] ?? null,
-					'municipio' => $datos['municipio'] ?? null,
-					'entidad_federativa' => $datos['entidad_federativa'] ?? null,
-					'cp' => $datos['cp'] ?? null,
-					'rfc' => $datos['rfc'] ?? null,
-				];
-
-				$persona = PersonaFisica::create($datosNormalizados);
-			} else {
-				$datosMoral = [
-					'razon_social' => $datos['razon_social'] ?? 'SIN RAZÓN SOCIAL',
-					'rfc' => $datos['rfc'] ?? null,
-					'instrumento' => $datos['instrumento'] ?? null,
-					'fecha_instrumento' => $datos['fecha_instrumento'] ?? null,
-					'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
-					'calle' => $datos['calle'] ?? null,
-					'colonia' => $datos['colonia'] ?? null,
-					'municipio' => $datos['municipio'] ?? null,
-					'entidad_federativa' => $datos['entidad_federativa'] ?? null,
-					'cp' => $datos['cp'] ?? null,
-				];
-
-				$persona = PersonaMoral::create($datosMoral);
-			}
-		} else {
-			$tipoPersona = 'familiar'; // ⚠️ Se asigna manualmente
-
-			$datosFamiliar = [
-				'nombre' => $datos['nombre'] ?? '',
-				'apellido_paterno' => $datos['apellido_p'] ?? null,
-				'apellido_materno' => $datos['apellido_m'] ?? null,
-				'sexo' => $datos['sexo'] ?? null,
-				'edad' => $datos['edad'] ?? null,
-				'escolaridad' => $datos['escolaridad'] ?? null,
-				'ocupacion' => $datos['ocupacion'] ?? null,
-				'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
-				'calle' => $datos['calle'] ?? null,
-				'colonia' => $datos['colonia'] ?? null,
-				'municipio' => $datos['municipio'] ?? null,
-				'entidad_federativa' => $datos['entidad_federativa'] ?? null,
-				'cp' => $datos['cp'] ?? null,
-				'estado_civil' => $datos['estado_civil'] ?? null,
-			];
-
-			$persona = PersonaFamiliar::create($datosFamiliar);
-		}
-
-		PersonaSolicitud::create([
-			'solicitud_id' => $solicitudId,
-			'persona_id' => $persona->id,
-			'tipo_persona' => $tipoPersona,
-			'rol' => $rol,
-		]);
-		
-	}
 
 
 

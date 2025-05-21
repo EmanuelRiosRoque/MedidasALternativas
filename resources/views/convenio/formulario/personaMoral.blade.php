@@ -170,7 +170,10 @@
     <flux:modal.trigger name="edit-profile">
         <flux:button>Datos de Contacto</flux:button>
     </flux:modal.trigger>
-
+    @if ($errors->has('correos') || $errors->has('telefonos'))
+        <p class="text-red-500 text-sm mt-1">Hace falta agregar al menos un correo o teléfono.</p>
+    @endif
+    
     <flux:modal name="edit-profile" class="md:w-96">
         <div class="space-y-6">
             <div>

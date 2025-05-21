@@ -136,6 +136,10 @@
         <flux:button>Datos de Contacto</flux:button>
     </flux:modal.trigger>
 
+    @if ($errors->has('correos') || $errors->has('telefonos'))
+        <p class="text-red-500 text-sm mt-1">Hace falta agregar al menos un correo o teléfono.</p>
+    @endif
+
     <flux:modal name="edit-profile" class="md:w-96">
         <div class="space-y-6">
             <div>
@@ -154,7 +158,7 @@
 
                 <div class="flex gap-2">
                     <flux:input
-                        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                        oninput="this.value = this.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                         wire:model.defer="correo_temp"
                         type="email"
                         placeholder="Agregar correo"
