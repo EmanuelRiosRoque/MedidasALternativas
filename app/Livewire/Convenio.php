@@ -200,7 +200,8 @@ class Convenio extends Component
 
 	public function guardado()
 	{
-
+		// dd($this->solicitanteArray,$this->invitadoArray);
+		// dd($this->invitadoArray);
 		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
 		$solicitud = Solicitud::create([
 			"modalidad" => $this->modalidad,
@@ -211,8 +212,8 @@ class Convenio extends Component
 			"oficio" => "oficio",
 			"cual_otro" => $this->cual_otro
 		]);
-
 		 // 2. Procesar solicitantes
+
 		 foreach ($this->solicitanteArray as $datos) {
 			// dd($datos);
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
@@ -232,35 +233,37 @@ class Convenio extends Component
 	{
 		$tipoPersona = null;
 
-    if ($this->materia === "mercantil") {
+    if ($this->materia === "mercantil" || $this->materia === "civil") {
         $tipoPersona = $datos['persona']; // 'fisica' o 'moral'
-        $datosPersona = [
-            'tipo' => $tipoPersona,
-            'nombre' => $datos['nombre'] ?? '',
-            'apellido_p' => $datos['apellido_p'] ?? null,
-            'apellido_m' => $datos['apellido_m'] ?? null,
-            'sexo' => $datos['sexo'] ?? null,
-            'edad' => $datos['edad'] ?? null,
-            'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
-            'escolaridad' => $datos['escolaridad'] ?? null,
-            'ocupacion' => $datos['ocupacion'] ?? null,
-            'nacionalidad' => $datos['nacionalidad'] ?? null,
-            'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
-            'calle' => $datos['calle'] ?? null,
-            'colonia' => $datos['colonia'] ?? null,
-            'municipio' => $datos['municipio'] ?? null,
-            'entidad_federativa' => $datos['entidad_federativa'] ?? null,
-            'cp' => $datos['cp'] ?? null,
-            'rfc' => $datos['rfc'] ?? null,
-            'razon_social' => $datos['razon_social'] ?? null,
-            'instrumento' => $datos['instrumento'] ?? null,
-            'fecha_instrumento' => $datos['fecha_instrumento'] ?? null,
-        ];
+
+		$datosPersona = [
+			'persona' => $tipoPersona,
+			'nombre' => $datos['nombre'] ?? '',
+			'apellido_p' => $datos['apellido_p'] ?? null,
+			'apellido_m' => $datos['apellido_m'] ?? null,
+			'sexo' => $datos['sexo'] ?? null,
+			'edad' => $datos['edad'] ?? null,
+			'fecha_nacimiento' => !empty($datos['fecha_nacimiento']) ? $datos['fecha_nacimiento'] : null,
+			'escolaridad' => $datos['escolaridad'] ?? null,
+			'ocupacion' => $datos['ocupacion'] ?? null,
+			'nacionalidad' => $datos['nacionalidad'] ?? null,
+			'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
+			'calle' => $datos['calle'] ?? null,
+			'colonia' => $datos['colonia'] ?? null,
+			'municipio' => $datos['municipio'] ?? null,
+			'entidad_federativa' => $datos['entidad_federativa'] ?? null,
+			'cp' => $datos['cp'] ?? null,
+			'rfc' => $datos['rfc'] ?? null,
+			'razon_social' => $datos['razon_social'] ?? null,
+			'instrumento' => $datos['instrumento'] ?? null,
+			'fecha_instrumento' => !empty($datos['fecha_instrumento']) ? $datos['fecha_instrumento'] : null,
+		];
+
     } else {
         $tipoPersona = 'familiar';
 
         $datosPersona = [
-            'tipo' => $tipoPersona,
+            'persona' => $tipoPersona,
             'nombre' => $datos['nombre'] ?? '',
             'apellido_p' => $datos['apellido_p'] ?? null,
             'apellido_m' => $datos['apellido_m'] ?? null,
@@ -277,7 +280,7 @@ class Convenio extends Component
             'estado_civil' => $datos['estado_civil'] ?? null,
         ];
     }
-    
+	    $datosPersona['solicitud_id'] = $solicitudId;
 		Solicitante::create($datosPersona);
 	}
 

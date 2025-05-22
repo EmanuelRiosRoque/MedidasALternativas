@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('solicitantes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('solicitud_id')->constrained()->onDelete('cascade');
+            $table->foreignId('solicitud_id')->constrained('solicitudes')->onDelete('cascade');
 
             // Tipo de persona
-            $table->enum('persona', ['fisica', 'moral'])->nullable();
+            $table->enum('persona', ['fisica', 'moral', 'familiar'])->nullable();
             $table->boolean('representante')->default(0);
             $table->string('persona_invitado')->nullable();
 

@@ -109,10 +109,10 @@
                 </button>
             @endif
             
-            {{-- <button wire:click="guardado" type="button"
+            <button wire:click="guardado" type="button"
                 class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
                 Guardar
-            </button> --}}
+            </button>
         </div>
     </div>
 </div>

@@ -99,7 +99,7 @@ trait HandleCrudLogicoPersonas
             $this->persona === 'moral' &&
             ($this->materia === 'civil' || $this->materia === 'mercantil')
         ) {
-            $this->validate([
+            $rules = [
                 'razon_social_solicitante' => 'required',
                 'instrumento_solicitante' => 'required',
                 'fecha_instrumento_solicitante' => 'required',
@@ -113,8 +113,32 @@ trait HandleCrudLogicoPersonas
                 'entidad_federativa_solicitante' => 'required|string|max:255',
                 'identificacion' => 'required|array|min:1',
                 'formato_privacidad' => 'required|array|min:1',
-                'representante' => 'required'
-            ]);
+                'representante' => 'required',
+            ];
+
+             if ($this->representante == 1) {
+                // Datos del representante
+                $rules['nombre_representante'] = 'required|string|max:255';
+                $rules['apellido_p_representante'] = 'required|string|max:255';
+                $rules['apellido_m_representante'] = 'required|string|max:255';
+
+                // Documentos seleccionados
+                $rules['doc_representante'] = 'required|array|min:1';
+
+                if (in_array(1, (array) $this->doc_representante)) {
+                    $rules['acta_notarial'] = 'required';
+                }
+
+                if (in_array(2, (array) $this->doc_representante)) {
+                    $rules['acta_de_nacimiento'] = 'required';
+                }
+
+                if (in_array(3, (array) $this->doc_representante)) {
+                    $rules['resolucion_judicial'] = 'required';
+                }
+            }
+
+            $this->validate($rules);
         }
 
         if ($tipo === 'solicitante' && $this->materia === 'familiar') {
@@ -207,7 +231,7 @@ trait HandleCrudLogicoPersonas
             $key = str_replace('_solicitante', '', $campo);
 
             if ($key === 'persona') {
-                $datos[$key] = $tipo === 'solicitante' ? $this->persona : $this->persona_invitado;
+                $datos[$key] = $this->persona;
             } else {
                 $datos[$key] = $this->$campo;
             }
@@ -220,7 +244,7 @@ trait HandleCrudLogicoPersonas
         }
 
         Toaster::success('Participante agregado !');
-        $this->limpiarCamposPersona(preservarPersona: false);
+        $this->limpiarCamposPersona(preservarPersona: $tipo === 'invitado');
     }
 
 
@@ -327,7 +351,9 @@ trait HandleCrudLogicoPersonas
             'nombre_representante',
             'apellido_p_representante',
             'apellido_m_representante',
-            'doc_representante'
+            'doc_representante',
+            'correos',
+            'telefonos'
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');
