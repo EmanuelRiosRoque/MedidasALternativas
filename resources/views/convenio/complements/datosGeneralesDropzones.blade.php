@@ -27,27 +27,13 @@
             </flux:tooltip>
         </div>
 
-        {{-- <livewire:dropzone
+        <livewire:dropzone
             wire:model="identificacion"
             :rules="['mimes:pdf','max:10420']"
             :multiple="false"
             wire:key="identificacion"
-        /> --}}
+        />
 
-        <div class="w-full max-w-md mx-auto">
-            <label class="block mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-200" for="archivo">
-                Selecciona un archivo
-            </label>
-            <input wire:model='idetificacion' type="file" id="archivo" name="archivo" class="block w-full text-sm text-neutral-900 border border-emerald-300 rounded-lg cursor-pointer bg-emerald-50 focus:outline-none
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-lg file:border-0 file:text-sm file:font-semibold
-                            file:bg-emerald-500 file:text-white hover:file:bg-emerald-600
-                            dark:text-white dark:border-emerald-500 dark:bg-neutral-800
-                            dark:file:bg-emerald-600 dark:file:text-white dark:hover:file:bg-emerald-700" />
-            <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                PDF, PNG, JPG. Tamaño máximo: 5MB.
-            </p>
-        </div>
 
     </div>
 
@@ -68,27 +54,14 @@
             </flux:button>
         </div>
 
-        {{-- <livewire:dropzone
+        <livewire:dropzone
             wire:model="formato_privacidad"
             :rules="['mimes:pdf','max:10420']"
             :multiple="false"
             wire:key="formatoPrivacidad"
-        /> --}}
+        />
 
-         <div class="w-full max-w-md mx-auto">
-            <label class="block mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-200" for="archivo">
-                Selecciona un archivo
-            </label>
-            <input wire:model='formato_privacidad' type="file" id="archivo" name="archivo" class="block w-full text-sm text-neutral-900 border border-emerald-300 rounded-lg cursor-pointer bg-emerald-50 focus:outline-none
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-lg file:border-0 file:text-sm file:font-semibold
-                            file:bg-emerald-500 file:text-white hover:file:bg-emerald-600
-                            dark:text-white dark:border-emerald-500 dark:bg-neutral-800
-                            dark:file:bg-emerald-600 dark:file:text-white dark:hover:file:bg-emerald-700" />
-            <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                PDF, PNG, JPG. Tamaño máximo: 5MB.
-            </p>
-        </div>
+       
     </div>
 </div>
 
