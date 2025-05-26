@@ -20,8 +20,192 @@ trait HandleCrudLogicoPersonas
         // Campos adicionales para moral o familiar
         'razon_social_solicitante', 'rfc_solicitante', 'instrumento_solicitante',
         'fecha_instrumento_solicitante', 'telefono_solicitante',
-        'domicilio_solicitante', 'estado_civil_solicitante','correos', 'telefonos'
+        'domicilio_solicitante', 'estado_civil_solicitante','correos', 'telefonos',
+        'nombre_representante',
+        'apellido_p_representante',
+        'apellido_m_representante',
     ];
+
+    protected function validarPersonaAntesDeAgregar(string $tipo)
+    {
+        // Solo validamos si es solicitante, materia civil y persona física
+
+        if (
+            $tipo === 'solicitante' &&
+            ($this->materia === 'civil' || $this->materia === 'mercantil')
+        ) {
+            $this->validate([
+                'persona' => 'required'
+            ]);
+        }
+
+        if (
+            $tipo === 'solicitante' &&
+            $this->persona === 'fisica' &&
+            ($this->materia === 'civil' || $this->materia === 'mercantil')
+        ) {
+            $rules = [
+                'nombre_solicitante' => 'required|string|max:255',
+                'apellido_p_solicitante' => 'required|string|max:255',
+                'apellido_m_solicitante' => 'required|string|max:255',
+                'sexo_solicitante' => 'required',
+                'edad_solicitante' => 'required',
+                'fecha_nacimiento_solicitante' => 'required|date',
+                'escolaridad_solicitante' => 'required|string|max:255',
+                'ocupacion_solicitante' => 'required|string|max:255',
+                'nacionalidad_solicitante' => 'required|string|max:255',
+                'telefonos' => 'required|array|min:1',
+                'correos' => 'required|array|min:1',
+                'tipo_domicilio_solicitante' => 'required|string|max:255',
+                'calle_solicitante' => 'required|string|max:255',
+                'cp_solicitante' => 'required|string|max:10',
+                'colonia' => 'required|string|max:255',
+                'municipio_solicitante' => 'required|string|max:255',
+                'entidad_federativa_solicitante' => 'required|string|max:255',
+                'identificacion' => 'required|array|min:1',
+                'formato_privacidad' => 'required|array|min:1',
+                'representante' => 'required',
+            ];
+
+            if ($this->representante == 1) {
+                // Datos del representante
+                $rules['nombre_representante'] = 'required|string|max:255';
+                $rules['apellido_p_representante'] = 'required|string|max:255';
+                $rules['apellido_m_representante'] = 'required|string|max:255';
+
+                // Documentos seleccionados
+                $rules['doc_representante'] = 'required|array|min:1';
+
+                if (in_array(1, (array) $this->doc_representante)) {
+                    $rules['acta_notarial'] = 'required';
+                }
+
+                if (in_array(2, (array) $this->doc_representante)) {
+                    $rules['acta_de_nacimiento'] = 'required';
+                }
+
+                if (in_array(3, (array) $this->doc_representante)) {
+                    $rules['resolucion_judicial'] = 'required';
+                }
+            }
+
+            $this->validate($rules);
+        }
+
+
+
+        if (
+            $tipo === 'solicitante' &&
+            $this->persona === 'moral' &&
+            ($this->materia === 'civil' || $this->materia === 'mercantil')
+        ) {
+            $rules = [
+                'razon_social_solicitante' => 'required',
+                'instrumento_solicitante' => 'required',
+                'fecha_instrumento_solicitante' => 'required',
+                'telefonos' => 'required|array|min:1',
+                'correos' => 'required|array|min:1',
+                'tipo_domicilio_solicitante' => 'required|string|max:255',
+                'calle_solicitante' => 'required|string|max:255',
+                'cp_solicitante' => 'required|string|max:10',
+                'colonia' => 'required|string|max:255',
+                'municipio_solicitante' => 'required|string|max:255',
+                'entidad_federativa_solicitante' => 'required|string|max:255',
+                'identificacion' => 'required|array|min:1',
+                'formato_privacidad' => 'required|array|min:1',
+                'representante' => 'required',
+            ];
+
+             if ($this->representante == 1) {
+                // Datos del representante
+                $rules['nombre_representante'] = 'required|string|max:255';
+                $rules['apellido_p_representante'] = 'required|string|max:255';
+                $rules['apellido_m_representante'] = 'required|string|max:255';
+
+                // Documentos seleccionados
+                $rules['doc_representante'] = 'required|array|min:1';
+
+                if (in_array(1, (array) $this->doc_representante)) {
+                    $rules['acta_notarial'] = 'required';
+                }
+
+                if (in_array(2, (array) $this->doc_representante)) {
+                    $rules['acta_de_nacimiento'] = 'required';
+                }
+
+                if (in_array(3, (array) $this->doc_representante)) {
+                    $rules['resolucion_judicial'] = 'required';
+                }
+            }
+
+            $this->validate($rules);
+        }
+
+        if ($tipo === 'solicitante' && $this->materia === 'familiar') {
+            $this->validate([
+                'nombre_solicitante' => 'required|string|max:255',
+                'apellido_p_solicitante' => 'required|string|max:255',
+                'apellido_m_solicitante' => 'required|string|max:255',
+                'sexo_solicitante' => 'required',
+                'edad_solicitante' => 'required',
+                'escolaridad_solicitante' => 'required|string|max:255',
+                'ocupacion_solicitante' => 'required|string|max:255',
+                'estado_civil_solicitante' => 'required',
+                'telefonos' => 'required|array|min:1',
+                'correos' => 'required|array|min:1',
+                'tipo_domicilio_solicitante' => 'required|string|max:255',
+                'calle_solicitante' => 'required|string|max:255',
+                'cp_solicitante' => 'required|string|max:10',
+                'colonia' => 'required|string|max:255',
+                'municipio_solicitante' => 'required|string|max:255',
+                'entidad_federativa_solicitante' => 'required|string|max:255',
+                'identificacion' => 'required|array|min:1',
+                'formato_privacidad' => 'required|array|min:1',
+                'representante' => 'required'
+            ]);
+        }
+
+
+        if ($tipo === 'invitado' && $this->materia === 'familiar') {
+            $this->validate([
+                'nombre_solicitante' => 'required|string|max:255',
+                'apellido_p_solicitante' => 'required|string|max:255',
+                'apellido_m_solicitante' => 'required|string|max:255',
+               
+                'telefonos' => 'required|array|min:1',
+                'correos' => 'required|array|min:1',
+            ]);
+        }
+
+
+       if (
+            $tipo === 'invitado' &&
+            $this->persona === 'fisica' &&
+            ($this->materia === 'civil' || $this->materia === 'mercantil')
+        ) {
+            $this->validate([
+                'nombre_solicitante' => 'required|string|max:255',
+                'apellido_p_solicitante' => 'required|string|max:255',
+                'apellido_m_solicitante' => 'required|string|max:255',
+                'telefonos' => 'required|array|min:1',
+                'correos' => 'required|array|min:1',
+            ]);
+        }
+
+
+        if (
+            $tipo === 'invitado' &&
+            $this->persona === 'moral' &&
+            ($this->materia === 'civil' || $this->materia === 'mercantil')
+        ) {
+            $this->validate([
+                'razon_social_solicitante' => 'required',
+                'telefonos' => 'required|array|min:1',
+                'correos' => 'required|array|min:1',
+            ]);
+        }
+        
+    }
 
     public function seleccionarPersona($index, string $tipo = 'solicitante')
     {
@@ -35,21 +219,23 @@ trait HandleCrudLogicoPersonas
         $this->mostrarModal = true;
     }
 
-
     public function agregarPersona(string $tipo = 'solicitante')
     {
+        $this->validarPersonaAntesDeAgregar($tipo);
+
         $datos = [];
 
         foreach ($this->camposPersona as $campo) {
             $key = str_replace('_solicitante', '', $campo);
 
-            // Evita que 'persona' y 'persona_invitado' se mezclen
             if ($key === 'persona') {
-                $datos[$key] = $tipo === 'solicitante' ? $this->persona : $this->persona_invitado;
+                $datos[$key] = $this->persona;
             } else {
                 $datos[$key] = $this->$campo;
             }
         }
+
+        // $datos['tipo'] = $tipo;
 
         if ($tipo === 'solicitante') {
             $this->solicitanteArray[] = $datos;
@@ -58,30 +244,16 @@ trait HandleCrudLogicoPersonas
         }
 
         Toaster::success('Participante agregado !');
-        $this->limpiarCamposPersona(preservarPersona: false);
+        $this->limpiarCamposPersona(preservarPersona: $tipo === 'invitado');
     }
-
-
-    // public function agregarPersona($payload)
-    // {
-    //     $tipo = $payload['tipo']; // 'solicitante' o 'invitado'
-    //     $datos = $payload['datos'];
-
-    //     if ($tipo === 'solicitante') {
-    //         $this->solicitanteArray[] = $datos;
-    //     } else {
-    //         $this->invitadoArray[] = $datos;
-    //     }
-
-    //      Toaster::success('Participante agregado !');
-    // }
 
     public function cargarEdicion()
     {
         if (empty($this->detalleSeleccionado)) return;
-
+        // dd($this->detalleSeleccionado);
         $this->modoEdicion = true;
         $this->indiceEdicion = $this->detalleSeleccionado['index'];
+        // dd($this->detalleSeleccionado);
 
         foreach ($this->camposPersona as $campo) {
             $key = str_replace('_solicitante', '', $campo);
@@ -89,6 +261,7 @@ trait HandleCrudLogicoPersonas
                 $this->$campo = $this->detalleSeleccionado[$key];
             }
         }
+        // dd($this->detalleSeleccionado);
 
         $this->mostrarModal = false;
     }
@@ -152,7 +325,6 @@ trait HandleCrudLogicoPersonas
 			'nacionalidad_solicitante',
 			'tipo_domicilio_solicitante',
 			'calle_solicitante',
-			'colonia_solicitante',
 			'municipio_solicitante',
 			'entidad_federativa_solicitante',
 			'correo_solicitante',
@@ -170,7 +342,15 @@ trait HandleCrudLogicoPersonas
             'formato_privacidad',
             'apellido_p_solicitante',
             'apellido_m_solicitante',
-            'colonia'
+            'colonia',
+            'acta_de_nacimiento',
+            'resolucion_judicial',
+            'nombre_representante',
+            'apellido_p_representante',
+            'apellido_m_representante',
+            'doc_representante',
+            'correos',
+            'telefonos'
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');

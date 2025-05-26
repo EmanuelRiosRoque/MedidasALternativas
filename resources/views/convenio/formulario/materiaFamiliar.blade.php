@@ -132,11 +132,15 @@
         <h1 class="text-xl border-b-2 border-emerald-700 inline-block pb-1">Datos de Contacto</h1>
     </div>
 
-    <flux:modal.trigger name="edit-profile">
+    <flux:modal.trigger name="edit-contactos">
         <flux:button>Datos de Contacto</flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="edit-profile" class="md:w-96">
+    @if ($errors->has('correos') || $errors->has('telefonos'))
+        <p class="text-red-500 text-sm mt-1">Hace falta agregar al menos un correo o teléfono.</p>
+    @endif
+
+    <flux:modal name="edit-contactos" class="md:w-96">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Datos de contacto</flux:heading>
@@ -290,7 +294,7 @@
             </label>
             <flux:select wire:model="colonia" placeholder="Selecciona una colonia...">
                 @foreach ($colonias as $col)
-                    <flux:select.option>{{ $col->colonia }}</flux:select.option>
+                    <flux:select.option value="{{ $col->id }}" >{{ $col->colonia }}</flux:select.option>
                 @endforeach
             </flux:select>
         </div>    

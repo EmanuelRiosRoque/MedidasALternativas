@@ -16,6 +16,7 @@ class Solicitud extends Model
     protected $fillable = [
         "modalidad",
         "materia",
+        "estatus_id",
         "derivado_canalizado",
         "numero_ticket",
         "institucion",
@@ -24,8 +25,14 @@ class Solicitud extends Model
     ];
 
     public function personas()
-{
-    return $this->hasMany(PersonaSolicitud::class);
-}
+    {
+        return $this->hasMany(PersonaSolicitud::class);
+    }
+
+    public function estatus()
+    {
+        return $this->belongsTo(Estatus::class);
+    }
+
 
 }

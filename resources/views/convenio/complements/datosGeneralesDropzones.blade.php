@@ -33,6 +33,8 @@
             :multiple="false"
             wire:key="identificacion"
         />
+
+
     </div>
 
     {{-- Formato de privacidad --}}
@@ -46,7 +48,7 @@
                 variant="outline"
                 size="xs"
                 icon="link"
-                @click.prevent="window.open('{{ asset('pdfs/aviso_privacidad_civil.pdf') }}', '_blank')"
+                @click.prevent="window.open('{{ asset('pdfs/aviso_' . ($materia === 'familiar' ? 'familiar' : 'civil') . '.pdf') }}', '_blank')"
             >
                 Formato
             </flux:button>
@@ -58,10 +60,14 @@
             :multiple="false"
             wire:key="formatoPrivacidad"
         />
+
+       
     </div>
 </div>
 
-
+@if ($errors->has('identificacion') || $errors->has('formato_privacidad'))
+    <p class="text-red-500 text-sm mt-1">Hace falta agregar al menos una indetificacion o un aviso de privacidad.</p>
+@endif
 
 <div class="mb-2">
     <flux:radio.group wire:model.live="representante" label="¿Es usted el representante legal o albacea?">
@@ -69,6 +75,7 @@
         <flux:radio value="0" label="No" />
     </flux:radio.group>
 </div>
+
 
 @if ($representante == 1)  
 <div class="mb-2">
