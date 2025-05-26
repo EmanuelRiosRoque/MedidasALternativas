@@ -50,13 +50,9 @@
 
 {{--** Boton para enviar datos --}}
 <div class="flex justify-end mt-2">
-    <button 
-        wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('invitado')" }}"
-        type="button"
-        class="bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
-    >
+     <flux:button wire:click='{{ $modoEdicion ? "editarPersona" : "agregarPersona(\"invitado\")" }}' variant="primary" type="button">
         {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
-    </button>
+    </flux:button>
 </div>
 
 {{--* Cards donde se visualizan los participantes agregados --}}

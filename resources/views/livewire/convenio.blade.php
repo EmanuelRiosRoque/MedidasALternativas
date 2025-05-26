@@ -37,13 +37,13 @@
                 Documentos
             </flux:navbar.item>
 
-            <flux:navbar.item 
+            {{-- <flux:navbar.item 
                 wire:click.prevent="cambiarTab(5)" 
                 icon="bookmark-square" 
                 :current="$tab === 5"
             >
                 Finalizar
-            </flux:navbar.item>
+            </flux:navbar.item> --}}
         </flux:navbar>
 
         <!-- Skeleton Loader cuando se está cambiando de tab -->
@@ -63,7 +63,7 @@
                 @include('convenio.datosInvitado')
             @elseif ($tab === 4)
                 @include('convenio.combosDocumentos')
-            @elseif ($tab === 5)
+            {{-- @elseif ($tab === 5) --}}
                 {{-- <div class="flex justify-end">
                     <button 
                         wire:click="save"
@@ -82,37 +82,25 @@
 
         <div class="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
             @if ($tab > 1)
-                <button
-                    wire:click="cambiarTab({{ $tab - 1 }})"
-                    type="button"
-                    class="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 font-medium px-5 py-2.5 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
+                <flux:button wire:click="cambiarTab({{ $tab - 1 }})" icon="arrow-left">
                     Anterior
-                </button>
+                </flux:button>
             @else
                 <div></div>
             @endif
         
-            @if ($tab < 5)
-                <button
-                    wire:click="cambiarTab({{ $tab + 1 }})" 
-                    type="button"
-                    class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg"
-                >
+            @if ($tab < 4)
+                <flux:button wire:click="cambiarTab({{ $tab + 1 }})" icon:trailing="arrow-right" variant='primary'>
                     Siguiente
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
+                </flux:button>
             @endif
             
-            <button wire:click="guardado" type="button"
-                class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
+   
+            @if ($tab === 4)
+            <flux:button wire:click="guardado"  variant='primary'>
                 Guardar
-            </button>
+            </flux:button>
+            @endif
         </div>
     </div>
 </div>

@@ -48,7 +48,7 @@
                 variant="outline"
                 size="xs"
                 icon="link"
-                @click.prevent="window.open('{{ asset('pdfs/aviso_privacidad_civil.pdf') }}', '_blank')"
+                @click.prevent="window.open('{{ asset('pdfs/aviso_' . ($materia === 'familiar' ? 'familiar' : 'civil') . '.pdf') }}', '_blank')"
             >
                 Formato
             </flux:button>

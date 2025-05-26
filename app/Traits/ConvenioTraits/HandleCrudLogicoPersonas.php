@@ -207,7 +207,6 @@ trait HandleCrudLogicoPersonas
         
     }
 
-
     public function seleccionarPersona($index, string $tipo = 'solicitante')
     {
         $array = $tipo === 'invitado' ? $this->invitadoArray : $this->solicitanteArray;
@@ -219,7 +218,6 @@ trait HandleCrudLogicoPersonas
         $this->detalleSeleccionado['tipo'] = $tipo;
         $this->mostrarModal = true;
     }
-
 
     public function agregarPersona(string $tipo = 'solicitante')
     {
@@ -237,6 +235,8 @@ trait HandleCrudLogicoPersonas
             }
         }
 
+        // $datos['tipo'] = $tipo;
+
         if ($tipo === 'solicitante') {
             $this->solicitanteArray[] = $datos;
         } else {
@@ -247,16 +247,13 @@ trait HandleCrudLogicoPersonas
         $this->limpiarCamposPersona(preservarPersona: $tipo === 'invitado');
     }
 
-
-
-
-
     public function cargarEdicion()
     {
         if (empty($this->detalleSeleccionado)) return;
-
+        // dd($this->detalleSeleccionado);
         $this->modoEdicion = true;
         $this->indiceEdicion = $this->detalleSeleccionado['index'];
+        // dd($this->detalleSeleccionado);
 
         foreach ($this->camposPersona as $campo) {
             $key = str_replace('_solicitante', '', $campo);
@@ -264,6 +261,7 @@ trait HandleCrudLogicoPersonas
                 $this->$campo = $this->detalleSeleccionado[$key];
             }
         }
+        // dd($this->detalleSeleccionado);
 
         $this->mostrarModal = false;
     }
@@ -327,7 +325,6 @@ trait HandleCrudLogicoPersonas
 			'nacionalidad_solicitante',
 			'tipo_domicilio_solicitante',
 			'calle_solicitante',
-			'colonia_solicitante',
 			'municipio_solicitante',
 			'entidad_federativa_solicitante',
 			'correo_solicitante',

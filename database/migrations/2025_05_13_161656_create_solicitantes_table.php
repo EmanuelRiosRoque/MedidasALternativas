@@ -18,7 +18,7 @@ return new class extends Migration
             // Tipo de persona
             $table->enum('persona', ['fisica', 'moral', 'familiar'])->nullable();
             $table->boolean('representante')->default(0);
-            $table->string('persona_invitado')->nullable();
+            $table->string('tipo_solicitante')->nullable();
 
             // Datos generales
             $table->string('nombre')->nullable();
@@ -39,17 +39,7 @@ return new class extends Migration
             $table->string('entidad_federativa')->nullable();
             $table->string('cp')->nullable();
 
-            // Contacto básico
-            $table->string('correo')->nullable(); // por si se desea guardar uno principal
-
-            // Documentos (pueden venir como checkbox o dropzone)
-            $table->json('identificacion')->nullable(); // puede almacenar rutas o tipos
-            $table->boolean('acta_notarial')->nullable();
-            $table->boolean('acta_de_nacimiento')->nullable();
-            $table->boolean('resolucion_judicial')->nullable();
-
             // Otros
-            $table->json('formato_privacidad')->nullable();
             $table->string('como_se_entero')->nullable();
 
             // Persona moral

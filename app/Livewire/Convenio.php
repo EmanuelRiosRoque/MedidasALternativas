@@ -2,14 +2,22 @@
 
 namespace App\Livewire;
 
+use App\Models\Correo;
 use Livewire\Component;
+use App\Models\Telefono;
+use App\Models\Documento;
 use App\Models\Solicitud;
-use App\Models\PersonaMoral;
-use App\Models\PersonaFisica;
-use Livewire\WithFileUploads;
-use App\Models\PersonaFamiliar;
-use App\Models\PersonaSolicitud;
 use App\Models\Solicitante;
+
+use App\Models\Representante;
+use Livewire\WithFileUploads;
+
+use App\Models\SepomexColonia;
+use Masmerise\Toaster\Toaster;
+use App\Models\DocumentoSolicitud;
+use Illuminate\Support\Facades\File;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 use App\Traits\ConvenioTraits\HandleValidaciones;
@@ -21,6 +29,7 @@ use App\Traits\ConvenioTraits\HandleAutoCompletarDomicilio;
 class Convenio extends Component
 {
     use WithFileUploads;
+	
 	// Funcion para auto completar domicilio
 	use HandleAutoCompletarDomicilio;
 
@@ -60,7 +69,7 @@ class Convenio extends Component
 	public $persona;
 	public $persona_invitado;
 	public $derivado_canalizado;
-	public string $como_se_entero = '';
+	public $como_se_entero = '';
 	public string $numero_ticket = '';
 	public $doc_representante;
 	public $institucion= '';
@@ -79,27 +88,26 @@ class Convenio extends Component
 	public string $apellido_m_representante = '';
 	public string $sexo_solicitante = '';
 	public string $edad_solicitante = '';
-	public string $fecha_nacimiento_solicitante = '';
+	public $fecha_nacimiento_solicitante = '';
 	public string $escolaridad_solicitante = '';
 	public string $ocupacion_solicitante = '';
-	public string $nacionalidad_solicitante= '';
+	public  $nacionalidad_solicitante= '';
 	public string $tipo_domicilio_solicitante = '';
 	public string $calle_solicitante = '';
-	public string $colonia_solicitante = '';
 	public string $municipio_solicitante = '';
 	public string $entidad_federativa_solicitante = '';
 	public string $correo_solicitante = '';
     public $cp_solicitante = '';
 	// Moral
-	public string $razon_social_solicitante = '';
-	public string $rfc_solicitante= '';
-	public string $instrumento_solicitante = '';
-	public string $fecha_instrumento_solicitante = '';
+	public $razon_social_solicitante = '';
+	public $rfc_solicitante= '';
+	public $instrumento_solicitante = '';
+	public $fecha_instrumento_solicitante = '';
 	public string $telefono_solicitante = '';
 
 	// Familiar
-	public string $domicilio_solicitante = '';
-	public string $estado_civil_solicitante = '';
+	public  $domicilio_solicitante = '';
+	public  $estado_civil_solicitante = '';
 
 	// Documento
 	public $identificacion;
@@ -114,7 +122,6 @@ class Convenio extends Component
 	public bool $modoEdicion = false;
 	public ?int $indiceEdicion = null;
 	
-
 	public $tipo = '';
 	public $documentoSeleccionado = '';
 	public $documentosOpcionales = [];
@@ -122,7 +129,6 @@ class Convenio extends Component
 	public $archivosSubidos = [];
 	public $documentosCargados = []; 
 	
-
 	public $temaFamiliar = '';
 	public $documentosFamiliarSeleccionado = '';
 	public $documentosFamiliarOpcionales = [];
@@ -130,35 +136,32 @@ class Convenio extends Component
 	public $documentosFamiliaresCargados = [];
 	public $archivosFamiliaresSubidos = [];
 
-
 	public $entidades;
 	public $ocupaciones;
 	public $escolaridades;
 	public $mediosSolicitante;
 	public $mediosInvitado;
-	
 
 	public string $correo_temp = '';
 	public string $telefono_temp = '';
 	public array $correos = [];
 	public array $telefonos = [];
 
-    public function mount()
-    {
-        $this->tiposDisponibles = array_keys($this->documentosOpcionalesPorTipo());
-        $this->temasFamiliaresDisponibles = array_keys($this->documentosPorTemaFamiliar());
+  	public function mount($id = null)
+	{
+		$this->tiposDisponibles = array_keys($this->documentosOpcionalesPorTipo());
+		$this->temasFamiliaresDisponibles = array_keys($this->documentosPorTemaFamiliar());
 		$this->entidades = $this->entidadesFederativas();
 		$this->ocupaciones = $this->ocupaciones();
 		$this->escolaridades = $this->escolaridades();
 		$this->mediosSolicitante = $this->difucionSolicitante();
 		$this->mediosInvitado = $this->difucionInvitado();
-    }
+	}
 	
 	public function updated($propertyName)
 	{
 		$this->resetValidation([$propertyName]);
 	}
-
 
 	public function cambiarTab($nuevoTab)
 	{
@@ -183,6 +186,19 @@ class Convenio extends Component
 			$this->validate($rules);
 		}
 
+		if ($this->tab === 2 && $nuevoTab === 3) {
+			if (empty($this->solicitanteArray)) {
+				Toaster::warning('Debe agregar al menos un solicitante antes de continuar !');
+				return;
+			}
+		}
+
+		if ($this->tab === 3 && $nuevoTab === 4) {
+			if (empty($this->invitadoArray)) {
+				Toaster::warning('Debe agregar al menos un invitado antes de continuar.');
+				return;
+			}
+		}
 		// Limpiar solicitante si sales del tab 2
 		if ($this->tab === 2) {
 			$this->limpiarCamposPersona();
@@ -196,15 +212,13 @@ class Convenio extends Component
 		$this->tab = $nuevoTab;
 	}
 
-
-
 	public function guardado()
 	{
 		// dd($this->solicitanteArray,$this->invitadoArray);
-		// dd($this->invitadoArray);
 		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
 		$solicitud = Solicitud::create([
 			"modalidad" => $this->modalidad,
+			"estatus_id" => 1,
 			"materia" => $this->materia,
 			"derivado_canalizado" => $this->derivado_canalizado,
 			"numero_ticket" => $this->numero_ticket,
@@ -215,7 +229,6 @@ class Convenio extends Component
 		 // 2. Procesar solicitantes
 
 		 foreach ($this->solicitanteArray as $datos) {
-			// dd($datos);
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
 		}
 		
@@ -225,67 +238,160 @@ class Convenio extends Component
 		
 	
 
-		//  5. Confirmación de que todo fue guardado correctamente
-		dd("Guardado");
+	   return Redirect::route('solicitudes.index')
+            ->success('Solicitud creada exitosamente !');
 	}
 
 	protected function guardarPersonaRelacionada($solicitudId, $datos, string $rol = 'solicitante')
 	{
 		$tipoPersona = null;
+		$solicitante = null;
 
-    if ($this->materia === "mercantil" || $this->materia === "civil") {
-        $tipoPersona = $datos['persona']; // 'fisica' o 'moral'
+		// 1. Crear $datosPersona según la materia
+		if (in_array($this->materia, ['mercantil', 'civil'])) {
+			$tipoPersona = $datos['persona'] ?? 'fisica';
 
-		$datosPersona = [
-			'persona' => $tipoPersona,
-			'nombre' => $datos['nombre'] ?? '',
-			'apellido_p' => $datos['apellido_p'] ?? null,
-			'apellido_m' => $datos['apellido_m'] ?? null,
-			'sexo' => $datos['sexo'] ?? null,
-			'edad' => $datos['edad'] ?? null,
-			'fecha_nacimiento' => !empty($datos['fecha_nacimiento']) ? $datos['fecha_nacimiento'] : null,
-			'escolaridad' => $datos['escolaridad'] ?? null,
-			'ocupacion' => $datos['ocupacion'] ?? null,
-			'nacionalidad' => $datos['nacionalidad'] ?? null,
-			'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
-			'calle' => $datos['calle'] ?? null,
-			'colonia' => $datos['colonia'] ?? null,
-			'municipio' => $datos['municipio'] ?? null,
-			'entidad_federativa' => $datos['entidad_federativa'] ?? null,
-			'cp' => $datos['cp'] ?? null,
-			'rfc' => $datos['rfc'] ?? null,
-			'razon_social' => $datos['razon_social'] ?? null,
-			'instrumento' => $datos['instrumento'] ?? null,
-			'fecha_instrumento' => !empty($datos['fecha_instrumento']) ? $datos['fecha_instrumento'] : null,
-		];
+			$datosPersona = [
+				'persona'             => $tipoPersona,
+				'nombre'              => $datos['nombre'] ?? '',
+				'tipo_solicitante'    => $rol,
+				'apellido_p'          => $datos['apellido_p'] ?? null,
+				'apellido_m'          => $datos['apellido_m'] ?? null,
+				'sexo'                => $datos['sexo'] ?? null,
+				'edad'                => $datos['edad'] ?? null,
+				'fecha_nacimiento'    => !empty($datos['fecha_nacimiento']) ? $datos['fecha_nacimiento'] : null,
+				'escolaridad'         => $datos['escolaridad'] ?? null,
+				'ocupacion'           => $datos['ocupacion'] ?? null,
+				'nacionalidad'        => $datos['nacionalidad'] ?? null,
+				'tipo_domicilio'      => $datos['tipo_domicilio'] ?? null,
+				'calle'               => $datos['calle'] ?? null,
+				'colonia'             => $datos['colonia'] ?? null,
+				'municipio'           => $datos['municipio'] ?? null,
+				'entidad_federativa'  => $datos['entidad_federativa'] ?? null,
+				'cp'                  => $datos['cp'] ?? null,
+				'rfc'                 => $datos['rfc'] ?? null,
+				'razon_social'        => $datos['razon_social'] ?? null,
+				'instrumento'         => $datos['instrumento'] ?? null,
+				'como_se_entero' 	  => $datos['como_se_entero'] ?? '',
+				'fecha_instrumento'   => !empty($datos['fecha_instrumento']) ? $datos['fecha_instrumento'] : null,
+				'solicitud_id'        => $solicitudId,
+			];
+		} else {
+			$tipoPersona = 'familiar';
 
-    } else {
-        $tipoPersona = 'familiar';
+			$datosPersona = [
+				'persona'             => $tipoPersona,
+				'tipo_solicitante'    => $rol,
+				'nombre'              => $datos['nombre'] ?? '',
+				'apellido_p'          => $datos['apellido_p'] ?? null,
+				'apellido_m'          => $datos['apellido_m'] ?? null,
+				'sexo'                => $datos['sexo'] ?? null,
+				'edad'                => $datos['edad'] ?? null,
+				'escolaridad'         => $datos['escolaridad'] ?? null,
+				'ocupacion'           => $datos['ocupacion'] ?? null,
+				'tipo_domicilio'      => $datos['tipo_domicilio'] ?? null,
+				'calle'               => $datos['calle'] ?? null,
+				'colonia'             => $datos['colonia'] ?? null,
+				'municipio'           => $datos['municipio'] ?? null,
+				'entidad_federativa'  => $datos['entidad_federativa'] ?? null,
+				'cp'                  => $datos['cp'] ?? null,
+				'estado_civil'        => $datos['estado_civil'] ?? null,
+				'como_se_entero' 	  => $datos['como_se_entero'] ?? '',
+				'solicitud_id'        => $solicitudId,
+			];
+		}
 
-        $datosPersona = [
-            'persona' => $tipoPersona,
-            'nombre' => $datos['nombre'] ?? '',
-            'apellido_p' => $datos['apellido_p'] ?? null,
-            'apellido_m' => $datos['apellido_m'] ?? null,
-            'sexo' => $datos['sexo'] ?? null,
-            'edad' => $datos['edad'] ?? null,
-            'escolaridad' => $datos['escolaridad'] ?? null,
-            'ocupacion' => $datos['ocupacion'] ?? null,
-            'tipo_domicilio' => $datos['tipo_domicilio'] ?? null,
-            'calle' => $datos['calle'] ?? null,
-            'colonia' => $datos['colonia'] ?? null,
-            'municipio' => $datos['municipio'] ?? null,
-            'entidad_federativa' => $datos['entidad_federativa'] ?? null,
-            'cp' => $datos['cp'] ?? null,
-            'estado_civil' => $datos['estado_civil'] ?? null,
-        ];
-    }
-	    $datosPersona['solicitud_id'] = $solicitudId;
-		Solicitante::create($datosPersona);
+		// 2. Crear solicitante
+		$solicitante = Solicitante::create($datosPersona);
+
+		// 3. Correos
+		if (!empty($datos['correos']) && is_array($datos['correos'])) {
+			foreach ($datos['correos'] as $correo) {
+				if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+					Correo::create([
+						'solicitante_id' => $solicitante->id,
+						'email' => $correo,
+					]);
+				}
+			}
+		}
+
+		// 4. Teléfonos
+		if (!empty($datos['telefonos']) && is_array($datos['telefonos'])) {
+			foreach ($datos['telefonos'] as $telefono) {
+				if (!empty($telefono)) {
+					Telefono::create([
+						'solicitante_id' => $solicitante->id,
+						'numero' => $telefono,
+						'tipo' => null,
+					]);
+				}
+			}
+		}
+
+		// 5. Representante
+		if (!empty($datos['representante']) && $datos['representante'] != 0) {
+			$representante = $datos['representante'];
+
+			Representante::create([
+				'solicitante_id'     => $solicitante->id,
+				'nombre'             => $datos['nombre_representante'] ?? '',
+				'apellido_paterno'   => $datos['apellido_p_representante'] ?? '',
+				'apellido_materno'   => $datos['apellido_m_representante'] ?? null,
+			]);
+		}
+
+		
+
+		$this->guardarDocumentoIndividual($datos['identificacion'][0] ?? null, 'identificacion', $solicitante->id);
+		$this->guardarDocumentoIndividual($datos['formato_privacidad'][0] ?? null, 'formato de privacidad', $solicitante->id);
+
+		//Representante
+		$this->guardarDocumentoIndividual($datos['acta_notarial'][0] ?? null, 'acta notarial', $solicitante->id);
+		$this->guardarDocumentoIndividual($datos['acta_de_nacimiento'][0] ?? null, 'acta de nacimiento', $solicitante->id);
+		$this->guardarDocumentoIndividual($datos['resolucion_judicial'][0] ?? null, 'resolucion judicial', $solicitante->id);
+
+
+		// 7. Documentos generales de la solicitud
+		$documentosListos = $this->guardarArchivos();
+
+		foreach ($documentosListos as $doc) {
+			DocumentoSolicitud::create([
+				'solicitud_id'    => $solicitudId,
+				'tipo'            => $doc['documento'],
+				'nombre_original' => $doc['nombre_original'],
+				'ruta'            => $doc['ruta'],
+				'extension'       => $doc['extension'],
+				'size'            => $doc['size'],
+			]);
+		}
 	}
 
+	protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId)
+	{
+		if ($archivo && !empty($archivo['path']) && file_exists($archivo['path'])) {
+			$nombreOriginal = $archivo['name'];
+			$nuevoNombre = uniqid() . '_' . $nombreOriginal;
+			$destino = 'documentos';
 
+			$rutaFinal = Storage::disk('public')->putFileAs(
+				$destino,
+				new HttpFile($archivo['path']),
+				$nuevoNombre
+			);
 
+			$rutaPublica = 'storage/' . $rutaFinal;
+
+			Documento::create([
+				'solicitante_id'    => $solicitanteId,
+				'tipo'              => $tipo,
+				'nombre_original'   => $nombreOriginal,
+				'ruta'              => $rutaPublica,
+				'extension'         => $archivo['extension'] ?? pathinfo($nombreOriginal, PATHINFO_EXTENSION),
+				'size'              => $archivo['size'] ?? null,
+			]);
+		}
+	}
 
 	public function save () {
 		return Redirect::route('pre-mediacion.index')

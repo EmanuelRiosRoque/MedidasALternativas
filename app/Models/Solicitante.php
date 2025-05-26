@@ -13,6 +13,7 @@ class Solicitante extends Model
 
     protected $fillable = [
         'solicitud_id',
+        'tipo_solicitante',
         'persona',
         'representante',
         'persona_invitado',

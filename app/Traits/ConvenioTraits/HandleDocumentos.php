@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Traits\ConvenioTraits;
+use Illuminate\Support\Facades\File;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Support\Facades\Storage;
 
 trait HandleDocumentos
 {
@@ -429,26 +432,40 @@ trait HandleDocumentos
         $this->documentosFamiliarSeleccionado = '';
     }
 
-    public function guardarArchivos()
+    public function guardarArchivos(): array
     {
         $documentosConArchivos = [];
 
-        foreach ($this->documentosCargados as $index => $documento) {
-            // Verifica si se cargó algún archivo para este documento
-            if (isset($this->archivosSubidos[$index]) && !empty($this->archivosSubidos[$index])) {
+        foreach ($this->documentosCargados as $index => $documentoTipo) {
+            $archivo = $this->archivosSubidos[$index][0] ?? null;
+
+            if ($archivo && isset($archivo['path']) && file_exists($archivo['path'])) {
+                // Generar nombre único
+                $nombreOriginal = $archivo['name'];
+                $nuevoNombre = uniqid() . '_' . $nombreOriginal;
+                $destino = 'documentos';
+
+                // Guardar archivo en public/documentos/
+                $rutaFinal = Storage::disk('public')->putFileAs(
+                    $destino,
+                    new HttpFile($archivo['path']),
+                    $nuevoNombre
+                );
+
+                $rutaPublica = 'storage/' . $rutaFinal;
+
+                // Guardar información del documento para base de datos
                 $documentosConArchivos[] = [
-                    'documento' => $documento,
-                    'archivo' => $this->archivosSubidos[$index]
-                ];
-            } else {
-                $documentosConArchivos[] = [
-                    'documento' => $documento,
-                    'archivo' => 'No se subió archivo'
+                    'documento'        => $documentoTipo,
+                    'nombre_original'  => $nombreOriginal,
+                    'ruta'             => $rutaPublica,
+                    'extension'        => $archivo['extension'] ?? pathinfo($nombreOriginal, PATHINFO_EXTENSION),
+                    'size'             => $archivo['size'] ?? null,
                 ];
             }
         }
 
-        dd($documentosConArchivos);
+        return $documentosConArchivos;
     }
 
     public function eliminarDocumentoFamiliar($doc)

@@ -58,14 +58,14 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 {{--** Boton para enviar datos --}}
 <div class="flex justify-end">
-    <button 
-        wire:click="{{ $modoEdicion ? 'editarPersona' : "agregarPersona('solicitante')" }}"
-        type="button"
-        class="bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 mt-5 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
-    >
-        {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
-    </button>
+  
+         <flux:button wire:click='{{ $modoEdicion ? "editarPersona" : "agregarPersona(\"solicitante\")" }}' variant="primary" type="button">
+            {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
+        </flux:button>
+
 </div>
+
+
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($solicitanteArray))
