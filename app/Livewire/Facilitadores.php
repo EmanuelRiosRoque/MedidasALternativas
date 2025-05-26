@@ -57,7 +57,7 @@ class Facilitadores extends Component
         $correo = trim($this->correo_temp);
     
         if ($correo !== '' && filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-            $this->correos[] = strtoupper($correo);
+            $this->correos[] = ($correo);
             $this->correo_temp = '';
         }
     }
