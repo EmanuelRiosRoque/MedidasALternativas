@@ -15,7 +15,7 @@
         @endif
         
         <div class="animate__animated animate__fadeIn">
-            <flux:radio.group wire:model.live="acudiran_juntos" label="¿Acudiran juntos?" >
+            <flux:radio.group wire:model="acudiran_juntos" label="¿Acudiran juntos?" >
                 <flux:radio value="1" label="Si" />
                 <flux:radio value="2" label="No" />
             </flux:radio.group>

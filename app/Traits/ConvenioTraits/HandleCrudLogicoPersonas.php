@@ -24,6 +24,7 @@ trait HandleCrudLogicoPersonas
         'nombre_representante',
         'apellido_p_representante',
         'apellido_m_representante',
+        'acudiran_juntos'
     ];
 
     protected function validarPersonaAntesDeAgregar(string $tipo)
@@ -350,7 +351,8 @@ trait HandleCrudLogicoPersonas
             'apellido_m_representante',
             'doc_representante',
             'correos',
-            'telefonos'
+            'telefonos',
+            'acudiran_juntos'
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');

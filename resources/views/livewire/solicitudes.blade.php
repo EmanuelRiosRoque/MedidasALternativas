@@ -92,11 +92,15 @@
                                                     class="absolute right-0 mt-2 w-40 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-md shadow-lg z-50"
                                                     style="display: none;">
                                                     <ul class="text-sm text-gray-700 dark:text-gray-200">
-                                                        <li><a href="{{ route('solicitud.index') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">Ver</a></li>
                                                         <li>
-                                                            <a href="{{ route('solicitud.index') }}"
+                                                            <a href="{{ route('solicitud.index', $solicitud->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                                Ver
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ route('solicitud.asignacion') }}"
                                                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                                                                Editar
+                                                                Asignar 
                                                             </a>
                                                         </li>
                                                         <li><button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700 text-red-600">Eliminar</button></li>

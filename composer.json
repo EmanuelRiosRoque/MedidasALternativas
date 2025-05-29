@@ -18,6 +18,7 @@
         "livewire/volt": "^1.7.0",
         "mallardduck/blade-lucide-icons": "^1.23",
         "masmerise/livewire-toaster": "^2.7",
+        "omnia-digital/livewire-calendar": "^3.2",
         "power-components/livewire-powergrid": "^6.3",
         "spatie/laravel-permission": "^6.17"
     },

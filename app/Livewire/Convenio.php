@@ -12,10 +12,8 @@ use App\Models\Solicitante;
 use App\Models\Representante;
 use Livewire\WithFileUploads;
 
-use App\Models\SepomexColonia;
 use Masmerise\Toaster\Toaster;
 use App\Models\DocumentoSolicitud;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\File as HttpFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
@@ -214,8 +212,19 @@ class Convenio extends Component
 
 	public function guardado()
 	{
-		// dd($this->solicitanteArray,$this->invitadoArray);
-		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
+		$rutaOficio = null;
+
+		// Si existe el archivo de oficio, lo guardamos primero
+		if (!empty($this->oficio) && !empty($this->oficio['path']) && file_exists($this->oficio['path'])) {
+			$rutaOficio = $this->guardarDocumentoIndividual(
+				$this->oficio,
+				'oficio', // tipo de documento
+				null,     // no está ligado a un solicitante, es general
+				false     // no lo guardamos en la tabla Documento si no aplica
+			);
+		}
+
+		// Crear la solicitud
 		$solicitud = Solicitud::create([
 			"modalidad" => $this->modalidad,
 			"estatus_id" => 1,
@@ -223,23 +232,21 @@ class Convenio extends Component
 			"derivado_canalizado" => $this->derivado_canalizado,
 			"numero_ticket" => $this->numero_ticket,
 			"institucion" => $this->institucion,
-			"oficio" => "oficio",
+			"oficio" => $rutaOficio, // Guardamos la ruta si existía
 			"cual_otro" => $this->cual_otro
 		]);
-		 // 2. Procesar solicitantes
 
-		 foreach ($this->solicitanteArray as $datos) {
+		// Procesar personas relacionadas
+		foreach ($this->solicitanteArray as $datos) {
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
 		}
-		
+
 		foreach ($this->invitadoArray as $datos) {
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'invitado');
 		}
-		
-	
 
-	   return Redirect::route('solicitudes.index')
-            ->success('Solicitud creada exitosamente !');
+		return Redirect::route('solicitudes.table')
+			->success('Solicitud creada exitosamente !');
 	}
 
 	protected function guardarPersonaRelacionada($solicitudId, $datos, string $rol = 'solicitante')
@@ -367,7 +374,7 @@ class Convenio extends Component
 		}
 	}
 
-	protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId)
+	protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId, $guardarDB = true)
 	{
 		if ($archivo && !empty($archivo['path']) && file_exists($archivo['path'])) {
 			$nombreOriginal = $archivo['name'];
@@ -382,15 +389,20 @@ class Convenio extends Component
 
 			$rutaPublica = 'storage/' . $rutaFinal;
 
-			Documento::create([
-				'solicitante_id'    => $solicitanteId,
-				'tipo'              => $tipo,
-				'nombre_original'   => $nombreOriginal,
-				'ruta'              => $rutaPublica,
-				'extension'         => $archivo['extension'] ?? pathinfo($nombreOriginal, PATHINFO_EXTENSION),
-				'size'              => $archivo['size'] ?? null,
-			]);
+			if($guardarDB){
+				Documento::create([
+					'solicitante_id'    => $solicitanteId,
+					'tipo'              => $tipo,
+					'nombre_original'   => $nombreOriginal,
+					'ruta'              => $rutaPublica,
+					'extension'         => $archivo['extension'] ?? pathinfo($nombreOriginal, PATHINFO_EXTENSION),
+					'size'              => $archivo['size'] ?? null,
+				]);
+			}
+			
+			return $rutaPublica;
 		}
+		return null;
 	}
 
 	public function save () {

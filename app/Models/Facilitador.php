@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Facilitador extends Model
 {
-   
+    protected $table = 'facilitadores'; // 👈 aquí forzamos el nombre correcto
+    protected $fillable = ['nombre'];
+
 }

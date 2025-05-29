@@ -54,13 +54,13 @@ class Solicitante extends Model
 
     // Relaciones
 
-    // public function correos()
-    // {
-    //     return $this->hasMany(Correo::class);
-    // }
+    public function correos()
+    {
+        return $this->hasMany(Correo::class);
+    }
 
-    // public function telefonos()
-    // {
-    //     return $this->hasMany(Telefono::class);
-    // }
+    public function telefonos()
+    {
+        return $this->hasMany(Telefono::class);
+    }
 }
