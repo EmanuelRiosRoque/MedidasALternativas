@@ -54,6 +54,7 @@ class AppointmentsCalendar extends LivewireCalendar
                     'date' => $model->fecha . ' ' . $model->hora_inicio,
                     'hora_inicio' => $model->hora_inicio,
                     'hora_fin' => $model->hora_fin,
+                    'color' => $model->color
                 ];
             });
     }
@@ -89,19 +90,6 @@ class AppointmentsCalendar extends LivewireCalendar
     public function onDayClick($year, $month, $day)
     {
         $this->fechaSeleccionada = Carbon::createFromDate($year, $month, $day)->toDateString();
-
-        // $this->eventosDelDia = Agenda::whereDate('created_at', $this->fechaSeleccionada)
-        //     ->get()
-        //     ->map(function (Agenda $model) {
-        //         return [
-        //             'id' => $model->id,
-        //             'title' => $model->name,
-        //             'descripcion' => 'Sin descripción',
-        //             'fecha' => $model->created_at->format('H:i'),
-        //         ];
-        //     })
-        //     ->toArray();
-
         $this->dispatch('abrirModalDia', fecha: $this->fechaSeleccionada);
     }
 

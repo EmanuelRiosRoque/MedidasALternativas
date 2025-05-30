@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('hora_fin');
             $table->string('descripcion');
             $table->string('materia');
+            $table->string('color');
             $table->timestamps();
         });
     }

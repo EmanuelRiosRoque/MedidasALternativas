@@ -8,7 +8,7 @@
     ondragleave="onLivewireCalendarEventDragLeave(event, '{{ $componentId }}', '{{ $day }}', '{{ $dragAndDropClasses }}');"
     ondragover="onLivewireCalendarEventDragOver(event);"
     ondrop="onLivewireCalendarEventDrop(event, '{{ $componentId }}', '{{ $day }}', {{ $day->year }}, {{ $day->month }}, {{ $day->day }}, '{{ $dragAndDropClasses }}');"
-    class="flex-1 h-40  border border-gray-200 -mt-px -ml-px"
+    class="flex-1 h-44 border border-gray-200 -mt-px -ml-px"
     style="min-width: 10rem;"
 >
     <div class="w-full h-full" id="{{ $componentId }}-{{ $day }}">

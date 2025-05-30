@@ -98,7 +98,7 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="{{ route('solicitud.asignacion') }}"
+                                                            <a href="{{ route('calendario.index') }}"
                                                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
                                                                 Asignar 
                                                             </a>

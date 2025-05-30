@@ -15,6 +15,7 @@ class Agenda extends Model
         'hora_fin',
         'descripcion',
         'materia',
+        'color'
     ];
 
     // Relación con Solicitud

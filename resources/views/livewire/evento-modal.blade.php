@@ -6,11 +6,16 @@
                 <flux:text class="mt-2">Información relevante del evento seleccionado.</flux:text>
             </div>
 
-            <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
-                @foreach ($facilitadores as $facilitador)
-                    <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
-                @endforeach
-            </flux:select>
+            <div class=" grid grid-cols-2 gap-2">
+                <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
+                    @foreach ($facilitadores as $facilitador)
+                        <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+    
+               <x-select-color wire:model="colorEvento" />
+            </div>
+
 
             @if($solicitudes->isNotEmpty())
                 <flux:select wire:model="solicitud" placeholder="Elige solicitud a asignar">
@@ -56,11 +61,16 @@
                 <flux:text class="mt-2">Información relevante del evento seleccionado.</flux:text>
             </div>
 
-            <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
-                @foreach ($facilitadores as $facilitador)
-                    <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
-                @endforeach
-            </flux:select>
+            <div class=" grid grid-cols-2 gap-2">
+                <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
+                    @foreach ($facilitadores as $facilitador)
+                        <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+    
+               <x-select-color wire:model="colorEvento" />
+            </div>
+
 
             @if($solicitudes->isNotEmpty())
                 <flux:select wire:model="solicitud" placeholder="Elige solicitud a asignar">

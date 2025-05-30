@@ -14,7 +14,8 @@ class EstatusSeeder extends Seeder
     public function run(): void
     {
         DB::table('estatus')->insert([
-            ['nombre' => 'Registrada'],
+            ['nombre' => 'Registrado'],
+            ['nombre' => 'Asignado'],
         ]);
     }
 }

@@ -28,12 +28,14 @@ class EventoModal extends Component
     public $facilitador = '';
     public $horaInicio = '';
     public $horaFin = '';
+    public $colorEvento = '';
 
     public function recibirFecha($fecha)
     {
         $this->fechaSeleccionada = $fecha;
         $this->showModalDia = true;
     }
+
     public function cargarEvento($id)
     {
         $this->eventoId = $id;
@@ -51,14 +53,30 @@ class EventoModal extends Component
 
         $this->actividad     = $evento->descripcion;
         $this->fechaSeleccionada = $evento->fecha;
+        $this->colorEvento = $evento->color;
 
         $this->show = true;
     }
 
-    protected $listeners = [
+    protected $listeners = 
+    [
         'abrirModalEvento' => 'cargarEvento',
         'abrirModalDia' => 'recibirFecha',
     ];
+
+    private function generarHorarios($inicio, $fin)
+    {
+        $horarios = [];
+        $hora = \Carbon\Carbon::createFromFormat('H:i', $inicio);
+        $horaFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
+
+        while ($hora < $horaFin) {
+            $horarios[$hora->format('H:i')] = $hora->format('g:i A');
+            $hora->addMinutes(30);
+        }
+
+        return $horarios;
+    }
 
     public function mount() 
     {
@@ -83,26 +101,10 @@ class EventoModal extends Component
         $this->horarios = $this->generarHorarios('09:00', '19:00');
     }
 
-    private function generarHorarios($inicio, $fin)
-    {
-        $horarios = [];
-        $hora = \Carbon\Carbon::createFromFormat('H:i', $inicio);
-        $horaFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
-
-        while ($hora < $horaFin) {
-            $horarios[$hora->format('H:i')] = $hora->format('g:i A');
-            $hora->addMinutes(30);
-        }
-
-        return $horarios;
-    }
-
     public function abrirModalDia()
     {
         $this->showModalDia = true;
     }
-
-   
 
     public function cerrar()
     {
@@ -124,16 +126,18 @@ class EventoModal extends Component
 
     public function guardarEvento()
     {
+        // dd($this->colorEvento)
         $this->validate([
             'solicitud'   => 'required|exists:solicitudes,id',
             'facilitador' => 'required|exists:facilitadores,id',
-            'horaInicio'  => 'required',
-            'horaFin'     => 'required',
+            'horaInicio'  => 'required|date_format:H:i',
+            'horaFin'     => 'required|date_format:H:i|after:horaInicio',
             'actividad'   => 'required|string|max:255',
         ]);
 
+
         if ($this->eventoId) {
-            // 🔁 Actualizar evento existente
+            // Actualizar evento existente
             $evento = Agenda::find($this->eventoId);
 
             if ($evento) {
@@ -146,6 +150,8 @@ class EventoModal extends Component
                     'hora_fin'       => $this->horaFin,
                     'descripcion'    => $this->actividad,
                     'materia'        => $this->rolUsuario,
+                    'color'          => $this->colorEvento, 
+
                 ]);
 
                 if ($cambioFacilitador) {
@@ -155,7 +161,6 @@ class EventoModal extends Component
                 }
             }
         } else {
-            // ➕ Crear evento nuevo
             Agenda::create([
                 'solicitud_id'   => $this->solicitud,
                 'facilitador_id' => $this->facilitador,
@@ -164,6 +169,7 @@ class EventoModal extends Component
                 'hora_fin'       => $this->horaFin,
                 'descripcion'    => $this->actividad,
                 'materia'        => $this->rolUsuario,
+                'color'          => $this->colorEvento, 
             ]);
 
             Solicitud::where('id', $this->solicitud)->update([
@@ -177,28 +183,6 @@ class EventoModal extends Component
         return redirect()->route('calendario.index')
             ->with('success', '¡Evento guardado correctamente!');
     }
-
-//    public function actualizarEvento($eventoId)
-//     {
-//         $evento = Agenda::find($eventoId);
-
-//         if (!$evento) {
-//             session()->flash('error', 'Evento no encontrado.');
-//             return;
-//         }
-
-//         // Precarga los datos en los campos del formulario
-//         $this->solicitud = $evento->solicitud_id;
-//         $this->facilitador = $evento->facilitador_id;
-//         $this->fechaSeleccionada = $evento->fecha;
-//         $this->horaInicio = $evento->hora_inicio;
-//         $this->horaFin = $evento->hora_fin;
-//         $this->actividad = $evento->descripcion;
-
-//         // Abre el modal principal
-//         $this->show = true;
-//     }
-
 
     public function render()
     {
