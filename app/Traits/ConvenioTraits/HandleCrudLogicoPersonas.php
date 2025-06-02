@@ -245,7 +245,7 @@ trait HandleCrudLogicoPersonas
         }
 
         Toaster::success('Participante agregado !');
-        $this->limpiarCamposPersona(preservarPersona: $tipo === 'invitado');
+        $this->limpiarCamposPersona(preservarPersona: false);
     }
 
     public function cargarEdicion()
