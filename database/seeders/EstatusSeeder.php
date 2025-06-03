@@ -17,6 +17,9 @@ class EstatusSeeder extends Seeder
             ['nombre' => 'Registrado'],
             ['nombre' => 'Asignado'],
             ['nombre' => 'Pre-Mediación'],
+            ['nombre' => 'Re-Asignado'],
+            ['nombre' => 'Re-Asignacion Fallida'],
+            ['nombre' => 'Oculto'],
         ]);
     }
 }

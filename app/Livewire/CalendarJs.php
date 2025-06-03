@@ -28,7 +28,7 @@ class CalendarJs extends Component
     public $facilitadores = [];
     public $solicitudes = [];
     public $eventoId = null;
-    public $motivo_reasignacion = '';
+    public $observacion = '';
 
     public $solicitud = '';
     public $actividad = '';
@@ -38,7 +38,8 @@ class CalendarJs extends Component
     public $colorEvento = '';
     public $solicitantes = [];
     public $solicitante = '';
-
+    public $fechaSeleccionadaUpdate;
+    public $reasignacion = 2;
 
     public function mount()
     {
@@ -87,6 +88,7 @@ class CalendarJs extends Component
     {
         $this->eventos = Agenda::with('facilitador', 'solicitud') // si tienes relación definida
             ->whereDate('fecha', $this->fechaSeleccionada)
+            ->where('activo', 1)
             ->get();
     }
 
@@ -105,6 +107,30 @@ class CalendarJs extends Component
 
     public function guardarEvento()
     {
+        $folioFamiliar = siguienteValorSecuencia('familiar'); // 1
+        $folioCivil = siguienteValorSecuencia('civil');       // 1
+
+        $folioFamiliarFormateado = 'FAM-' . now()->year . '-' . str_pad($folioFamiliar, 4, '0', STR_PAD_LEFT);
+        $folioCivilFormateado = 'CIV-' . now()->year . '-' . str_pad($folioCivil, 4, '0', STR_PAD_LEFT);
+
+        dd($folioFamiliarFormateado, $folioCivilFormateado);
+
+        
+
+        $this->validateDatos();
+
+        if ($this->eventoId) {
+            $this->procesarActualizacion();
+        } else {
+            $this->crearNuevoEvento();
+        }
+
+        $this->cargarEventosYDias();
+        $this->cerrar();
+    }
+
+    private function validateDatos()
+    {
         $this->validate([
             'solicitud'   => 'required|exists:solicitudes,id',
             'facilitador' => 'required|exists:facilitadores,id',
@@ -112,131 +138,295 @@ class CalendarJs extends Component
             'horaFin'     => 'required|after:horaInicio',
             'actividad'   => 'required|string|max:255',
         ]);
+    }
 
-        if ($this->eventoId) {
-            // Actualizar evento existente
-            $evento = Agenda::find($this->eventoId);
+    private function procesarActualizacion()
+    {
+        $evento = Agenda::find($this->eventoId);
 
-            if ($evento) {
-                $cambioFacilitador = $evento->facilitador_id != $this->facilitador;
+        if (!$evento) return;
 
-                $evento->update([
-                    'facilitador_id' => $this->facilitador,
-                    'fecha'          => $this->fechaSeleccionada,
-                    'hora_inicio'    => $this->horaInicio,
-                    'hora_fin'       => $this->horaFin,
-                    'descripcion'    => $this->actividad,
-                    'materia'        => $this->rolUsuario,
-                    'color'          => $this->colorEvento,
-                    'motivo_reasignacion' => $this->motivo_reasignacion,
-                ]);
-
-                // if ($cambioFacilitador) {
-                    // Limpiar todos los facilitadores de la solicitud antes de reasignar
-                    Solicitante::where('solicitud_id', $this->solicitud)
-                        ->update([
-                            'facilitador_id' => null,
-                            'estatus_id'     => null,
-                        ]);
-
-                    // Luego aplicar la asignación según el tipo seleccionado
-                    switch ($this->solicitante) {
-                        case 'todos':
-                            Solicitante::where('solicitud_id', $this->solicitud)
-                                ->update([
-                                    'facilitador_id' => $this->facilitador,
-                                    'estatus_id'     => 3,
-                                ]);
-                            break;
-
-                        case 'solicitantes':
-                            Solicitante::where('solicitud_id', $this->solicitud)
-                                ->where('tipo_solicitante', 'solicitante')
-                                ->update([
-                                    'facilitador_id' => $this->facilitador,
-                                    'estatus_id'     => 3,
-                                ]);
-                            break;
-
-                        case 'invitados':
-                            Solicitante::where('solicitud_id', $this->solicitud)
-                                ->where('tipo_solicitante', 'invitado')
-                                ->update([
-                                    'facilitador_id' => $this->facilitador,
-                                    'estatus_id'     => 3,
-                                ]);
-                            break;
-
-                        default:
-                            if (is_numeric($this->solicitante)) {
-                                Solicitante::where('id', $this->solicitante)
-                                    ->update([
-                                        'facilitador_id' => $this->facilitador,
-                                        'estatus_id'     => 3,
-                                    ]);
-                            }
-                            break;
-                    }
-                // }
-
-                }
+        if ($this->reasignacion == 1) {
+            $this->desactivarEventosAnteriores();
+            $this->crearReasignacion();
         } else {
-            // Crear nuevo evento
-            Agenda::create([
-                'solicitud_id'   => $this->solicitud,
-                'facilitador_id' => $this->facilitador,
-                'fecha'          => $this->fechaSeleccionada,
-                'hora_inicio'    => $this->horaInicio,
-                'hora_fin'       => $this->horaFin,
-                'descripcion'    => $this->actividad,
-                'materia'        => $this->rolUsuario,
-                'color'          => $this->colorEvento,
-                'motivo_reasignacion' => $this->motivo_reasignacion,
+            $evento->update([
+                'solicitud_id'     => $this->solicitud,
+                'opcion_invitacion'=> $this->solicitante,
+                'facilitador_id'   => $this->facilitador,
+                'fecha'            => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+                'hora_inicio'      => $this->horaInicio,
+                'hora_fin'         => $this->horaFin,
+                'descripcion'      => $this->actividad,
+                'materia'          => $this->rolUsuario,
+                'color'            => $this->colorEvento,
             ]);
-
-            // Asignar a solicitantes según selección
-            switch ($this->solicitante) {
-                case 'todos':
-                    Solicitante::where('solicitud_id', $this->solicitud)
-                        ->update([
-                            'facilitador_id' => $this->facilitador,
-                            'estatus_id'     => 3,
-                        ]);
-                    break;
-
-                case 'solicitantes':
-                    Solicitante::where('solicitud_id', $this->solicitud)
-                        ->where('tipo_solicitante', 'solicitante')
-                        ->update([
-                            'facilitador_id' => $this->facilitador,
-                            'estatus_id'     => 3,
-                        ]);
-                    break;
-
-                case 'invitados':
-                    Solicitante::where('solicitud_id', $this->solicitud)
-                        ->where('tipo_solicitante', 'invitado')
-                        ->update([
-                            'facilitador_id' => $this->facilitador,
-                            'estatus_id'     => 3,
-                        ]);
-                    break;
-
-                default:
-                    if (is_numeric($this->solicitante)) {
-                        Solicitante::where('id', $this->solicitante)
-                            ->update([
-                                'facilitador_id' => $this->facilitador,
-                                'estatus_id'     => 3,
-                            ]);
-                    }
-                    break;
-            }
         }
 
-        $this->cargarEventosYDias();
-        $this->cerrar();
+        $this->reasignarFacilitadores();
     }
+
+    private function desactivarEventosAnteriores()
+    {
+        Agenda::where('solicitud_id', $this->solicitud)
+            ->where('estatus_id', 4)
+            ->update([
+                'estatus_id' => 5,
+                'activo'     => 0
+            ]);
+    }
+
+    private function crearReasignacion()
+    {
+        Agenda::create([
+            'solicitud_id'      => $this->solicitud,
+            'opcion_invitacion' => $this->solicitante,
+            'facilitador_id'    => $this->facilitador,
+            'fecha'             => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+            'hora_inicio'       => $this->horaInicio,
+            'hora_fin'          => $this->horaFin,
+            'descripcion'       => $this->actividad,
+            'materia'           => $this->rolUsuario,
+            'color'             => $this->colorEvento,
+            'observacion'       => $this->observacion,
+            'estatus_id'        => 4,
+            'activo'            => 1,
+        ]);
+    }
+
+    private function crearNuevoEvento()
+    {
+        Agenda::create([
+            'solicitud_id'      => $this->solicitud,
+            'facilitador_id'    => $this->facilitador,
+            'opcion_invitacion' => $this->solicitante,
+            'fecha'             => $this->fechaSeleccionada,
+            'hora_inicio'       => $this->horaInicio,
+            'hora_fin'          => $this->horaFin,
+            'descripcion'       => $this->actividad,
+            'materia'           => $this->rolUsuario,
+            'color'             => $this->colorEvento,
+            'observacion'       => $this->observacion,
+            'estatus_id'        => 2,
+            'activo'            => 1,
+        ]);
+
+        $this->reasignarFacilitadores();
+    }
+
+    private function reasignarFacilitadores()
+    {
+        // Limpiar asignaciones previas
+        Solicitante::where('solicitud_id', $this->solicitud)
+            ->update([
+                'facilitador_id' => null,
+                'estatus_id'     => null,
+            ]);
+
+        // Asignar según tipo
+        switch ($this->solicitante) {
+            case 'todos':
+                Solicitante::where('solicitud_id', $this->solicitud)
+                    ->update([
+                        'facilitador_id' => $this->facilitador,
+                        'estatus_id'     => 3,
+                    ]);
+                break;
+
+            case 'solicitantes':
+                Solicitante::where('solicitud_id', $this->solicitud)
+                    ->where('tipo_solicitante', 'solicitante')
+                    ->update([
+                        'facilitador_id' => $this->facilitador,
+                        'estatus_id'     => 3,
+                    ]);
+                break;
+
+            case 'invitados':
+                Solicitante::where('solicitud_id', $this->solicitud)
+                    ->where('tipo_solicitante', 'invitado')
+                    ->update([
+                        'facilitador_id' => $this->facilitador,
+                        'estatus_id'     => 3,
+                    ]);
+                break;
+
+            default:
+                if (is_numeric($this->solicitante)) {
+                    Solicitante::where('id', $this->solicitante)
+                        ->update([
+                            'facilitador_id' => $this->facilitador,
+                            'estatus_id'     => 3,
+                        ]);
+                }
+                break;
+        }
+    }
+
+
+    // public function guardarEvento()
+    // {
+    //     $this->validate([
+    //         'solicitud'   => 'required|exists:solicitudes,id',
+    //         'facilitador' => 'required|exists:facilitadores,id',
+    //         'horaInicio'  => 'required',
+    //         'horaFin'     => 'required|after:horaInicio',
+    //         'actividad'   => 'required|string|max:255',
+    //     ]);
+
+    //     if ($this->eventoId) {
+    //         // Actualizar evento existente
+    //         $evento = Agenda::find($this->eventoId);
+
+    //         if ($evento) {
+    //             $cambioFacilitador = $evento->facilitador_id != $this->facilitador;
+    //             if ($this->reasignacion == 1) {
+
+    //             // Desactivar eventos anteriores con estatus 4
+    //             Agenda::where('solicitud_id', $this->solicitud)
+    //                 ->where('estatus_id', 4)
+    //                 ->update([
+    //                     'estatus_id' => 5,
+    //                     'activo'     => 0
+    //                 ]);
+    //             // Crear nuevo evento (reasignación)
+    //             $evento->create([
+    //                 'solicitud_id'     => $this->solicitud,
+    //                 'opcion_invitacion'=> $this->solicitante,
+    //                 'facilitador_id'   => $this->facilitador,
+    //                 'fecha'            => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+    //                 'hora_inicio'      => $this->horaInicio,
+    //                 'hora_fin'         => $this->horaFin,
+    //                 'descripcion'      => $this->actividad,
+    //                 'materia'          => $this->rolUsuario,
+    //                 'color'            => $this->colorEvento,
+    //                 'observacion'      => $this->observacion,
+    //                 'estatus_id'       => 4,
+    //                 'activo'           => 1,
+    //             ]);
+    //             } else {
+    //                 $evento->update([
+    //                     'solicitud_id'     => $this->solicitud,
+    //                     'opcion_invitacion'=> $this->solicitante,
+    //                     'facilitador_id'   => $this->facilitador,
+    //                     'fecha'            => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+    //                     'hora_inicio'      => $this->horaInicio,
+    //                     'hora_fin'         => $this->horaFin,
+    //                     'descripcion'      => $this->actividad,
+    //                     'materia'          => $this->rolUsuario,
+    //                     'color'            => $this->colorEvento,
+    //                 ]);
+    //             }
+
+    //             // if ($cambioFacilitador) {
+    //                 // Limpiar todos los facilitadores de la solicitud antes de reasignar
+    //                 Solicitante::where('solicitud_id', $this->solicitud)
+    //                     ->update([
+    //                         'facilitador_id' => null,
+    //                         'estatus_id'     => null,
+    //                     ]);
+
+    //                 // Luego aplicar la asignación según el tipo seleccionado
+    //                 switch ($this->solicitante) {
+    //                     case 'todos':
+    //                         Solicitante::where('solicitud_id', $this->solicitud)
+    //                             ->update([
+    //                                 'facilitador_id' => $this->facilitador,
+    //                                 'estatus_id'     => 3,
+    //                             ]);
+    //                         break;
+
+    //                     case 'solicitantes':
+    //                         Solicitante::where('solicitud_id', $this->solicitud)
+    //                             ->where('tipo_solicitante', 'solicitante')
+    //                             ->update([
+    //                                 'facilitador_id' => $this->facilitador,
+    //                                 'estatus_id'     => 3,
+    //                             ]);
+    //                         break;
+
+    //                     case 'invitados':
+    //                         Solicitante::where('solicitud_id', $this->solicitud)
+    //                             ->where('tipo_solicitante', 'invitado')
+    //                             ->update([
+    //                                 'facilitador_id' => $this->facilitador,
+    //                                 'estatus_id'     => 3,
+    //                             ]);
+    //                         break;
+
+    //                     default:
+    //                         if (is_numeric($this->solicitante)) {
+    //                             Solicitante::where('id', $this->solicitante)
+    //                                 ->update([
+    //                                     'facilitador_id' => $this->facilitador,
+    //                                     'estatus_id'     => 3,
+    //                                 ]);
+    //                         }
+    //                         break;
+    //                 }
+    //             // }
+
+    //             }
+    //     } else {
+    //         // Crear nuevo evento
+    //         Agenda::create([
+    //             'solicitud_id'      => $this->solicitud,
+    //             'facilitador_id'    => $this->facilitador,
+    //             'opcion_invitacion' => $this->solicitante,
+    //             'fecha'             => $this->fechaSeleccionada,
+    //             'hora_inicio'       => $this->horaInicio,
+    //             'hora_fin'          => $this->horaFin,
+    //             'descripcion'       => $this->actividad,
+    //             'materia'           => $this->rolUsuario,
+    //             'color'             => $this->colorEvento,
+    //             'observacion'       => $this->observacion,
+    //             'estatus_id'        =>  2,
+    //             'activo'            =>  1,
+    //         ]);
+
+    //         // Asignar a solicitantes según selección
+    //         switch ($this->solicitante) {
+    //             case 'todos':
+    //                 Solicitante::where('solicitud_id', $this->solicitud)
+    //                     ->update([
+    //                         'facilitador_id' => $this->facilitador,
+    //                         'estatus_id'     => 3,
+    //                     ]);
+    //                 break;
+
+    //             case 'solicitantes':
+    //                 Solicitante::where('solicitud_id', $this->solicitud)
+    //                     ->where('tipo_solicitante', 'solicitante')
+    //                     ->update([
+    //                         'facilitador_id' => $this->facilitador,
+    //                         'estatus_id'     => 3,
+    //                     ]);
+    //                 break;
+
+    //             case 'invitados':
+    //                 Solicitante::where('solicitud_id', $this->solicitud)
+    //                     ->where('tipo_solicitante', 'invitado')
+    //                     ->update([
+    //                         'facilitador_id' => $this->facilitador,
+    //                         'estatus_id'     => 3,
+    //                     ]);
+    //                 break;
+
+    //             default:
+    //                 if (is_numeric($this->solicitante)) {
+    //                     Solicitante::where('id', $this->solicitante)
+    //                         ->update([
+    //                             'facilitador_id' => $this->facilitador,
+    //                             'estatus_id'     => 3,
+    //                         ]);
+    //                 }
+    //                 break;
+    //         }
+    //     }
+
+    //     $this->cargarEventosYDias();
+    //     $this->cerrar();
+    // }
 
     public function abrirModalDia()
     {
@@ -258,6 +448,10 @@ class CalendarJs extends Component
             'horaFin',
             'actividad',
             'fechaSeleccionada',
+            'solicitante',
+            'solicitantes',
+            'observacion',
+            'reasignacion'
         ]);
     }
 
@@ -275,7 +469,8 @@ class CalendarJs extends Component
         $this->horaFin = $evento->hora_fin;
         $this->actividad = $evento->descripcion;
         $this->colorEvento = $evento->color;
-        $this->colorEvento = $evento->color;
+        $this->solicitante = $evento->opcion_invitacion;
+        $this->observacion = $evento->observacion;
         $this->solicitantes = Solicitante::where('solicitud_id', $evento->solicitud_id)->get();
 
 

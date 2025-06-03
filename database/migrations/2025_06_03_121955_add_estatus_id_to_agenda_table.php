@@ -9,20 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('agenda', function (Blueprint $table) {
-            $table->string('motivo_reasignacion')->nullable()->after('color');
+            $table->foreignId('estatus_id')->nullable()->constrained('estatus')->nullOnDelete();
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('agenda', function (Blueprint $table) {
-            $table->dropColumn('motivo_reasignacion');
+        Schema::table('solicitantes', function (Blueprint $table) {
+            $table->dropForeign(['estatus_id']);
+            $table->dropColumn('estatus_id');
         });
     }
 };

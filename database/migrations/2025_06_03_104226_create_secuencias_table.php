@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('secuencias', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique(); // Ejemplo: familiar_2025
+            $table->string('nombre')->unique();
             $table->unsignedInteger('valor_actual')->default(0);
             $table->timestamps();
         });

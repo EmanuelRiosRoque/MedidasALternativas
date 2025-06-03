@@ -16,7 +16,10 @@ class Agenda extends Model
         'descripcion',
         'materia',
         'color',
-        'motivo_reasignacion'
+        'observacion',
+        'opcion_invitacion',
+        'estatus_id',
+        'activo',
     ];
 
     // Relación con Solicitud
@@ -29,5 +32,10 @@ class Agenda extends Model
     public function facilitador()
     {
         return $this->belongsTo(Facilitador::class);
+    }
+
+    public function estatus()
+    {
+        return $this->belongsTo(Estatus::class);
     }
 }

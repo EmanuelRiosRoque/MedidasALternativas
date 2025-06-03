@@ -1,30 +1,36 @@
 <div class="max-w-4xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
     <!-- Lista de eventos -->
-    <div class="bg-neutral-700 p-4 rounded-lg shadow">
-        <h2 class="text-xl font-semibold mb-4 text-neutral-100">Eventos del día</h2>
+   <div class="bg-neutral-700 p-4 rounded-lg shadow">
+    <h2 class="text-xl font-semibold mb-4 text-neutral-100">Eventos del día</h2>
 
-        <ul class="space-y-3 text-sm text-neutral-200">
-            @forelse ($eventos as $evento)
-                <li wire:click="editarEvento({{ $evento->id }})"
-                    class="flex rounded-md transition shadow-md hover:bg-neutral-600 hover:shadow-lg overflow-hidden cursor-pointer">
-                    <div class="w-2 {{ $evento->color }}"></div>
-                    <div class="flex-1 p-5">
-                        <div class="font-semibold text-white">
+    <ul class="space-y-3 text-sm text-neutral-200">
+        @forelse ($eventos as $evento)
+            <li wire:click="editarEvento({{ $evento->id }})"
+                class="flex rounded-md transition shadow-md hover:bg-neutral-600 hover:shadow-lg overflow-hidden cursor-pointer">
+                <div class="w-2 {{ $evento->color }}"></div>
+                <div class="flex-1 p-5">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-white">
                             {{ $evento->solicitud->nombre ?? 'Solicitud #' . $evento->solicitud->id }}
-                        </div>
-                        <div class="text-xs text-neutral-200">
-                            {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i') }}
-                            - {{ \Carbon\Carbon::parse($evento->hora_fin)->format('H:i') }}
-                            | Facilitador: {{ $evento->facilitador->nombre ?? 'Sin asignar' }}
-                        </div>
+                        </span>
+                        <span class="px-2 py-1 text-xs rounded-full font-semibold
+                          bg-neutral-800 text-white">
+                            {{ $evento->estatus->nombre }}
+                        </span>
                     </div>
-                </li>
-            @empty
-                <li class="text-neutral-400 italic">No hay eventos para este día.</li>
-            @endforelse
-        </ul>
+                    <div class="text-xs text-neutral-300">
+                        {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i') }}
+                        - {{ \Carbon\Carbon::parse($evento->hora_fin)->format('H:i') }}
+                        | Facilitador: {{ $evento->facilitador->nombre ?? 'Sin asignar' }}
+                    </div>
+                </div>
+            </li>
+        @empty
+            <li class="text-neutral-400 italic">No hay eventos para este día.</li>
+        @endforelse
+    </ul>
+</div>
 
-    </div>
 
 
 
@@ -105,14 +111,14 @@
         @if (!empty($solicitantes))        
             @if (!empty($solicitantes))
                 <flux:select wire:model="solicitante" placeholder="Elige un solicitante o invitado">
-                    <flux:select.option value="todos">TODOS</flux:select.option>
-                    <flux:select.option value="solicitantes">TODOS LOS SOLICITANTES</flux:select.option>
-                    <flux:select.option value="invitados">TODOS LOS INVITADOS</flux:select.option>
-                    @foreach ($solicitantes as $solicitante)
+                    <flux:select.option value="todos">TODOS (ACUDIRÁN JUNTOS)</flux:select.option>
+                    <flux:select.option value="solicitantes">SOLICITANTE (S)</flux:select.option>
+                    <flux:select.option value="invitados">INVITADO (S)</flux:select.option>
+                    {{-- @foreach ($solicitantes as $solicitante)
                         <flux:select.option value="{{ $solicitante->id }}">
                             {{ strtoupper($solicitante->nombre ?? 'SIN NOMBRE') }} – {{ strtoupper($solicitante->tipo_solicitante ?? 'TIPO DESCONOCIDO') }}
                         </flux:select.option>
-                    @endforeach
+                    @endforeach --}}
                 </flux:select>
             @else
                 <p class="text-sm text-gray-500 dark:text-gray-400 italic">
@@ -120,6 +126,11 @@
                 </p>
             @endif
         @endif
+
+        @if ($modoEditar)
+        <flux:input wire:model="fechaSeleccionadaUpdate" label="Nueva fecha para asignar" type='date' />
+        @endif
+
 
         <div class=" grid grid-cols-2 gap-2">
             <flux:select wire:model="horaInicio" placeholder="Elige hora incio">
@@ -137,16 +148,29 @@
 
         <flux:input wire:model="actividad" label="Actividad" placeholder="Nombre de la actividad" />
 
-        <flux:input wire:model="motivo_reasignacion" label="Motivo reasignacion" placeholder="Ingrese el motivo" />
+        @if ($modoEditar)
+            <flux:radio.group wire:model.live="reasignacion" label="¿Reasignación?">
+                <flux:radio value="1" label="Sí" />
+                <flux:radio value="2" label="No" />
+            </flux:radio.group>
+
+            @if ($reasignacion == 1)
+                <flux:input wire:model="observacion" label="Observacion" placeholder="Ingrese el observacion" />
+            @endif
+        @endif
 
         <div class="flex justify-end">
             <flux:button type="button" wire:click="cerrar" class="mr-2">Cerrar</flux:button>
-            @if ($modoEditar)
-                <flux:button type="button" wire:click="cerrar" class="mr-2">Reasignar</flux:button>
-            @endif
-            <flux:button type="button" wire:click="guardarEvento" variant="primary">{{ $modoEditar ? 'Actualizar' : 'Agregar' }}</flux:button>
-
+            
+            <flux:button type="button" wire:click="guardarEvento" variant="primary">
+                @if ($reasignacion == 1)
+                    Confirmar Reasignación
+                @else
+                    {{ $modoEditar ? 'Actualizar' : 'Agregar' }}
+                @endif
+            </flux:button>
         </div>
+
     </div>
 </flux:modal>
 
