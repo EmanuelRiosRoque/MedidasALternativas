@@ -99,7 +99,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupacion...">
+        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupación...">
             @foreach ($ocupaciones as $ocupacion)
                 <flux:select.option>{{ $ocupacion }}</flux:select.option>
             @endforeach

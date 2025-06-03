@@ -7,6 +7,7 @@ use App\Models\Agenda;
 use Livewire\Component;
 use App\Models\Solicitud;
 use App\Models\Facilitador;
+use App\Models\Solicitante;
 
 class CalendarJs extends Component
 {
@@ -22,12 +23,12 @@ class CalendarJs extends Component
     public bool $showModalDia = false;
     public $rolUsuario;
 
- 
-    public $horarios = [];
-    public $facilitadores = []; 
-    public $solicitudes = []; 
-    public $eventoId = null;
 
+    public $horarios = [];
+    public $facilitadores = [];
+    public $solicitudes = [];
+    public $eventoId = null;
+    public $motivo_reasignacion = '';
 
     public $solicitud = '';
     public $actividad = '';
@@ -35,62 +36,9 @@ class CalendarJs extends Component
     public $horaInicio = '';
     public $horaFin = '';
     public $colorEvento = '';
+    public $solicitantes = [];
+    public $solicitante = '';
 
-
-    public function editarEvento($id)
-    {
-        $this->modoEditar = true;
-
-        $evento = Agenda::findOrFail($id);
-
-        $this->eventoId = $evento->id;
-        $this->fechaSeleccionada = $evento->fecha;
-        $this->facilitador = $evento->facilitador_id;
-        $this->solicitud = $evento->solicitud_id;
-        $this->horaInicio = $evento->hora_inicio;
-        $this->horaFin = $evento->hora_fin;
-        $this->actividad = $evento->descripcion;
-        $this->colorEvento = $evento->color;
-
-
-        $this->showModalDia = true;
-    }
-
-    private function generarHorarios($inicio, $fin)
-    {
-        $horarios = [];
-        $hora = \Carbon\Carbon::createFromFormat('H:i', $inicio);
-        $horaFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
-
-        while ($hora < $horaFin) {
-            $horarios[$hora->format('H:i')] = $hora->format('g:i A');
-            $hora->addMinutes(30);
-        }
-
-        return $horarios;
-    }
-
-    public function abrirModalDia()
-    {
-        $this->showModalDia = true;
-    }
-     public function cerrar()
-    {
-        $this->showModalDia = false;
-        $this->modoEditar = false;
-
-        $this->resetValidation(); // Limpia los errores de validación
-
-        // Opcional: limpia los campos del formulario si quieres reiniciar todo
-        $this->reset([
-            'solicitud',
-            'facilitador',
-            'horaInicio',
-            'horaFin',
-            'actividad',
-            'fechaSeleccionada',
-        ]);
-    }
 
     public function mount()
     {
@@ -155,10 +103,8 @@ class CalendarJs extends Component
         $this->cargarEventos();
     }
 
-
- public function guardarEvento()
+    public function guardarEvento()
     {
-        // dd($this->colorEvento)
         $this->validate([
             'solicitud'   => 'required|exists:solicitudes,id',
             'facilitador' => 'required|exists:facilitadores,id',
@@ -166,7 +112,6 @@ class CalendarJs extends Component
             'horaFin'     => 'required|after:horaInicio',
             'actividad'   => 'required|string|max:255',
         ]);
-
 
         if ($this->eventoId) {
             // Actualizar evento existente
@@ -182,17 +127,61 @@ class CalendarJs extends Component
                     'hora_fin'       => $this->horaFin,
                     'descripcion'    => $this->actividad,
                     'materia'        => $this->rolUsuario,
-                    'color'          => $this->colorEvento, 
-
+                    'color'          => $this->colorEvento,
+                    'motivo_reasignacion' => $this->motivo_reasignacion,
                 ]);
 
-                if ($cambioFacilitador) {
-                    Solicitud::where('id', $this->solicitud)->update([
-                        'facilitador' => $this->facilitador,
-                    ]);
+                // if ($cambioFacilitador) {
+                    // Limpiar todos los facilitadores de la solicitud antes de reasignar
+                    Solicitante::where('solicitud_id', $this->solicitud)
+                        ->update([
+                            'facilitador_id' => null,
+                            'estatus_id'     => null,
+                        ]);
+
+                    // Luego aplicar la asignación según el tipo seleccionado
+                    switch ($this->solicitante) {
+                        case 'todos':
+                            Solicitante::where('solicitud_id', $this->solicitud)
+                                ->update([
+                                    'facilitador_id' => $this->facilitador,
+                                    'estatus_id'     => 3,
+                                ]);
+                            break;
+
+                        case 'solicitantes':
+                            Solicitante::where('solicitud_id', $this->solicitud)
+                                ->where('tipo_solicitante', 'solicitante')
+                                ->update([
+                                    'facilitador_id' => $this->facilitador,
+                                    'estatus_id'     => 3,
+                                ]);
+                            break;
+
+                        case 'invitados':
+                            Solicitante::where('solicitud_id', $this->solicitud)
+                                ->where('tipo_solicitante', 'invitado')
+                                ->update([
+                                    'facilitador_id' => $this->facilitador,
+                                    'estatus_id'     => 3,
+                                ]);
+                            break;
+
+                        default:
+                            if (is_numeric($this->solicitante)) {
+                                Solicitante::where('id', $this->solicitante)
+                                    ->update([
+                                        'facilitador_id' => $this->facilitador,
+                                        'estatus_id'     => 3,
+                                    ]);
+                            }
+                            break;
+                    }
+                // }
+
                 }
-            }
         } else {
+            // Crear nuevo evento
             Agenda::create([
                 'solicitud_id'   => $this->solicitud,
                 'facilitador_id' => $this->facilitador,
@@ -201,17 +190,117 @@ class CalendarJs extends Component
                 'hora_fin'       => $this->horaFin,
                 'descripcion'    => $this->actividad,
                 'materia'        => $this->rolUsuario,
-                'color'          => $this->colorEvento, 
+                'color'          => $this->colorEvento,
+                'motivo_reasignacion' => $this->motivo_reasignacion,
             ]);
 
-            Solicitud::where('id', $this->solicitud)->update([
-                'facilitador' => $this->facilitador,
-                'estatus_id'  => 2
-            ]);
+            // Asignar a solicitantes según selección
+            switch ($this->solicitante) {
+                case 'todos':
+                    Solicitante::where('solicitud_id', $this->solicitud)
+                        ->update([
+                            'facilitador_id' => $this->facilitador,
+                            'estatus_id'     => 3,
+                        ]);
+                    break;
+
+                case 'solicitantes':
+                    Solicitante::where('solicitud_id', $this->solicitud)
+                        ->where('tipo_solicitante', 'solicitante')
+                        ->update([
+                            'facilitador_id' => $this->facilitador,
+                            'estatus_id'     => 3,
+                        ]);
+                    break;
+
+                case 'invitados':
+                    Solicitante::where('solicitud_id', $this->solicitud)
+                        ->where('tipo_solicitante', 'invitado')
+                        ->update([
+                            'facilitador_id' => $this->facilitador,
+                            'estatus_id'     => 3,
+                        ]);
+                    break;
+
+                default:
+                    if (is_numeric($this->solicitante)) {
+                        Solicitante::where('id', $this->solicitante)
+                            ->update([
+                                'facilitador_id' => $this->facilitador,
+                                'estatus_id'     => 3,
+                            ]);
+                    }
+                    break;
+            }
         }
-        $this->cargarEventosYDias();
 
+        $this->cargarEventosYDias();
         $this->cerrar();
+    }
+
+    public function abrirModalDia()
+    {
+        $this->showModalDia = true;
+    }
+
+    public function cerrar()
+    {
+        $this->showModalDia = false;
+        $this->modoEditar = false;
+
+        $this->resetValidation(); // Limpia los errores de validación
+
+        // Opcional: limpia los campos del formulario si quieres reiniciar todo
+        $this->reset([
+            'solicitud',
+            'facilitador',
+            'horaInicio',
+            'horaFin',
+            'actividad',
+            'fechaSeleccionada',
+        ]);
+    }
+
+    public function editarEvento($id)
+    {
+        $this->modoEditar = true;
+
+        $evento = Agenda::findOrFail($id);
+
+        $this->eventoId = $evento->id;
+        $this->fechaSeleccionada = $evento->fecha;
+        $this->facilitador = $evento->facilitador_id;
+        $this->solicitud = $evento->solicitud_id;
+        $this->horaInicio = $evento->hora_inicio;
+        $this->horaFin = $evento->hora_fin;
+        $this->actividad = $evento->descripcion;
+        $this->colorEvento = $evento->color;
+        $this->colorEvento = $evento->color;
+        $this->solicitantes = Solicitante::where('solicitud_id', $evento->solicitud_id)->get();
+
+
+        $this->showModalDia = true;
+    }
+
+
+    public function updatedSolicitud($value)
+    {
+        $this->solicitantes = Solicitante::where('solicitud_id', $value)->get();
+    }
+
+
+    private function generarHorarios($inicio, $fin)
+    {
+        $horarios = [];
+        $hora = \Carbon\Carbon::createFromFormat('H:i', $inicio);
+        $horaFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
+
+        while ($hora < $horaFin) {
+            $horarios[$hora->format('H:i')] = $hora->format('g:i A');
+            $hora->addMinutes(30);
+        }
+
+        return $horarios;
     }
 
     public function render()

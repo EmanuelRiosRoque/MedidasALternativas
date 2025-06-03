@@ -7,12 +7,26 @@ use Livewire\Component;
 
 class Solicitudes extends Component
 {
+    public $numSolicitudes = 0;
+
     public function render()
     {
-        $solicitudes = Solicitud::all();
+        $usuario = auth()->user();
 
-        return view('livewire.solicitudes',[
-            'solicitudes' => $solicitudes
+        $solicitudes = Solicitud::query()
+            ->when($usuario->hasRole('familiar'), function ($query) {
+                $query->where('materia', 'familiar');
+            })
+            ->when($usuario->hasRole('civil'), function ($query) {
+                $query->whereIn('materia', ['civil', 'mercantil']);
+            });
+
+        // Obtener la cantidad directamente
+        $this->numSolicitudes = $solicitudes->count();
+
+        return view('livewire.solicitudes', [
+            'solicitudes' => $solicitudes->get()
         ]);
     }
 }
+

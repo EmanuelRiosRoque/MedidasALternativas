@@ -15,7 +15,8 @@ class Agenda extends Model
         'hora_fin',
         'descripcion',
         'materia',
-        'color'
+        'color',
+        'motivo_reasignacion'
     ];
 
     // Relación con Solicitud

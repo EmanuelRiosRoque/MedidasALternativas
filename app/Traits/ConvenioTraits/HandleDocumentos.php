@@ -228,7 +228,7 @@ trait HandleDocumentos
                 'Oficio de descuento de pensión alimenticia',
                 'Otro'
             ],
-            'Guarda y Custodia' => [
+            'Guarda y custodia' => [
                 'Acta de registro civil: matrimonio, nacimiento',
                 'Resolución judicial previa',
                 'Otro'
@@ -239,13 +239,13 @@ trait HandleDocumentos
                 'Otro'
             ],
             'Cuestiones patrimoniales derivadas de juicio sucesorio' => [
-                'Resolucion judicial',
+                'Resolución judicial',
                 'Acta notarial',
                 'Otro'
             ],
             'Derivados de la disolución de la sociedad conyugal' => [
                 'Acta de matrimonio',
-                'Resolucion judicial',
+                'Resolución judicial',
                 'Documentos a través de los cuales acrediten la propiedad de los bienes',
                 'Otro'
             ],
@@ -256,29 +256,17 @@ trait HandleDocumentos
                 'Documentos a través de los cuales acrediten la propiedad de los bienes de la sociedad conyugal o para compensación de bienes',
                 'Otro'
             ],
-
-            'Modificación de los términos de Resolución judicial' => [
+            'Modificación de los términos de resolución judicial' => [
                 'Acta de registro civil: matrimonio, nacimiento',
                 'Recibo de nómina',
                 'Resolución judicial previa',
                 'Oficio de descuento de pensión alimenticia',
                 'Otro'
             ],
-
-            // 'Modificación de los términos de Resolución judicial' => [
-            //     'Acta de registro civil: matrimonio, nacimiento',
-            //     'Recibo de nómina',
-            //     'Resolución judicial previa',
-            //     'Oficio de descuento de pensión alimenticia',
-            // ],
-
             'Crisis de la convivencia' => [
-                
+                'Otro'
             ],
 
-            'Otros' => [
-                
-            ],
 
         ];
     }

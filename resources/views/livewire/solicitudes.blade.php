@@ -11,7 +11,7 @@
                 <div>
                     <div class="flex items-center gap-x-3">
                         <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Solicitudes</h2>
-                        <span class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">240 Solicitudes</span>
+                        <span class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">{{ $numSolicitudes }} Solicitudes</span>
                     </div>
                     <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-300 hover:text-emerald-700 transition-all cursor-default">
                         Cantidad total de solicitudes registradas.
@@ -55,6 +55,7 @@
                                     <tr>
                                         <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">ID / Ticket</th>
                                         <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Estatus</th>
+                                        <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Modalidad</th>
                                         <th class="px-4 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Fecha y hora</th>
                                         <th class="py-3.5 px-4 relative text-sm font-normal text-neutral-500 dark:text-neutral-400">Opciones</th>
                                     </tr>
@@ -68,6 +69,17 @@
                                                 {{ $solicitud->estatus->nombre ?? 'Sin estatus' }}
                                             </div>
                                         </td>
+                                        <td class="px-12 py-4 text-sm whitespace-nowrap">
+                                            <div class="
+                                                inline px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wide
+                                                {{ $solicitud->modalidad === 'linea' 
+                                                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-800/40 dark:text-blue-300' 
+                                                    : 'bg-green-100 text-green-700 dark:bg-green-800/40 dark:text-green-300' 
+                                                }}">
+                                                {{ $solicitud->modalidad === 'linea' ? 'En Línea' : 'Presencial' }}
+                                            </div>
+                                        </td>
+
                                         <td class="px-4 py-4 text-sm whitespace-nowrap">
                                             <div>
                                                 <h4 class="text-neutral-700 dark:text-neutral-200">
@@ -103,7 +115,6 @@
                                                                 Asignar 
                                                             </a>
                                                         </li>
-                                                        <li><button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700 text-red-600">Eliminar</button></li>
                                                     </ul>
                                                 </div>
                                             </div>

@@ -88,7 +88,7 @@
 
 
         @if($solicitudes->isNotEmpty())
-        <flux:select wire:model="solicitud" placeholder="Elige solicitud a asignar">
+        <flux:select wire:model.change="solicitud" placeholder="Elige solicitud a asignar">
             @foreach ($solicitudes as $solicitud)
             <flux:select.option value="{{ $solicitud->id }}">
                 {{ $solicitud->nombre ?? 'Solicitud #' . $solicitud->id }}
@@ -99,6 +99,26 @@
         <p class="text-sm text-gray-500 dark:text-gray-400 italic">
             No hay solicitudes disponibles.
         </p>
+        @endif
+
+        {{-- Mostrar solicitantes si hay --}}
+        @if (!empty($solicitantes))        
+            @if (!empty($solicitantes))
+                <flux:select wire:model="solicitante" placeholder="Elige un solicitante o invitado">
+                    <flux:select.option value="todos">TODOS</flux:select.option>
+                    <flux:select.option value="solicitantes">TODOS LOS SOLICITANTES</flux:select.option>
+                    <flux:select.option value="invitados">TODOS LOS INVITADOS</flux:select.option>
+                    @foreach ($solicitantes as $solicitante)
+                        <flux:select.option value="{{ $solicitante->id }}">
+                            {{ strtoupper($solicitante->nombre ?? 'SIN NOMBRE') }} – {{ strtoupper($solicitante->tipo_solicitante ?? 'TIPO DESCONOCIDO') }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+            @else
+                <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+                    No hay solicitantes disponibles.
+                </p>
+            @endif
         @endif
 
         <div class=" grid grid-cols-2 gap-2">
@@ -115,11 +135,15 @@
             </flux:select>
         </div>
 
-        <flux:input wire:model="actividad" label="Avtividad" placeholder="Nombre de la actividad" />
+        <flux:input wire:model="actividad" label="Actividad" placeholder="Nombre de la actividad" />
+
         <flux:input wire:model="motivo_reasignacion" label="Motivo reasignacion" placeholder="Ingrese el motivo" />
 
         <div class="flex justify-end">
             <flux:button type="button" wire:click="cerrar" class="mr-2">Cerrar</flux:button>
+            @if ($modoEditar)
+                <flux:button type="button" wire:click="cerrar" class="mr-2">Reasignar</flux:button>
+            @endif
             <flux:button type="button" wire:click="guardarEvento" variant="primary">{{ $modoEditar ? 'Actualizar' : 'Agregar' }}</flux:button>
 
         </div>

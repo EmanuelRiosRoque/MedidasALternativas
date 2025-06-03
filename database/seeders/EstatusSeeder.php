@@ -16,6 +16,7 @@ class EstatusSeeder extends Seeder
         DB::table('estatus')->insert([
             ['nombre' => 'Registrado'],
             ['nombre' => 'Asignado'],
+            ['nombre' => 'Pre-Mediación'],
         ]);
     }
 }
