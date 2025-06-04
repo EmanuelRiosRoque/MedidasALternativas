@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Solictud;
 
+use App\Models\Agenda;
 use Livewire\Component;
 use App\Models\Solicitante;
 use App\Models\PersonaSolicitud;
+use App\Models\Solicitud;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 
 class Index extends Component
@@ -16,6 +18,8 @@ class Index extends Component
     public $solicitudId;
     public $solicitantes = [];
     public $invitados = [];
+    public $solicitud;
+    public $evento;
     public $escolaridades;
     public $ocupaciones;
 
@@ -39,20 +43,26 @@ class Index extends Component
     // Montar con ID
     public function mount($solicitudId)
     {
-		$this->escolaridades = $this->escolaridades();
-		$this->ocupaciones = $this->ocupaciones();
+        $this->escolaridades = $this->escolaridades();
+        $this->ocupaciones = $this->ocupaciones();
 
+        $this->solicitud = Solicitud::with('facilitador')->findOrFail($solicitudId);
+        $this->evento = Agenda::where('solicitud_id', $solicitudId)
+            ->where('activo', 1)
+            ->first();
+
+        // dd($this->solicitud);
+    
 
         $this->solicitudId = $solicitudId;
 
-       $this->solicitantes = Solicitante::where('tipo_solicitante', 'solicitante')
+        $this->solicitantes = Solicitante::where('tipo_solicitante', 'solicitante')
             ->where('solicitud_id', $this->solicitudId)
             ->get();
 
         $this->invitados = Solicitante::where('tipo_solicitante', 'invitado')
             ->where('solicitud_id', $this->solicitudId)
             ->get();
-
     }
 
     public function cargarPersona($id)

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('institucion')->nullable();
             $table->string('oficio')->nullable();
             $table->string('cual_otro')->nullable();
-            $table->string('facilitador')->nullable();
             $table->timestamps();
         });
     }

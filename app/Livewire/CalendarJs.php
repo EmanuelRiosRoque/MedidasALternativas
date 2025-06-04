@@ -54,8 +54,8 @@ class CalendarJs extends Component
 
 
         $this->solicitudes = Solicitud::where(function ($query) {
-            $query->whereNull('facilitador')
-                ->orWhere('facilitador', '');
+            $query->whereNull('facilitador_id')
+                ->orWhere('facilitador_id', '');
         })
             ->where('estatus_id', 1)
             ->where(function ($query) {
@@ -107,13 +107,13 @@ class CalendarJs extends Component
 
     public function guardarEvento()
     {
-        $folioFamiliar = siguienteValorSecuencia('familiar'); // 1
-        $folioCivil = siguienteValorSecuencia('civil');       // 1
+        // $folioFamiliar = siguienteValorSecuencia('familiar'); // 1
+        // $folioCivil = siguienteValorSecuencia('civil');       // 1
 
-        $folioFamiliarFormateado = 'FAM-' . now()->year . '-' . str_pad($folioFamiliar, 4, '0', STR_PAD_LEFT);
-        $folioCivilFormateado = 'CIV-' . now()->year . '-' . str_pad($folioCivil, 4, '0', STR_PAD_LEFT);
+        // $folioFamiliarFormateado = 'FAM-' . now()->year . '-' . str_pad($folioFamiliar, 4, '0', STR_PAD_LEFT);
+        // $folioCivilFormateado = 'CIV-' . now()->year . '-' . str_pad($folioCivil, 4, '0', STR_PAD_LEFT);
 
-        dd($folioFamiliarFormateado, $folioCivilFormateado);
+        // dd($folioFamiliarFormateado, $folioCivilFormateado);
 
         
 
@@ -150,18 +150,28 @@ class CalendarJs extends Component
             $this->desactivarEventosAnteriores();
             $this->crearReasignacion();
         } else {
+            $cambioFacilitador = $evento->facilitador_id != $this->facilitador;
+
             $evento->update([
-                'solicitud_id'     => $this->solicitud,
-                'opcion_invitacion'=> $this->solicitante,
-                'facilitador_id'   => $this->facilitador,
-                'fecha'            => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
-                'hora_inicio'      => $this->horaInicio,
-                'hora_fin'         => $this->horaFin,
-                'descripcion'      => $this->actividad,
-                'materia'          => $this->rolUsuario,
-                'color'            => $this->colorEvento,
+                'solicitud_id'      => $this->solicitud,
+                'opcion_invitacion' => $this->solicitante,
+                'facilitador_id'    => $this->facilitador,
+                'fecha'             => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+                'hora_inicio'       => $this->horaInicio,
+                'hora_fin'          => $this->horaFin,
+                'descripcion'       => $this->actividad,
+                'materia'           => $this->rolUsuario,
+                'color'             => $this->colorEvento,
             ]);
+
+            if ($cambioFacilitador) {
+                Solicitud::where('id', $this->solicitud)
+                    ->update([
+                        'facilitador_id' => $this->facilitador,
+                    ]);
+            }
         }
+
 
         $this->reasignarFacilitadores();
     }
@@ -169,7 +179,7 @@ class CalendarJs extends Component
     private function desactivarEventosAnteriores()
     {
         Agenda::where('solicitud_id', $this->solicitud)
-            ->where('estatus_id', 4)
+            ->whereIn('estatus_id', [2, 4])
             ->update([
                 'estatus_id' => 5,
                 'activo'     => 0
@@ -192,6 +202,13 @@ class CalendarJs extends Component
             'estatus_id'        => 4,
             'activo'            => 1,
         ]);
+
+        Solicitud::where('id', $this->solicitud)
+        ->update([
+            'estatus_id'     => 4,
+            'facilitador_id' => $this->facilitador,
+        ]);
+
     }
 
     private function crearNuevoEvento()
@@ -209,6 +226,11 @@ class CalendarJs extends Component
             'observacion'       => $this->observacion,
             'estatus_id'        => 2,
             'activo'            => 1,
+        ]);
+        Solicitud::where('id', $this->solicitud)
+           ->update([
+            'estatus_id'     => 2,
+            'facilitador_id' => $this->facilitador,
         ]);
 
         $this->reasignarFacilitadores();
@@ -263,171 +285,6 @@ class CalendarJs extends Component
         }
     }
 
-
-    // public function guardarEvento()
-    // {
-    //     $this->validate([
-    //         'solicitud'   => 'required|exists:solicitudes,id',
-    //         'facilitador' => 'required|exists:facilitadores,id',
-    //         'horaInicio'  => 'required',
-    //         'horaFin'     => 'required|after:horaInicio',
-    //         'actividad'   => 'required|string|max:255',
-    //     ]);
-
-    //     if ($this->eventoId) {
-    //         // Actualizar evento existente
-    //         $evento = Agenda::find($this->eventoId);
-
-    //         if ($evento) {
-    //             $cambioFacilitador = $evento->facilitador_id != $this->facilitador;
-    //             if ($this->reasignacion == 1) {
-
-    //             // Desactivar eventos anteriores con estatus 4
-    //             Agenda::where('solicitud_id', $this->solicitud)
-    //                 ->where('estatus_id', 4)
-    //                 ->update([
-    //                     'estatus_id' => 5,
-    //                     'activo'     => 0
-    //                 ]);
-    //             // Crear nuevo evento (reasignación)
-    //             $evento->create([
-    //                 'solicitud_id'     => $this->solicitud,
-    //                 'opcion_invitacion'=> $this->solicitante,
-    //                 'facilitador_id'   => $this->facilitador,
-    //                 'fecha'            => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
-    //                 'hora_inicio'      => $this->horaInicio,
-    //                 'hora_fin'         => $this->horaFin,
-    //                 'descripcion'      => $this->actividad,
-    //                 'materia'          => $this->rolUsuario,
-    //                 'color'            => $this->colorEvento,
-    //                 'observacion'      => $this->observacion,
-    //                 'estatus_id'       => 4,
-    //                 'activo'           => 1,
-    //             ]);
-    //             } else {
-    //                 $evento->update([
-    //                     'solicitud_id'     => $this->solicitud,
-    //                     'opcion_invitacion'=> $this->solicitante,
-    //                     'facilitador_id'   => $this->facilitador,
-    //                     'fecha'            => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
-    //                     'hora_inicio'      => $this->horaInicio,
-    //                     'hora_fin'         => $this->horaFin,
-    //                     'descripcion'      => $this->actividad,
-    //                     'materia'          => $this->rolUsuario,
-    //                     'color'            => $this->colorEvento,
-    //                 ]);
-    //             }
-
-    //             // if ($cambioFacilitador) {
-    //                 // Limpiar todos los facilitadores de la solicitud antes de reasignar
-    //                 Solicitante::where('solicitud_id', $this->solicitud)
-    //                     ->update([
-    //                         'facilitador_id' => null,
-    //                         'estatus_id'     => null,
-    //                     ]);
-
-    //                 // Luego aplicar la asignación según el tipo seleccionado
-    //                 switch ($this->solicitante) {
-    //                     case 'todos':
-    //                         Solicitante::where('solicitud_id', $this->solicitud)
-    //                             ->update([
-    //                                 'facilitador_id' => $this->facilitador,
-    //                                 'estatus_id'     => 3,
-    //                             ]);
-    //                         break;
-
-    //                     case 'solicitantes':
-    //                         Solicitante::where('solicitud_id', $this->solicitud)
-    //                             ->where('tipo_solicitante', 'solicitante')
-    //                             ->update([
-    //                                 'facilitador_id' => $this->facilitador,
-    //                                 'estatus_id'     => 3,
-    //                             ]);
-    //                         break;
-
-    //                     case 'invitados':
-    //                         Solicitante::where('solicitud_id', $this->solicitud)
-    //                             ->where('tipo_solicitante', 'invitado')
-    //                             ->update([
-    //                                 'facilitador_id' => $this->facilitador,
-    //                                 'estatus_id'     => 3,
-    //                             ]);
-    //                         break;
-
-    //                     default:
-    //                         if (is_numeric($this->solicitante)) {
-    //                             Solicitante::where('id', $this->solicitante)
-    //                                 ->update([
-    //                                     'facilitador_id' => $this->facilitador,
-    //                                     'estatus_id'     => 3,
-    //                                 ]);
-    //                         }
-    //                         break;
-    //                 }
-    //             // }
-
-    //             }
-    //     } else {
-    //         // Crear nuevo evento
-    //         Agenda::create([
-    //             'solicitud_id'      => $this->solicitud,
-    //             'facilitador_id'    => $this->facilitador,
-    //             'opcion_invitacion' => $this->solicitante,
-    //             'fecha'             => $this->fechaSeleccionada,
-    //             'hora_inicio'       => $this->horaInicio,
-    //             'hora_fin'          => $this->horaFin,
-    //             'descripcion'       => $this->actividad,
-    //             'materia'           => $this->rolUsuario,
-    //             'color'             => $this->colorEvento,
-    //             'observacion'       => $this->observacion,
-    //             'estatus_id'        =>  2,
-    //             'activo'            =>  1,
-    //         ]);
-
-    //         // Asignar a solicitantes según selección
-    //         switch ($this->solicitante) {
-    //             case 'todos':
-    //                 Solicitante::where('solicitud_id', $this->solicitud)
-    //                     ->update([
-    //                         'facilitador_id' => $this->facilitador,
-    //                         'estatus_id'     => 3,
-    //                     ]);
-    //                 break;
-
-    //             case 'solicitantes':
-    //                 Solicitante::where('solicitud_id', $this->solicitud)
-    //                     ->where('tipo_solicitante', 'solicitante')
-    //                     ->update([
-    //                         'facilitador_id' => $this->facilitador,
-    //                         'estatus_id'     => 3,
-    //                     ]);
-    //                 break;
-
-    //             case 'invitados':
-    //                 Solicitante::where('solicitud_id', $this->solicitud)
-    //                     ->where('tipo_solicitante', 'invitado')
-    //                     ->update([
-    //                         'facilitador_id' => $this->facilitador,
-    //                         'estatus_id'     => 3,
-    //                     ]);
-    //                 break;
-
-    //             default:
-    //                 if (is_numeric($this->solicitante)) {
-    //                     Solicitante::where('id', $this->solicitante)
-    //                         ->update([
-    //                             'facilitador_id' => $this->facilitador,
-    //                             'estatus_id'     => 3,
-    //                         ]);
-    //                 }
-    //                 break;
-    //         }
-    //     }
-
-    //     $this->cargarEventosYDias();
-    //     $this->cerrar();
-    // }
-
     public function abrirModalDia()
     {
         $this->showModalDia = true;
@@ -465,8 +322,9 @@ class CalendarJs extends Component
         $this->fechaSeleccionada = $evento->fecha;
         $this->facilitador = $evento->facilitador_id;
         $this->solicitud = $evento->solicitud_id;
-        $this->horaInicio = $evento->hora_inicio;
-        $this->horaFin = $evento->hora_fin;
+        $this->horaInicio = \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i');
+        $this->horaFin = \Carbon\Carbon::parse($evento->hora_fin)->format('H:i');       
+
         $this->actividad = $evento->descripcion;
         $this->colorEvento = $evento->color;
         $this->solicitante = $evento->opcion_invitacion;

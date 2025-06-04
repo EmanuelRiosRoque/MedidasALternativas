@@ -92,19 +92,20 @@
             <x-select-color wire:model="colorEvento" />
         </div>
 
-
-        @if($solicitudes->isNotEmpty())
-        <flux:select wire:model.change="solicitud" placeholder="Elige solicitud a asignar">
-            @foreach ($solicitudes as $solicitud)
-            <flux:select.option value="{{ $solicitud->id }}">
-                {{ $solicitud->nombre ?? 'Solicitud #' . $solicitud->id }}
-            </flux:select.option>
-            @endforeach
-        </flux:select>
-        @else
-        <p class="text-sm text-gray-500 dark:text-gray-400 italic">
-            No hay solicitudes disponibles.
-        </p>
+        @if (!$modoEditar)
+            @if($solicitudes->isNotEmpty())
+            <flux:select wire:model.change="solicitud" placeholder="Elige solicitud a asignar">
+                @foreach ($solicitudes as $solicitud)
+                <flux:select.option value="{{ $solicitud->id }}">
+                    {{ $solicitud->nombre ?? 'Solicitud #' . $solicitud->id }}
+                </flux:select.option>
+                @endforeach
+            </flux:select>
+            @else
+            <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+                No hay solicitudes disponibles.
+            </p>
+            @endif
         @endif
 
         {{-- Mostrar solicitantes si hay --}}

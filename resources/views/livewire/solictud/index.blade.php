@@ -17,90 +17,123 @@
 
         {{-- Lista de personas --}}
         <div class="grid grid-cols-1 md:grid-cols-3 md:gap-1 gap-2">
-            <x-lista-personas :personas="$invitados" titulo="Lista Invitados" />
+            <x-lista-personas :personas="$solicitantes" titulo="Lista Solicitantes" />
 
-            <div class="mx-auto right-0 mt-2 w-60">
-                <div class="bg-white rounded overflow-hidden shadow-lg">
-                    <div class="text-center p-6 bg-neutral-800 border-b">
+            <div class="mx-auto right-0  mt-9 w-60">
+                <div class="shadow-lg">
+                    <div class="text-center p-4 w-full max-w-md bg-white rounded-lg shadow-md sm:p-8 dark:bg-neutral-800 dark:border-neutral-700 border hover:border-emerald-600 transform transition duration-300 ease-in-out hover:scale-[1.02] ">
                         <svg aria-hidden="true" role="img" class="h-24 w-24 text-white rounded-full mx-auto" width="32" height="32"
                             preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256">
                             <path fill="currentColor"
                                 d="M172 120a44 44 0 1 1-44-44a44 44 0 0 1 44 44Zm60 8A104 104 0 1 1 128 24a104.2 104.2 0 0 1 104 104Zm-16 0a88 88 0 1 0-153.8 58.4a81.3 81.3 0 0 1 24.5-23a59.7 59.7 0 0 0 82.6 0a81.3 81.3 0 0 1 24.5 23A87.6 87.6 0 0 0 216 128Z">
                             </path>
                         </svg>
-                        <p class="pt-2 text-lg font-semibold text-neutral-50">S/N</p>
-                        <p class="text-sm text-neutral-100">Facilitador sin asginar</p>
-                        <div class="mt-5">
-                            <a
-                                class="border cursor-pointer hover:bg-emerald-700  rounded-full py-2 px-4 text-xs font-semibold text-neutral-100">
-                                Asignar Facilitador
-                            </a>
-                        </div>
-                    </div>
-                    <div class="border-b">
-                        <Link href="/account/campaigns">
-                        <a class="px-4 py-2 hover:bg-neutral-100 flex">
-                            <div class="text-green-600">
-                                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1"
-                                    viewBox="0 0 24 24" class="w-5 h-5">
-                                    <path
-                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                </svg>
-                            </div>
-                            <div class="pl-3">
-                                <p class="text-sm font-medium text-neutral-800 leading-none">
-                                    Infracciones
-                                </p>
-                                <p class="text-xs text-neutral-500">0</p>
-                            </div>
-                        </a>
-                        </Link>
-                        <Link href="/account/donations">
-                        <a class="px-4 py-2 hover:bg-neutral-100 flex">
-                            <div class="text-neutral-800">
-                                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1"
-                                    viewBox="0 0 24 24" class="w-5 h-5">
-                                    <path
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </div>
-                            <div class="pl-3">
-                                <p class="text-sm font-medium text-neutral-800 leading-none">Mediaciones</p>
-                                <p class="text-xs text-neutral-500">0</p>
-                            </div>
-                        </a>
-                        </Link>
-                    </div>
-            
-                    <div class="">
-                        <a href="#" class="w-full px-4 py-2 pb-4 hover:bg-neutral-100 flex cursor-pointer">
-                            <p class="text-sm font-medium text-neutral-800 leading-none">
-                                Ver perfil
-                            </p>
-                        </a>
+                        <p class="pt-2 text-lg font-semibold text-neutral-50">{{ $solicitud->facilitador->nombre ?? 'Sin asignar' }}</p>
+                        <p class="pt-2 text-sm font-semibold text-neutral-100">Facilitador</p>
                     </div>
                 </div>
             </div>
+
+            <x-lista-personas :personas="$invitados" titulo="Lista Invitados" />
+        </div>
+
+        
+        @if ($solicitud->modalidad != 'presencial')
+           <div class="text-center border-b border-emerald-200 dark:border-emerald-700 pb-6 mb-6 mt-20 max-w-4xl mx-auto">
+                <h1 class="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                    Pre-Mediacion
+                </h1>
+                <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+                    Agrega tu liga de sesión virtual, el dia y la hora de la sesión
+                </p>
+                <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+                    Recuerda que es una sesión vía Google Meet. Puedes generarla aquí:
+                    <a class="text-emerald-600" href="https://meet.google.com/landing" target="_blank" rel="noopener noreferrer">
+                        "Ir a generar sesión"
+                    </a>
+                </p>
+            </div>
             
-            <x-lista-personas :personas="$solicitantes" titulo="Lista Solicitantes" />
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl	m-auto ">
+                <!-- Callout de recordatorio -->
+                <flux:callout variant="sparkles" icon="bell">
+                    <flux:callout.heading>
+                        Recordatorio 
+                        <flux:badge color="purple" size="sm" inset="top bottom">De asignación</flux:badge>
+                    </flux:callout.heading>
 
+                    <flux:callout.text>
+                        <p class="text-sm font-semibold text-neutral-200 mb-2">¿A quién se te asignó darle sesión?</p>
+                        <ul class="list-disc list-inside text-sm text-neutral-100 space-y-1">
+                            <li>
+                                Para esta pre mediación se asignó a:
+                                <span class="text-emerald-600 font-semibold">{{ $evento->opcion_invitacion }}</span>.
+                            </li>
+                            <li>
+                                Con fecha de atención:
+                                <span class="text-emerald-600 font-semibold">
+                                    {{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}
+                                </span>.
+                            </li>
+                            <li>
+                                Horario asignado:
+                                <span class="text-emerald-600 font-semibold">
+                                    {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('g:i a') }} a
+                                    {{ \Carbon\Carbon::parse($evento->hora_fin)->format('g:i a') }}
+                                </span>.
+                            </li>
+                        </ul>
+                    </flux:callout.text>
+                </flux:callout>
 
-        <div class="text-center border-b border-emerald-200 dark:border-emerald-700 pb-6 mb-6 mt-6 max-w-4xl mx-auto">
-            <h1 class="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
-                Pre-Mediacion
-            </h1>
-            <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                Agrega tu liga de sesión virtual, el dia y la hora de la sesión
-            </p>
-            <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                Recuerda que es una sesión vía Google Meet. Puedes generarla aquí:
-                <a class="text-emerald-600" href="https://meet.google.com/landing" target="_blank" rel="noopener noreferrer">
-                    "Ir a generar sesión"
-                </a>
-            </p>
+                <!-- Sección de enlace -->
+                <div class="flex flex-col justify-between space-y-4">
+                    <flux:input label="Enlace / Liga" placeholder="Enlace de reunión virtual" />
+                    <div class="flex justify-end">
+                        <flux:button type="submit" variant="primary">Enviar invitación</flux:button>
+                    </div>
+                </div>
+            </div>
+
+        @else
+        
+        <div class=" max-w-md m-auto space-y-3 mt-5">
+            <flux:callout variant="sparkles" icon="bell">
+                <flux:callout.heading>
+                    Recordatorio <flux:badge color="purple" size="sm" inset="top bottom">De asignación</flux:badge>
+                </flux:callout.heading>
+    
+                <flux:callout.text>
+                    <p class="text-sm font-semibold text-neutral-200 mb-2">¿A quién se te asignó darle sesión?</p>
+                    <ul class="list-disc list-inside text-sm text-neutral-100 space-y-1">
+                        <li>
+                            Para esta pre mediación se asignó a: 
+                            <span class="text-emerald-600 font-semibold">{{ $evento->opcion_invitacion }}</span>.
+                        </li>
+                        <li>
+                            Con fecha de atención: 
+                            <span class="text-emerald-600 font-semibold">
+                                {{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}
+                            </span>.
+                        </li>
+                        <li>
+                            Horario asignado: 
+                            <span class="text-emerald-600 font-semibold">
+                                {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('g:i a') }} a 
+                                {{ \Carbon\Carbon::parse($evento->hora_fin)->format('g:i a') }}
+                            </span>.
+                        </li>
+                    </ul>
+                </flux:callout.text>
+    
+                {{-- <x-slot name="actions">
+                    <flux:button>Ver detalles</flux:button>
+                    <flux:button variant="ghost" class="@max-md:hidden">Administrar solicitud</flux:button>
+                </x-slot> --}}
+            </flux:callout>
         </div>
-        {{-- Documentos de la solicitud --}}
+        @endif
+        
     </div>
 
 

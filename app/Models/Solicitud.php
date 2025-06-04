@@ -16,7 +16,8 @@ class Solicitud extends Model
         "numero_ticket",
         "institucion",
         "oficio",
-        "cual_otro"
+        "cual_otro",
+        'facilitador_id'
     ];
 
     public function personas()
@@ -27,6 +28,11 @@ class Solicitud extends Model
     public function estatus()
     {
         return $this->belongsTo(Estatus::class);
+    }
+
+    public function facilitador()
+    {
+        return $this->belongsTo(Facilitador::class);
     }
 
 
