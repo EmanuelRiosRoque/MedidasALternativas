@@ -1,178 +1,192 @@
-<div class="max-w-4xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
-    <!-- Lista de eventos -->
-   <div class="bg-neutral-700 p-4 rounded-lg shadow">
-    <h2 class="text-xl font-semibold mb-4 text-neutral-100">Eventos del día</h2>
+<div class="max-w-4xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-neutral-800 dark:text-white">
 
-    <ul class="space-y-3 text-sm text-neutral-200">
-        @forelse ($eventos as $evento)
-            <li wire:click="editarEvento({{ $evento->id }})"
-                class="flex rounded-md transition shadow-md hover:bg-neutral-600 hover:shadow-lg overflow-hidden cursor-pointer">
-                <div class="w-2 {{ $evento->color }}"></div>
-                <div class="flex-1 p-5">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-white">
-                            {{ $evento->solicitud->nombre ?? 'Solicitud #' . $evento->solicitud->id }}
-                        </span>
-                        <span class="px-2 py-1 text-xs rounded-full font-semibold
-                          bg-neutral-800 text-white">
-                            {{ $evento->estatus->nombre }}
-                        </span>
-                    </div>
-                    <div class="text-xs text-neutral-300">
-                        {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i') }}
-                        - {{ \Carbon\Carbon::parse($evento->hora_fin)->format('H:i') }}
-                        | Facilitador: {{ $evento->facilitador->nombre ?? 'Sin asignar' }}
-                    </div>
-                </div>
-            </li>
-        @empty
-            <li class="text-neutral-400 italic">No hay eventos para este día.</li>
-        @endforelse
-    </ul>
-</div>
-
-
-
-
-    <!-- Calendario -->
-    <div class="p-4 bg-neutral-600 rounded-lg shadow">
-        <div class="flex items-center justify-between mb-2">
-            <button wire:click="cambiarMes(-1)" class="text-neutral-300 hover:text-white">&lt;</button>
-            <h2 class="text-lg font-semibold">
-                {{ \Carbon\Carbon::create($currentYear, $currentMonth)->translatedFormat('F Y') }}
-            </h2>
-            <button wire:click="cambiarMes(1)" class="text-neutral-300 hover:text-white">&gt;</button>
-        </div>
-
-        <div class="grid grid-cols-7 text-center text-sm text-neutral-400 mb-1">
-            @foreach (['L', 'M', 'M', 'J', 'V', 'S', 'D'] as $dia)
-            <div>{{ $dia }}</div>
-            @endforeach
-        </div>
-
-        <div class="grid grid-cols-7 gap-1 text-sm text-center">
-            @for ($i = 1; $i < $primerDiaMes; $i++) <div>
-        </div>
-        @endfor
-
-        @for ($day = 1; $day <= $diasEnMes; $day++) @php $fecha=\Carbon\Carbon::create($currentYear, $currentMonth,
-            $day)->toDateString();
-            $hoy = now()->toDateString() === $fecha;
-            $seleccionado = $fechaSeleccionada === $fecha;
-            @endphp
-            <div wire:click="seleccionarDia({{ $day }})"
-                class="cursor-pointer p-2 rounded-full transition
-                        {{ $seleccionado ? 'bg-emerald-700 text-white' : ($hoy ? 'bg-emerald-500 text-white' : 'hover:bg-emerald-400') }}">
-                {{ $day }}
+    {{-- Lista de eventos --}}
+    <div class="bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-2 text-neutral-800 dark:text-neutral-100 flex items-center justify-between">
+            Eventos del día
+            <div wire:loading wire:target='seleccionarDia' class="ml-4">
+                <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-emerald-600"></div>
             </div>
-            @endfor
+        </h2>
+
+        <hr class="border-neutral-300 dark:border-neutral-600 mb-4">
+
+        <ul class="space-y-3 text-sm text-neutral-600 dark:text-neutral-200">
+            @forelse ($eventos as $evento)
+                <li wire:click="editarEvento({{ $evento->id }})"
+                    class="flex rounded-md transition shadow-md hover:bg-neutral-200 dark:hover:bg-neutral-600 hover:shadow-lg hover:scale-[1.01] hover:ring-2 hover:ring-emerald-500 overflow-hidden cursor-pointer duration-150">
+                    <div class="w-2 {{ $evento->color }}"></div>
+                    <div class="flex-1 p-5">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-semibold flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full {{ $evento->color }}"></div>
+                                {{ $evento->solicitud->nombre ?? 'Solicitud #' . $evento->solicitud->id }}
+                            </span>
+                            <span class="px-2 py-1 text-xs rounded-full font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-white">
+                                {{ $evento->estatus->nombre }}
+                            </span>
+                        </div>
+                        <div class="text-xs text-neutral-500 dark:text-neutral-300">
+                            {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i') }}
+                            - {{ \Carbon\Carbon::parse($evento->hora_fin)->format('H:i') }}
+                            | Facilitador: {{ $evento->facilitador->nombre ?? 'Sin asignar' }}
+                        </div>
+                    </div>
+                </li>
+            @empty
+                <li class="italic text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-neutral-400 dark:text-neutral-500" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2a4 4 0 014-4h4" />
+                    </svg>
+                    No hay eventos para este día.
+                </li>
+            @endforelse
+        </ul>
     </div>
+
+    {{-- Calendario --}}
+   <div class="p-4 bg-neutral-200 dark:bg-neutral-600 rounded-lg shadow">
+    <div class="flex items-center justify-between mb-2">
+        <button wire:click="cambiarMes(-1)" class="text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white">&lt;</button>
+        <h2 class="text-lg font-semibold text-neutral-800 dark:text-white">
+            {{ \Carbon\Carbon::create($currentYear, $currentMonth)->translatedFormat('F Y') }}
+        </h2>
+        <button wire:click="cambiarMes(1)" class="text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white">&gt;</button>
+    </div>
+
+    {{-- Encabezados de lunes a viernes --}}
+    <div class="grid grid-cols-5 text-center text-sm text-neutral-500 dark:text-neutral-400 mb-1">
+        @foreach (['L', 'M', 'M', 'J', 'V'] as $dia)
+            <div>{{ $dia }}</div>
+        @endforeach
+    </div>
+
+    {{-- Días del mes: solo lunes a viernes --}}
+    <div class="grid grid-cols-5 gap-1 text-sm text-center">
+        @php
+            $inicioMes = \Carbon\Carbon::create($currentYear, $currentMonth, 1);
+            $finMes = $inicioMes->copy()->endOfMonth();
+        @endphp
+
+        @for ($fecha = $inicioMes->copy(); $fecha->lte($finMes); $fecha->addDay())
+            @php
+                $dayOfWeek = $fecha->dayOfWeek; // 0 (domingo) - 6 (sábado)
+            @endphp
+
+            @if ($dayOfWeek >= 1 && $dayOfWeek <= 5) {{-- Lunes a Viernes --}}
+                @php
+                    $day = $fecha->day;
+                    $fechaStr = $fecha->toDateString();
+                    $hoy = now()->toDateString() === $fechaStr;
+                    $seleccionado = $fechaSeleccionada === $fechaStr;
+                    $hayEventos = $eventos->where('fecha', $fechaStr)->isNotEmpty();
+                @endphp
+
+                <div wire:click="seleccionarDia({{ $day }})"
+                    class="cursor-pointer p-2 rounded-full transition
+                        {{ $seleccionado ? 'bg-emerald-700 text-white ring-2 ring-white' : ($hoy ? 'bg-emerald-500 text-white' : 'hover:bg-emerald-400') }}
+                        {{ $hayEventos ? 'border border-emerald-300 shadow-sm' : '' }}">
+                    {{ $day }}
+                </div>
+            @endif
+        @endfor
+    </div>
+
     <div class="mt-4 text-center">
-        <x-flux::button wire:click="abrirModalDia" variant="primary" class="w-full">
+        <x-flux::button wire:click="abrirModalDia" variant="primary"
+            class="w-full hover:scale-105 transition-transform duration-150">
             Agregar evento
         </x-flux::button>
     </div>
 </div>
 
 
-<flux:modal wire:model="showModalDia" class="md:w-96">
-    <div class="space-y-6">
-        <div>
-            <flux:heading size="lg">Crear evento para el dia: {{ $fechaSeleccionada }}</flux:heading>
-            <flux:text class="mt-2">Información relevante del evento seleccionado.</flux:text>
-        </div>
+    {{-- Modal --}}
+    <flux:modal wire:model="showModalDia" class="md:w-96 transition-all duration-300 ease-out">
+        <div class="space-y-6">
 
-        <div class=" grid grid-cols-2 gap-2">
-            <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
-                @foreach ($facilitadores as $facilitador)
-                <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
-                @endforeach
-            </flux:select>
+            <div>
+                <flux:heading size="lg">Crear evento para el día: {{ $fechaSeleccionada }}</flux:heading>
+                <flux:text class="mt-2">Información relevante del evento seleccionado.</flux:text>
+            </div>
 
-            <x-select-color wire:model="colorEvento" />
-        </div>
+            <div class="grid grid-cols-2 gap-2">
+                <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
+                    @foreach ($facilitadores as $facilitador)
+                        <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+                <x-select-color wire:model="colorEvento" />
+            </div>
 
-        @if (!$modoEditar)
-            @if($solicitudes->isNotEmpty())
-            <flux:select wire:model.change="solicitud" placeholder="Elige solicitud a asignar">
-                @foreach ($solicitudes as $solicitud)
-                <flux:select.option value="{{ $solicitud->id }}">
-                    {{ $solicitud->nombre ?? 'Solicitud #' . $solicitud->id }}
-                </flux:select.option>
-                @endforeach
-            </flux:select>
-            @else
-            <p class="text-sm text-gray-500 dark:text-gray-400 italic">
-                No hay solicitudes disponibles.
-            </p>
+            @if (!$modoEditar && $solicitudes->isNotEmpty())
+                <flux:select wire:model.change="solicitud" placeholder="Elige solicitud a asignar">
+                    @foreach ($solicitudes as $solicitud)
+                        <flux:select.option value="{{ $solicitud->id }}">
+                            {{ $solicitud->nombre ?? 'Solicitud #' . $solicitud->id }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+            @elseif (!$modoEditar)
+                <p class="text-sm text-neutral-500 dark:text-neutral-400 italic">
+                    No hay solicitudes disponibles.
+                </p>
             @endif
-        @endif
 
-        {{-- Mostrar solicitantes si hay --}}
-        @if (!empty($solicitantes))        
             @if (!empty($solicitantes))
                 <flux:select wire:model="solicitante" placeholder="Elige un solicitante o invitado">
                     <flux:select.option value="todos">TODOS (ACUDIRÁN JUNTOS)</flux:select.option>
-                    <flux:select.option value="solicitantes">SOLICITANTE (S)</flux:select.option>
-                    <flux:select.option value="invitados">INVITADO (S)</flux:select.option>
-                    {{-- @foreach ($solicitantes as $solicitante)
-                        <flux:select.option value="{{ $solicitante->id }}">
-                            {{ strtoupper($solicitante->nombre ?? 'SIN NOMBRE') }} – {{ strtoupper($solicitante->tipo_solicitante ?? 'TIPO DESCONOCIDO') }}
-                        </flux:select.option>
-                    @endforeach --}}
+                    <flux:select.option value="solicitantes">SOLICITANTE(S)</flux:select.option>
+                    <flux:select.option value="invitados">INVITADO(S)</flux:select.option>
                 </flux:select>
-            @else
-                <p class="text-sm text-gray-500 dark:text-gray-400 italic">
-                    No hay solicitantes disponibles.
-                </p>
             @endif
-        @endif
 
-        @if ($modoEditar)
-        <flux:input wire:model="fechaSeleccionadaUpdate" label="Nueva fecha para asignar" type='date' />
-        @endif
-
-
-        <div class=" grid grid-cols-2 gap-2">
-            <flux:select wire:model="horaInicio" placeholder="Elige hora incio">
-                @foreach ($horarios as $valor => $etiqueta)
-                <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
-                @endforeach
-            </flux:select>
-
-            <flux:select wire:model="horaFin" placeholder="Elige hora fin">
-                @foreach ($horarios as $valor => $etiqueta)
-                <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
-                @endforeach
-            </flux:select>
-        </div>
-
-        <flux:input wire:model="actividad" label="Actividad" placeholder="Nombre de la actividad" />
-
-        @if ($modoEditar)
-            <flux:radio.group wire:model.live="reasignacion" label="¿Reasignación?">
-                <flux:radio value="1" label="Sí" />
-                <flux:radio value="2" label="No" />
-            </flux:radio.group>
-
-            @if ($reasignacion == 1)
-                <flux:input wire:model="observacion" label="Observacion" placeholder="Ingrese el observacion" />
+            @if ($modoEditar)
+                <flux:input wire:model="fechaSeleccionadaUpdate" label="Nueva fecha para asignar" type="date" />
             @endif
-        @endif
 
-        <div class="flex justify-end">
-            <flux:button type="button" wire:click="cerrar" class="mr-2">Cerrar</flux:button>
-            
-            <flux:button type="button" wire:click="guardarEvento" variant="primary">
-                @if ($reasignacion == 1)
-                    Confirmar Reasignación
-                @else
-                    {{ $modoEditar ? 'Actualizar' : 'Agregar' }}
-                @endif
-            </flux:button>
+            <div class="grid grid-cols-2 gap-2">
+                <flux:select wire:model="horaInicio" placeholder="Elige hora inicio">
+                    @foreach ($horarios as $valor => $etiqueta)
+                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+                <flux:select wire:model="horaFin" placeholder="Elige hora fin">
+                    @foreach ($horarios as $valor => $etiqueta)
+                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            </div>
+
+            <flux:input wire:model="actividad" label="Actividad" placeholder="Nombre de la actividad" />
+
+            @if ($modoEditar)
+                <div x-data="{ mostrarObservacion: $wire.entangle('reasignacion') }" class="space-y-4">
+                    <flux:radio.group x-model="mostrarObservacion" label="¿Reasignación?">
+                        <flux:radio value="1" label="Sí" />
+                        <flux:radio value="2" label="No" />
+                    </flux:radio.group>
+
+                    <template x-if="mostrarObservacion == 1">
+                        <flux:input wire:model="observacion" label="Observación"
+                            placeholder="Ingrese la observación" />
+                    </template>
+                </div>
+            @endif
+
+            <div class="flex justify-end">
+                <flux:button type="button" wire:click="cerrar" class="mr-2">Cerrar</flux:button>
+                <flux:button type="button" wire:click="guardarEvento" variant="primary">
+                    @if ($reasignacion == 1)
+                        Confirmar Reasignación
+                    @else
+                        {{ $modoEditar ? 'Actualizar' : 'Agregar' }}
+                    @endif
+                </flux:button>
+            </div>
         </div>
-
-    </div>
-</flux:modal>
+    </flux:modal>
 
 </div>

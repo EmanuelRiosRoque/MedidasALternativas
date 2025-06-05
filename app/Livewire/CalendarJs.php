@@ -304,7 +304,6 @@ class CalendarJs extends Component
             'horaInicio',
             'horaFin',
             'actividad',
-            'fechaSeleccionada',
             'solicitante',
             'solicitantes',
             'observacion',
@@ -314,6 +313,7 @@ class CalendarJs extends Component
 
     public function editarEvento($id)
     {
+
         $this->modoEditar = true;
 
         $evento = Agenda::findOrFail($id);
