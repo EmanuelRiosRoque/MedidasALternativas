@@ -2,14 +2,12 @@
 
 use Livewire\Volt\Volt;
 use App\Livewire\Convenio;
+use App\Livewire\Calendario;
 use App\Livewire\Solicitudes;
 use App\Livewire\Facilitadores;
-use App\Livewire\Solictud\Index;
-use App\Livewire\Solictud\Asignacion;
+use App\Livewire\Solicitud\Index;
+use App\Livewire\Solicitud\VerPersonas;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\AppointmentsCalendar;
-use App\Livewire\Calendario;
-use Dotenv\Repository\Adapter\ApacheAdapter;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,9 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/facilitadores/form', Facilitadores::class)->name('facilitadores.index');
     Route::get('/solicitudes/table', Solicitudes::class)->name('solicitudes.table');
     
-    
-    Route::get('/solicitud/asignacion', Asignacion::class)->name('solicitud.asignacion');
     Route::get('/solicitud/{solicitudId}', Index::class)->name('solicitud.index');
+    Route::get('/solicitud/{solicitudId}/personas', VerPersonas::class)->name('personas.update');
 
     Route::get('/calendario', Calendario::class)->name("calendario.index");
 

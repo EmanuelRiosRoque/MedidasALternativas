@@ -396,6 +396,7 @@
                 @endif
             </label>
             <flux:select wire:model="colonia" placeholder="Selecciona una colonia...">
+                <flux:select.option value="">--Seleccione--</flux:select.option>
                 @foreach ($colonias as $col)
                     <flux:select.option>{{ $col->colonia }}</flux:select.option>
                 @endforeach

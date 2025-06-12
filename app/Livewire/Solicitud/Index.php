@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Livewire\Solictud;
+namespace App\Livewire\Solicitud;
 
 use App\Models\Agenda;
 use Livewire\Component;
-use App\Models\Solicitante;
-use App\Models\PersonaSolicitud;
 use App\Models\Solicitud;
+use App\Models\Solicitante;
+
 use App\Traits\ConvenioTraits\HandleDocumentos;
+
 
 class Index extends Component
 {
@@ -38,8 +39,6 @@ class Index extends Component
     public $correos = [];
     public $telefonos = [];
 
-
-
     // Montar con ID
     public function mount($solicitudId)
     {
@@ -50,9 +49,6 @@ class Index extends Component
         $this->evento = Agenda::where('solicitud_id', $solicitudId)
             ->where('activo', 1)
             ->first();
-
-        // dd($this->solicitud);
-    
 
         $this->solicitudId = $solicitudId;
 
@@ -65,31 +61,31 @@ class Index extends Component
             ->get();
     }
 
-    public function cargarPersona($id)
-    {
-        $persona = Solicitante::with(['correos', 'telefonos'])->find($id);
+    // public function cargarPersona($id)
+    // {
+    //     $persona = Solicitante::with(['correos', 'telefonos'])->find($id);
 
-        if ($persona) {
-            // dd($persona);
-            $this->nombre           = $persona->nombre;
-            $this->apellido_p       = $persona->apellido_p;
-            $this->apellido_m       = $persona->apellido_m;
-            $this->rfc              = $persona->rfc;
-            $this->sexo             = $persona->sexo;
-            $this->edad             = $persona->edad;
-            $this->fecha_nacimiento = $persona->fecha_nacimiento;
-            $this->escolaridad        = $persona->escolaridad;
-            $this->ocupacion        = $persona->ocupacion;
-            // Arreglos
-            $this->correos = $persona->correos->pluck('email')->toArray();   
-            $this->telefonos = $persona->telefonos->pluck('numero')->toArray();  
-            $this->mostrarModal = true;
-        }
-    }
+    //     if ($persona) {
+    //         // dd($persona);
+    //         $this->nombre           = $persona->nombre;
+    //         $this->apellido_p       = $persona->apellido_p;
+    //         $this->apellido_m       = $persona->apellido_m;
+    //         $this->rfc              = $persona->rfc;
+    //         $this->sexo             = $persona->sexo;
+    //         $this->edad             = $persona->edad;
+    //         $this->fecha_nacimiento = $persona->fecha_nacimiento;
+    //         $this->escolaridad        = $persona->escolaridad;
+    //         $this->ocupacion        = $persona->ocupacion;
+    //         // Arreglos
+    //         $this->correos = $persona->correos->pluck('email')->toArray();   
+    //         $this->telefonos = $persona->telefonos->pluck('numero')->toArray();  
+    //         $this->mostrarModal = true;
+    //     }
+    // }
 
     public function render()
     {
-        return view('livewire.solictud.index', [
+        return view('livewire.solicitud.index', [
             'solicitantes' => $this->solicitantes,
             'invitados' => $this->invitados,
         ]);

@@ -352,7 +352,6 @@ trait HandleCrudLogicoPersonas
             'doc_representante',
             'correos',
             'telefonos',
-            'acudiran_juntos'
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');

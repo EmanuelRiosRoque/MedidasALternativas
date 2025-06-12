@@ -37,13 +37,6 @@
                 Documentos
             </flux:navbar.item>
 
-            {{-- <flux:navbar.item 
-                wire:click.prevent="cambiarTab(5)" 
-                icon="bookmark-square" 
-                :current="$tab === 5"
-            >
-                Finalizar
-            </flux:navbar.item> --}}
         </flux:navbar>
 
         <!-- Skeleton Loader cuando se está cambiando de tab -->
@@ -52,7 +45,6 @@
         </div>
         
         
-
         <!-- Contenido del tab -->
         <div class="p-4 rounded-md dark:bg-neutral-900" wire:loading.remove wire:target='cambiarTab'>
             @if ($tab === 1)
@@ -63,21 +55,7 @@
                 @include('convenio.datosInvitado')
             @elseif ($tab === 4)
                 @include('convenio.combosDocumentos')
-            {{-- @elseif ($tab === 5) --}}
-                {{-- <div class="flex justify-end">
-                    <button 
-                        wire:click="save"
-                        type="button"
-                        class="bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-3 mt-5 py-2 rounded-lg shadow-lg hover:scale-105 transition-all duration-300"
-                    >
-                        Guardar Registro
-                    </button>
-                </div> --}}
             @endif
-               
-                
-            
-            
         </div>
 
         <div class="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-700 flex justify-between items-center">

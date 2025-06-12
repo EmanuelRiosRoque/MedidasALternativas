@@ -35,10 +35,14 @@ class CalendarJs extends Component
     public $facilitador = '';
     public $horaInicio = '';
     public $horaFin = '';
+    public $horaInicioInvitado = '';
+    public $horaFinInvitado = '';
+
+    
     public $colorEvento = '';
     public $solicitantes = [];
     public $solicitante = '';
-    public $fechaSeleccionadaUpdate;
+    public $fechaNueva;
     public $reasignacion = 2;
 
     public function mount()
@@ -52,11 +56,14 @@ class CalendarJs extends Component
         $this->facilitadores = Facilitador::all();
         $this->rolUsuario = auth()->user()->getRoleNames()->first();
 
+        $this->cargarSolicitudes();
 
-        $this->solicitudes = Solicitud::where(function ($query) {
-            $query->whereNull('facilitador_id')
-                ->orWhere('facilitador_id', '');
-        })
+        $this->horarios = $this->generarHorarios('09:00', '19:00');
+    }
+
+    public function cargarSolicitudes()
+    {
+        $this->solicitudes = Solicitud::whereNull('facilitador_id')
             ->where('estatus_id', 1)
             ->where(function ($query) {
                 if ($this->rolUsuario === 'civil') {
@@ -66,8 +73,6 @@ class CalendarJs extends Component
                 }
             })
             ->get();
-
-        $this->horarios = $this->generarHorarios('09:00', '19:00');
     }
 
     public function cambiarMes($incremento)
@@ -104,19 +109,11 @@ class CalendarJs extends Component
 
         $this->cargarEventos();
     }
-
+    
+    // Funciones para guardar evento
+    
     public function guardarEvento()
     {
-        // $folioFamiliar = siguienteValorSecuencia('familiar'); // 1
-        // $folioCivil = siguienteValorSecuencia('civil');       // 1
-
-        // $folioFamiliarFormateado = 'FAM-' . now()->year . '-' . str_pad($folioFamiliar, 4, '0', STR_PAD_LEFT);
-        // $folioCivilFormateado = 'CIV-' . now()->year . '-' . str_pad($folioCivil, 4, '0', STR_PAD_LEFT);
-
-        // dd($folioFamiliarFormateado, $folioCivilFormateado);
-
-        
-
         $this->validateDatos();
 
         if ($this->eventoId) {
@@ -126,6 +123,7 @@ class CalendarJs extends Component
         }
 
         $this->cargarEventosYDias();
+        $this->cargarSolicitudes();
         $this->cerrar();
     }
 
@@ -156,9 +154,11 @@ class CalendarJs extends Component
                 'solicitud_id'      => $this->solicitud,
                 'opcion_invitacion' => $this->solicitante,
                 'facilitador_id'    => $this->facilitador,
-                'fecha'             => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+                'fecha'             => $this->fechaNueva ?? $this->fechaSeleccionada,
                 'hora_inicio'       => $this->horaInicio,
                 'hora_fin'          => $this->horaFin,
+                'hora_inicio_invitado' => $this->horaInicioInvitado ?: null,
+                'hora_fin_invitado'    => $this->horaFinInvitado ?: null,
                 'descripcion'       => $this->actividad,
                 'materia'           => $this->rolUsuario,
                 'color'             => $this->colorEvento,
@@ -192,7 +192,7 @@ class CalendarJs extends Component
             'solicitud_id'      => $this->solicitud,
             'opcion_invitacion' => $this->solicitante,
             'facilitador_id'    => $this->facilitador,
-            'fecha'             => $this->fechaSeleccionadaUpdate ?? $this->fechaSeleccionada,
+            'fecha'             => $this->fechaNueva ?? $this->fechaSeleccionada,
             'hora_inicio'       => $this->horaInicio,
             'hora_fin'          => $this->horaFin,
             'descripcion'       => $this->actividad,
@@ -220,6 +220,10 @@ class CalendarJs extends Component
             'fecha'             => $this->fechaSeleccionada,
             'hora_inicio'       => $this->horaInicio,
             'hora_fin'          => $this->horaFin,
+            'hora_inicio'       => $this->horaInicio,
+            'hora_fin'          => $this->horaFin,
+            'hora_inicio_invitado' => $this->horaInicioInvitado ?: null,
+            'hora_fin_invitado'    => $this->horaFinInvitado ?: null,
             'descripcion'       => $this->actividad,
             'materia'           => $this->rolUsuario,
             'color'             => $this->colorEvento,
@@ -236,14 +240,42 @@ class CalendarJs extends Component
         $this->reasignarFacilitadores();
     }
 
+     public function editarEvento($id)
+    {
+
+        $this->modoEditar = true;
+
+        $evento = Agenda::findOrFail($id);
+
+        $this->eventoId = $evento->id;
+        $this->fechaSeleccionada = $evento->fecha;
+        $this->facilitador = $evento->facilitador_id;
+        $this->solicitud = $evento->solicitud_id;
+        $this->horaInicio = Carbon::parse($evento->hora_inicio)->format('H:i');
+        $this->horaFin = Carbon::parse($evento->hora_fin)->format('H:i');       
+        $this->horaInicioInvitado = Carbon::parse($evento->hora_inicio_invitado)->format('H:i');
+        $this->horaFinInvitado = Carbon::parse($evento->hora_fin_invitado)->format('H:i');    
+
+        $this->actividad = $evento->descripcion;
+        $this->colorEvento = $evento->color;
+        $this->solicitante = $evento->opcion_invitacion;
+        $this->observacion = $evento->observacion;
+        $this->solicitantes = Solicitante::where('solicitud_id', $evento->solicitud_id)->get();
+
+
+        $this->showModalDia = true;
+    }
+
     private function reasignarFacilitadores()
     {
         // Limpiar asignaciones previas
-        Solicitante::where('solicitud_id', $this->solicitud)
-            ->update([
-                'facilitador_id' => null,
-                'estatus_id'     => null,
-            ]);
+        if ($this->reasignacion === 1 ) {
+            Solicitante::where('solicitud_id', $this->solicitud)
+                ->update([
+                    'facilitador_id' => null,
+                    'estatus_id'     => null,
+                ]);
+        }
 
         // Asignar según tipo
         switch ($this->solicitante) {
@@ -255,13 +287,12 @@ class CalendarJs extends Component
                     ]);
                 break;
 
-            case 'solicitantes':
+            case 'separados':
                 Solicitante::where('solicitud_id', $this->solicitud)
-                    ->where('tipo_solicitante', 'solicitante')
-                    ->update([
-                        'facilitador_id' => $this->facilitador,
-                        'estatus_id'     => 3,
-                    ]);
+                        ->update([
+                            'facilitador_id' => $this->facilitador,
+                            'estatus_id'     => 3,
+                        ]);
                 break;
 
             case 'invitados':
@@ -285,7 +316,28 @@ class CalendarJs extends Component
         }
     }
 
-    public function abrirModalDia()
+
+    public function updatedSolicitud($value)
+    {
+        $this->solicitantes = Solicitante::where('solicitud_id', $value)->get();
+    }
+
+
+    private function generarHorarios($inicio, $fin)
+    {
+        $horarios = [];
+        $hora = \Carbon\Carbon::createFromFormat('H:i', $inicio);
+        $horaFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
+
+        while ($hora < $horaFin) {
+            $horarios[$hora->format('H:i')] = $hora->format('g:i A');
+            $hora->addMinutes(30);
+        }
+
+        return $horarios;
+    }
+
+     public function abrirModalDia()
     {
         $this->showModalDia = true;
     }
@@ -309,51 +361,6 @@ class CalendarJs extends Component
             'observacion',
             'reasignacion'
         ]);
-    }
-
-    public function editarEvento($id)
-    {
-
-        $this->modoEditar = true;
-
-        $evento = Agenda::findOrFail($id);
-
-        $this->eventoId = $evento->id;
-        $this->fechaSeleccionada = $evento->fecha;
-        $this->facilitador = $evento->facilitador_id;
-        $this->solicitud = $evento->solicitud_id;
-        $this->horaInicio = \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i');
-        $this->horaFin = \Carbon\Carbon::parse($evento->hora_fin)->format('H:i');       
-
-        $this->actividad = $evento->descripcion;
-        $this->colorEvento = $evento->color;
-        $this->solicitante = $evento->opcion_invitacion;
-        $this->observacion = $evento->observacion;
-        $this->solicitantes = Solicitante::where('solicitud_id', $evento->solicitud_id)->get();
-
-
-        $this->showModalDia = true;
-    }
-
-
-    public function updatedSolicitud($value)
-    {
-        $this->solicitantes = Solicitante::where('solicitud_id', $value)->get();
-    }
-
-
-    private function generarHorarios($inicio, $fin)
-    {
-        $horarios = [];
-        $hora = \Carbon\Carbon::createFromFormat('H:i', $inicio);
-        $horaFin = \Carbon\Carbon::createFromFormat('H:i', $fin);
-
-        while ($hora < $horaFin) {
-            $horarios[$hora->format('H:i')] = $hora->format('g:i A');
-            $hora->addMinutes(30);
-        }
-
-        return $horarios;
     }
 
     public function render()

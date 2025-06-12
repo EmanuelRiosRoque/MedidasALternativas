@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Solictud;
+namespace App\Livewire\Solicitud;
 
 use Livewire\Component;
 

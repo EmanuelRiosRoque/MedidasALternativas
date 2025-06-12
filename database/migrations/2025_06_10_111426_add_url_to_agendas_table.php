@@ -6,23 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::table('agenda', function (Blueprint $table) {
-            $table->string('opcion_invitacion')->nullable()->after('color');
+            $table->string('url')->nullable()->after('observacion');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('agenda', function (Blueprint $table) {
-            $table->dropColumn('opcion_invitacion');
+            $table->dropColumn('url');
         });
     }
 };

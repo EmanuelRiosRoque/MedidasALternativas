@@ -224,9 +224,21 @@ class Convenio extends Component
 			);
 		}
 
+		//Todo Guardar folios por materia y modalidad (V-Para virtuales P-Presenciales) 
+		// $folioFamiliar = siguienteValorSecuencia('familiar'); 
+        // $folioCivil = siguienteValorSecuencia('civil');    
+
+		// $folioFamiliarPresencial = $this->generarFolio('CJA', 'MF', $folioFamiliar);
+		// $folioCivilPresencial    = $this->generarFolio('CJA', 'MCM', $folioCivil);
+
+		// $folioSeleccionado = $this->materia === 'familiar'
+		// ? $folioFamiliarPresencial
+		// : $folioCivilPresencial;
+
 		// Crear la solicitud
 		$solicitud = Solicitud::create([
 			"modalidad" => $this->modalidad,
+			// "folio_materia" => $folioSeleccionado,
 			"estatus_id" => 1,
 			"materia" => $this->materia,
 			"derivado_canalizado" => $this->derivado_canalizado,
@@ -403,6 +415,16 @@ class Convenio extends Component
 			return $rutaPublica;
 		}
 		return null;
+	}
+
+	private function generarFolio(string $prefijo, string $clave, int $folio): string
+	{
+		$anio = now()->year;
+		$folioFormateado = str_pad($folio, 4, '0', STR_PAD_LEFT);
+
+		return ($this->materia === 'presencial')
+			? "$prefijo-$clave-$folioFormateado-$anio"
+			: "V-$prefijo-$clave-$folioFormateado-$anio";
 	}
 
 	public function save () {
