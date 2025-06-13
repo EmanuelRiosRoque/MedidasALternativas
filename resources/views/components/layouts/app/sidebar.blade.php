@@ -21,7 +21,7 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     {{-- @if($user==="admin") --}}
                     <flux:navlist.item icon="document-plus" :href="route('convenio.index')" :current="request()->routeIs('convenio.index')"  wire:navigate>{{ __('Registro solicitud') }}</flux:navlist.item>
-                    <flux:navlist.item icon="table-cells" :href="route('solicitudes.table')" :current="request()->routeIs('solicitudes.table')"  wire:navigate>{{ __('Solicitudes') }}</flux:navlist.item>
+                    <flux:navlist.item icon="table-cells" :href="route('solicitudes.index')" :current="request()->routeIs('solicitudes.index')"  wire:navigate>{{ __('Solicitudes') }}</flux:navlist.item>
                     {{-- <flux:navlist.item icon="identification" :href="route('pre-mediacion.index')" :current="request()->routeIs('pre-mediacion.index')"  wire:navigate>{{ __('Registros') }}</flux:navlist.item> --}}
                     {{-- @endif --}}
                     <flux:navlist.item icon="briefcase" :href="route('facilitadores.index')" :current="request()->routeIs('facilitadores.index')"  wire:navigate>{{ __('Facilitadores') }}</flux:navlist.item> 

@@ -257,7 +257,7 @@ class Convenio extends Component
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'invitado');
 		}
 
-		return Redirect::route('solicitudes.table')
+		return Redirect::route('solicitudes.index')
 			->success('Solicitud creada exitosamente !');
 	}
 

@@ -26,10 +26,8 @@
 
     <div>
         @if ($modalidad === 'linea')
-        <div class="animate__animated animate__fadeIn">
             <flux:input wire:model="numero_ticket" :label="__('#Ticket')" type="text" required 
                 placeholder="Número de Ticket" />
-        </div>
         @endif
     </div>
 
@@ -65,10 +63,8 @@
     
     <div>
         @if ($institucion === "Otro")
-        <div class="animate__animated animate__fadeIn">
             <flux:input wire:model="cual_otro" :label="__('Otro:')" type="text" required 
                 placeholder="Mencione cuál otro" />
-        </div>        
         @endif
     </div>
 </div>

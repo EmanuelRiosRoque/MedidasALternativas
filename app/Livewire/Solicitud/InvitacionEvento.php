@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Solicitud;
 
 use Carbon\Carbon;
 use App\Models\Correo;
@@ -19,7 +19,7 @@ class InvitacionEvento extends Component
     public $correosSolicitantes;
     public $correosInvitados;
 
-    public function mount($evento)
+    public function mount($evento = null)
     {
         $this->evento = $evento;
         $this->eventoId = $evento->id;
@@ -94,6 +94,6 @@ class InvitacionEvento extends Component
 
     public function render()
     {
-        return view('livewire.invitacion-evento');
+        return view('livewire.solicitud.invitacion-evento');
     }
 }

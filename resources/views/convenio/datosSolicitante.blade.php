@@ -6,20 +6,16 @@
 
     <div class="flex flex-wrap gap-x-6">
         @if ($materia === 'mercantil' || $materia=== 'civil')
-        <div class="animate__animated animate__fadeIn">
-            <flux:radio.group wire:model.live="persona" label="Persona" >
-                <flux:radio value="fisica" label="Física" />
-                <flux:radio value="moral" label="Moral" />
-            </flux:radio.group>
-        </div>
+        <flux:radio.group wire:model.live="persona" label="Persona">
+            <flux:radio value="fisica" label="Física" />
+            <flux:radio value="moral" label="Moral" />
+        </flux:radio.group>
         @endif
-        
-        <div class="animate__animated animate__fadeIn">
-            <flux:radio.group wire:model="acudiran_juntos" label="¿Acudirán juntos?" >
-                <flux:radio value="1" label="Si" />
-                <flux:radio value="2" label="No" />
-            </flux:radio.group>
-        </div>
+
+        <flux:radio.group wire:model="acudiran_juntos" label="¿Acudirán juntos?">
+            <flux:radio value="1" label="Si" />
+            <flux:radio value="2" label="No" />
+        </flux:radio.group>
     </div>
     <div>
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
@@ -27,12 +23,12 @@
         </label>
         <flux:select wire:model="como_se_entero" placeholder="¿Cómo se enteró?">
             @foreach ($mediosInvitado as $medio)
-                <flux:select.option>{{ $medio }}</flux:select.option>
+            <flux:select.option>{{ $medio }}</flux:select.option>
             @endforeach
         </flux:select>
     </div>
     <div class="w-full flex justify-center col-span-2">
-        <div wire:loading.delay.shortest wire:target="persona" >
+        <div wire:loading.delay.shortest wire:target="persona">
             <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-600"></div>
         </div>
     </div>
@@ -43,14 +39,14 @@
 {{--* Formularios por TIPO PERSONA --}}
 <div wire:loading.remove wire:target='persona'>
     @if ($persona === 'fisica')
-        @include('convenio.formulario.personaFisica', ['prefix' => 'solicitante', 'key' => 'fisica'])
+    @include('convenio.formulario.personaFisica', ['prefix' => 'solicitante', 'key' => 'fisica'])
     @elseif ($persona === 'moral')
-        @include('convenio.formulario.personaMoral', ['prefix' => 'solicitante', 'key' => 'moral'])
+    @include('convenio.formulario.personaMoral', ['prefix' => 'solicitante', 'key' => 'moral'])
     @endif
 </div>
 
 @if ($materia === 'familiar')
-    @include('convenio.formulario.materiaFamiliar', ['prefix' => 'solicitante', 'key' => 'familiar'])
+@include('convenio.formulario.materiaFamiliar', ['prefix' => 'solicitante', 'key' => 'familiar'])
 @endif
 
 {{--* Dropzone y representante --}}
@@ -58,10 +54,11 @@
 @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
 {{--** Boton para enviar datos --}}
 <div class="flex justify-end">
-  
-         <flux:button wire:click='{{ $modoEdicion ? "editarPersona" : "agregarPersona(\"solicitante\")" }}' variant="primary" type="button">
-            {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
-        </flux:button>
+
+    <flux:button wire:click='{{ $modoEdicion ? "editarPersona" : "agregarPersona(\"solicitante\")" }}' variant="primary"
+        type="button">
+        {{ $modoEdicion ? 'Actualizar' : 'Agregar' }}
+    </flux:button>
 
 </div>
 
@@ -69,39 +66,23 @@
 
 {{--* Cards donde se visualizan los participantes agregados --}}
 @if (!empty($solicitanteArray))
-    @if(collect($solicitanteArray)->where('persona', 'fisica')->count())
-        <x-convenio.tabla-participantes
-            heading="Solicitante Persona Física"
-            :solicitantes="collect($solicitanteArray)->where('persona', 'fisica')"
-            tipo="solicitante"
-        />
-    @endif
+@if(collect($solicitanteArray)->where('persona', 'fisica')->count())
+<x-convenio.tabla-participantes heading="Solicitante Persona Física"
+    :solicitantes="collect($solicitanteArray)->where('persona', 'fisica')" tipo="solicitante" />
+@endif
 
-    @if(collect($solicitanteArray)->where('persona', 'moral')->count())
-        <x-convenio.tabla-participantes
-            heading="Solicitante Persona Moral"
-            :solicitantes="collect($solicitanteArray)->where('persona', 'moral')"
-            tipo="solicitante"
-        />
-    @endif
+@if(collect($solicitanteArray)->where('persona', 'moral')->count())
+<x-convenio.tabla-participantes heading="Solicitante Persona Moral"
+    :solicitantes="collect($solicitanteArray)->where('persona', 'moral')" tipo="solicitante" />
+@endif
 
-    @if ($materia === "familiar")
-    <x-convenio.tabla-participantes
-        heading="Solicitantes"
-        :solicitantes="$solicitanteArray"
-        tipo="solicitante"
-    />
-    @endif
+@if ($materia === "familiar")
+<x-convenio.tabla-participantes heading="Solicitantes" :solicitantes="$solicitanteArray" tipo="solicitante" />
+@endif
 @endif
 
 {{--* Modal para visualizar datos extras --}}
 @if (!empty($detalleSeleccionado))
-    <x-convenio.modal-participantes 
-        heading="Solicitante"
-        :detalleSeleccionado="$detalleSeleccionado" 
-        :modoEdicion="$modoEdicion" 
-        :materia="$materia"
-    />
+<x-convenio.modal-participantes heading="Solicitante" :detalleSeleccionado="$detalleSeleccionado"
+    :modoEdicion="$modoEdicion" :materia="$materia" />
 @endif
-
-

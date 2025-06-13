@@ -28,7 +28,7 @@
             @include('livewire.solicitud.includes.recordatorio-callout')
 
             <!-- Sección de enlace -->
-            <livewire:invitacion-evento :evento="$evento" />
+            <livewire:solicitud.invitacion-evento :evento="$evento" />
         </div>
         @else
         <div class=" max-w-md m-auto space-y-3 mt-5">

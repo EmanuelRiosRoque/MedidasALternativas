@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Solicitudes;
 
 use App\Models\Solicitud;
 use Livewire\Component;
 
-class Solicitudes extends Component
+class Index extends Component
 {
     public $numSolicitudes = 0;
-
+    
     public function render()
     {
         $usuario = auth()->user();
@@ -24,7 +24,7 @@ class Solicitudes extends Component
         // Obtener la cantidad directamente
         $this->numSolicitudes = $solicitudes->count();
 
-        return view('livewire.solicitudes', [
+        return view('livewire.solicitudes.index', [
             'solicitudes' => $solicitudes->get()
         ]);
     }
