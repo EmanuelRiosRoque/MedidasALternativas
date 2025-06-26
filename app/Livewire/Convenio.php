@@ -273,6 +273,7 @@ class Convenio extends Component
 			$datosPersona = [
 				'persona'             => $tipoPersona,
 				'nombre'              => $datos['nombre'] ?? '',
+				'representante'       => $datos['representante'] ?? null,
 				'tipo_solicitante'    => $rol,
 				'apellido_p'          => $datos['apellido_p'] ?? null,
 				'apellido_m'          => $datos['apellido_m'] ?? null,
@@ -302,6 +303,7 @@ class Convenio extends Component
 				'persona'             => $tipoPersona,
 				'tipo_solicitante'    => $rol,
 				'nombre'              => $datos['nombre'] ?? '',
+				'representante'       => $datos['representante'] ?? null,
 				'apellido_p'          => $datos['apellido_p'] ?? null,
 				'apellido_m'          => $datos['apellido_m'] ?? null,
 				'sexo'                => $datos['sexo'] ?? null,

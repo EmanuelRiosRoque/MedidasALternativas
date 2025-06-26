@@ -95,7 +95,76 @@
     </div>
     @endif
 
-    <div>
+
+    @if ($personaSeleccionada['persona'] === 'familiar')
+    <div class="grid grid-cols-3 gap-3">
+        <flux:input 
+            wire:model="personaSeleccionada.nombre"
+            label="Nombre" 
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')" 
+        />
+
+        <flux:input 
+            wire:model="personaSeleccionada.apellido_p"
+            label="Apellido paterno" 
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')" 
+        />
+
+        <flux:input 
+            wire:model="personaSeleccionada.apellido_m"
+            label="Apellido materno" 
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')" 
+        />
+
+        <flux:field>
+            <flux:label>Sexo</flux:label>
+            <flux:select wire:model="personaSeleccionada.sexo" placeholder="Seleccione...">
+                <flux:select.option>Femenino</flux:select.option>
+                <flux:select.option>Masculino</flux:select.option>
+            </flux:select>
+        </flux:field>
+
+        <flux:input 
+            wire:model="personaSeleccionada.edad"
+            label="Edad" 
+            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')" 
+        />
+
+        <flux:input 
+            wire:model="personaSeleccionada.fecha_nacimiento" 
+            label="Fecha de nacimiento" 
+            type="date" 
+        />
+
+        <flux:field>
+            <flux:label>Escolaridad</flux:label>
+            <flux:select wire:model="personaSeleccionada.escolaridad" placeholder="Seleccione...">
+                @foreach ($escolaridades as $escolaridad)
+                <flux:select.option>{{ $escolaridad }}</flux:select.option>
+                @endforeach
+            </flux:select>
+        </flux:field>
+
+        <flux:field>
+            <flux:label>Ocupación</flux:label>
+            <flux:select wire:model="personaSeleccionada.ocupacion" placeholder="Seleccione...">
+                @foreach ($ocupaciones as $ocupacion)
+                <flux:select.option>{{ $ocupacion }}</flux:select.option>
+                @endforeach
+            </flux:select>
+        </flux:field>
+
+        <flux:field>
+            <flux:label>Nacionalidad</flux:label>
+            <flux:select wire:model="personaSeleccionada.nacionalidad" placeholder="Seleccione...">
+                <flux:select.option>Méxicana</flux:select.option>
+                <flux:select.option>Extranjera</flux:select.option>
+            </flux:select>
+        </flux:field>
+    </div>
+    @endif
+
+    <div>   
         <h1 class="text-base font-semibold uppercase text-emerald-400 tracking-wider mb-4 mt-4">
             Datos domicilio
         </h1>
