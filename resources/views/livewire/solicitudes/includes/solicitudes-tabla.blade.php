@@ -46,7 +46,7 @@
                     <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
                         <thead class="bg-neutral-50 dark:bg-neutral-800">
                             <tr>
-                                <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">ID / Ticket</th>
+                                <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Folio</th>
                                 <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Estatus</th>
                                 <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Modalidad</th>
                                 <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Acudirán Juntos</th>
@@ -57,7 +57,7 @@
                         <tbody class="bg-white divide-y divide-neutral-200 dark:divide-neutral-700 dark:bg-neutral-900">
                             @forelse ($solicitudes as $solicitud)
                             <tr>
-                                <td class="px-4 py-4 text-sm font-medium whitespace-nowrap text-neutral-800 dark:text-white">{{ $solicitud->id }}</td>
+                                <td class="px-4 py-4 text-sm font-medium whitespace-nowrap text-neutral-800 dark:text-white">{{ $solicitud->folio_materia }}</td>
                                 <td class="px-12 py-4 text-sm whitespace-nowrap">
                                     <div class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 bg-emerald-100/60 dark:bg-neutral-800">
                                         {{ $solicitud->estatus->nombre ?? 'Sin estatus' }}
@@ -125,7 +125,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-4 text-sm text-center text-neutral-500 dark:text-neutral-300">
+                                <td colspan="7" class="px-4 py-4 text-sm text-center text-neutral-500 dark:text-neutral-300">
                                     No hay solicitudes aún.
                                 </td>
                             </tr>

@@ -17,7 +17,9 @@ class Solicitud extends Model
         "institucion",
         "oficio",
         "cual_otro",
-        'facilitador_id'
+        "facilitador_id",
+        "folio_materia",
+        "acudiran_juntos"
     ];
 
     public function personas()

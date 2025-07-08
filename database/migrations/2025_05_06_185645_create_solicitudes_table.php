@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('estatus_id')->nullable(); // corregido
+            $table->unsignedBigInteger('estatus_id')->nullable(); 
             $table->string('modalidad')->nullable();
+            $table->string('folio_materia')->nullable();
             $table->string('materia')->nullable();
             $table->string('derivado_canalizado')->nullable();
             $table->string('numero_ticket')->nullable();
