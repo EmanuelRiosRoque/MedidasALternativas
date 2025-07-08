@@ -49,6 +49,7 @@ class Index extends Component
         $this->evento = Agenda::where('solicitud_id', $solicitudId)
             ->where('activo', 1)
             ->first();
+        
 
         $this->solicitudId = $solicitudId;
 

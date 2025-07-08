@@ -5,8 +5,8 @@
     </flux:callout.heading>
 
     <flux:callout.text>
-        <p class="text-sm font-semibold text-neutral-200 mb-2">¿A quién se te asignó darle sesión?</p>
-        <ul class="list-disc list-inside text-sm text-neutral-100 space-y-1">
+        <p class="text-sm font-semibold dark:text-neutral-200 mb-2">¿A quién se te asignó darle sesión?</p>
+        <ul class="list-disc list-inside text-sm dark:text-neutral-100 space-y-1">
             <li>
                 Para esta pre mediación se asignó a:
                 <span class="text-emerald-600 font-semibold">

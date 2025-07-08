@@ -18,7 +18,6 @@ use Illuminate\Http\File as HttpFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ConvenioTraits\HandleDocumentos;
-use App\Traits\ConvenioTraits\HandleValidaciones;
 use App\Traits\ConvenioTraits\HandleArreglosLogicos;
 use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
@@ -30,9 +29,6 @@ class Convenio extends Component
 	
 	// Funcion para auto completar domicilio
 	use HandleAutoCompletarDomicilio;
-
-	// Validaciones por pasos
-	use HandleValidaciones;
 
 	//Documentos
 	use HandleDocumentos;
@@ -185,10 +181,14 @@ class Convenio extends Component
 		}
 
 		if ($this->tab === 2 && $nuevoTab === 3) {
+			$rules = [
+				'acudiran_juntos' => 'required',
+			];
 			if (empty($this->solicitanteArray)) {
 				Toaster::warning('Debe agregar al menos un solicitante antes de continuar !');
 				return;
 			}
+			$this->validate($rules);
 		}
 
 		if ($this->tab === 3 && $nuevoTab === 4) {
@@ -238,13 +238,15 @@ class Convenio extends Component
 		// Crear la solicitud
 		$solicitud = Solicitud::create([
 			"modalidad" => $this->modalidad,
+			// 
+			"acudiran_juntos" => $this->acudiran_juntos,
 			// "folio_materia" => $folioSeleccionado,
 			"estatus_id" => 1,
 			"materia" => $this->materia,
 			"derivado_canalizado" => $this->derivado_canalizado,
 			"numero_ticket" => $this->numero_ticket,
 			"institucion" => $this->institucion,
-			"oficio" => $rutaOficio, // Guardamos la ruta si existía
+			"oficio" => $rutaOficio,
 			"cual_otro" => $this->cual_otro
 		]);
 

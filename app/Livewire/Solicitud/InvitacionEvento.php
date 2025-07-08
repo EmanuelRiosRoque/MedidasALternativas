@@ -21,14 +21,14 @@ class InvitacionEvento extends Component
 
     public function mount($evento = null)
     {
-        $this->evento = $evento;
-        $this->eventoId = $evento->id;
-
         if (!$evento || !isset($evento->solicitud_id)) {
             $this->correosSolicitantes = collect();
             $this->correosInvitados = collect();
             return;
         }
+
+        $this->evento = $evento;
+        $this->eventoId = $evento->id;
 
         $solicitanteIds = $this->getPersonaIds($evento, 'solicitante');
         $invitadoIds = $this->getPersonaIds($evento, 'invitado');
@@ -36,6 +36,7 @@ class InvitacionEvento extends Component
         $this->correosSolicitantes = $this->getCorreosBySolicitantes($solicitanteIds);
         $this->correosInvitados = $this->getCorreosBySolicitantes($invitadoIds);
     }
+
 
 
     private function getPersonaIds($evento, $tipo = 'solicitante')

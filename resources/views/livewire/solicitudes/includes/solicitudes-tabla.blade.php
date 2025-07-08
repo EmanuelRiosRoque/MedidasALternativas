@@ -49,6 +49,7 @@
                                 <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">ID / Ticket</th>
                                 <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Estatus</th>
                                 <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Modalidad</th>
+                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Acudirán Juntos</th>
                                 <th class="px-4 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Fecha y hora</th>
                                 <th class="py-3.5 px-4 relative text-sm font-normal text-neutral-500 dark:text-neutral-400">Opciones</th>
                             </tr>
@@ -72,7 +73,16 @@
                                         {{ $solicitud->modalidad === 'linea' ? 'En Línea' : 'Presencial' }}
                                     </div>
                                 </td>
-
+                                <td class="px-12 py-4 text-sm whitespace-nowrap">
+                                    <div class="
+                                        inline px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wide
+                                        {{ $solicitud->acudiran_juntos === 1 
+                                            ? 'bg-blue-100 text-green-700 dark:bg-green-800/40 dark:text-green-300' 
+                                            : 'bg-green-100 text-red-700 dark:bg-red-800/40 dark:text-red-300' 
+                                        }}">
+                                        {{ $solicitud->modalidad === 1 ? 'Si' : 'No' }}
+                                    </div>
+                                </td>
                                 <td class="px-4 py-4 text-sm whitespace-nowrap">
                                     <div>
                                         <h4 class="text-neutral-700 dark:text-neutral-200">

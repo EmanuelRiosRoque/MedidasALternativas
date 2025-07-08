@@ -21,11 +21,11 @@ return new class extends Migration
             $table->string('institucion')->nullable();
             $table->string('oficio')->nullable();
             $table->string('cual_otro')->nullable();
+            $table->boolean('acudiran_juntos')->nullable();
             $table->foreign('estatus_id')->references('id')->on('estatus')->onDelete('set null');
             $table->foreignId('facilitador_id')->nullable()->constrained('facilitadores')->nullOnDelete();
             $table->timestamps();
         });
-
     }
     
     /**
