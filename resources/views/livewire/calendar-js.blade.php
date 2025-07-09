@@ -127,7 +127,9 @@
 
     {{-- Modal --}}
     <flux:modal wire:model="showModalDia" class="md:w-96 transition-all duration-300 ease-out">
-        <div class="space-y-6">
+        <div class="space-y-6"
+            x-data="{ mostrarObservacion: $wire.entangle('reasignacion') }"
+        >
 
             <div>
                 <flux:heading size="lg"> {{ $modoEditar ? 'Actualziar el evento del día' : 'Crear evento para el día'
@@ -136,13 +138,19 @@
             </div>
 
             <div class="grid grid-cols-2 gap-2">
-                <flux:select wire:model="facilitador" placeholder="Elige facilitador disponible">
+                <flux:select
+                    wire:model="facilitador"
+                    placeholder="Elige facilitador disponible"
+                    x-bind:disabled="{{ $modoEditar ? 'mostrarObservacion == 2' : 'false' }}"
+                >
                     @foreach ($facilitadores as $facilitador)
-                    <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
+                        <flux:select.option value="{{ $facilitador->id }}">{{ $facilitador->nombre }}</flux:select.option>
                     @endforeach
                 </flux:select>
+
                 <x-select-color wire:model="colorEvento" />
             </div>
+
 
             @if (!$modoEditar && $solicitudes->isNotEmpty())
             <flux:select wire:model.live="solicitud" placeholder="Elige solicitud a asignar">
@@ -224,7 +232,7 @@
             @if ($modoEditar)
             <flux:input wire:model="fechaNueva" type="date" label="Cambiar fecha" placeholder="Ingrese la observación" />
 
-            <div x-data="{ mostrarObservacion: $wire.entangle('reasignacion') }" class="space-y-4">
+            <div class="space-y-4">
                 <flux:radio.group x-model="mostrarObservacion" label="¿Reasignación?">
                     <flux:radio value="1" label="Sí" />
                     <flux:radio value="2" label="No" />

@@ -17,8 +17,6 @@ class CalendarJs extends Component
     public $eventos = [];
     public $diasConEventos = [];
 
-
-
     public bool $modoEditar = false;
     public bool $showModalDia = false;
     public $rolUsuario;
@@ -59,6 +57,8 @@ class CalendarJs extends Component
         $this->cargarSolicitudes();
 
         $this->horarios = $this->generarHorarios('09:00', '19:00');
+
+
     }
 
     public function cargarSolicitudes()
@@ -86,6 +86,7 @@ class CalendarJs extends Component
     public function seleccionarDia($dia)
     {
         $this->fechaSeleccionada = Carbon::create($this->currentYear, $this->currentMonth, $dia)->toDateString();
+        
         $this->cargarEventos();
     }
 
@@ -249,6 +250,8 @@ class CalendarJs extends Component
 
         $this->eventoId = $evento->id;
         $this->fechaSeleccionada = $evento->fecha;
+        $this->fechaNueva = $evento->fecha;
+
         $this->facilitador = $evento->facilitador_id;
         $this->solicitud = $evento->solicitud_id;
         $this->horaInicio = Carbon::parse($evento->hora_inicio)->format('H:i');
