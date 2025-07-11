@@ -16,6 +16,8 @@ class Index extends Component
 
 
 	public $mostrarModal = false;
+    public $medio_envio = 'correo';
+
     public $solicitudId;
     public $solicitantes = [];
     public $invitados = [];
@@ -38,6 +40,8 @@ class Index extends Component
     public $escolaridad;
     public $correos = [];
     public $telefonos = [];
+
+
 
     // Montar con ID
     public function mount($solicitudId)

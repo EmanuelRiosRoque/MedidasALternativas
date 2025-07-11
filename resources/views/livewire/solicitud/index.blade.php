@@ -23,13 +23,52 @@
         </x-solicitud.section-header>
 
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl	m-auto ">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl m-auto" x-data="{ medio_envio: 'correo' }">
             <!-- Callout de recordatorio -->
             @include('livewire.solicitud.includes.recordatorio-callout')
 
-            <!-- Sección de enlace -->
-            <livewire:solicitud.invitacion-evento :evento="$evento" />
+            <!-- Sección de selección -->
+            <div>
+                <flux:radio.group label="Medio de envío" x-model="medio_envio">
+                    <flux:radio value="correo" label="Correo" />
+                    <flux:radio value="sepomex" label="SEPOMEX" />
+                    <flux:radio value="personal" label="Personal" />
+                </flux:radio.group>
+            </div>
+
+            <!-- Contenido dinámico según la opción -->
+            <div x-show="medio_envio === 'correo'" x-cloak>
+                <livewire:solicitud.invitacion-evento :evento="$evento" />
+            </div>
+
+            <div x-show="medio_envio === 'personal'" x-cloak>
+                <flux:button variant="primary" icon="arrow-down-tray" >Entrega personal</flux:button>
+            </div>
+
+            <div x-show="medio_envio === 'sepomex'" x-cloak>
+                <div class="flex flex-col space-y-2">
+                    <a href="{{ route('descargar-amparo') }}">
+                        <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
+                            Amaparo
+                        </flux:button>
+                    </a>
+                
+                    <a href="{{ route('descargar-correoMexico') }}">
+                        <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
+                            Correos México
+                        </flux:button>
+                    </a>
+
+                    <a href="{{ route('descargar-servicioPostal') }}">
+                        <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
+                            Servicio Postal
+                        </flux:button>
+                    </a>                                    
+                </div>
+            </div>
         </div>
+
+
         @else
         <div class=" max-w-md m-auto space-y-3 mt-5">
             <!-- Callout de recordatorio -->

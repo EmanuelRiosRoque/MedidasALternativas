@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PDFs\PDFsController;
 use Livewire\Volt\Volt;
 use App\Livewire\Convenio;
 use App\Livewire\Calendario;
@@ -34,6 +35,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/solicitud/{solicitudId}/personas', VerPersonas::class)->name('personas.update');
 
     Route::get('/calendario', Calendario::class)->name("calendario.index");
+
+    //**Documentos */
+    Route::get('/descargar-amparo', [PDFsController::class, 'amparo'])->name('descargar-amparo');
+    Route::get('/descargar-correoMexico', [PDFsController::class, 'correoMexico'])->name('descargar-correoMexico');
+    Route::get('/descargar-servicioPostal', [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
 
 });
 
