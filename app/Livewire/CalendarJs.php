@@ -61,19 +61,22 @@ class CalendarJs extends Component
 
     }
 
-    public function cargarSolicitudes()
+   public function cargarSolicitudes()
     {
-        $this->solicitudes = Solicitud::whereNull('facilitador_id')
+        $solicitudes = $this->solicitudes = Solicitud::whereNull('facilitador_id')
             ->where('estatus_id', 1)
-            ->where(function ($query) {
-                if ($this->rolUsuario === 'civil') {
-                    $query->whereIn('materia', ['civil', 'mercantil']);
-                } else {
-                    $query->where('materia', $this->rolUsuario);
-                }
+            ->when($this->rolUsuario !== 'admin', function ($query) {
+                $query->where(function ($query) {
+                    if ($this->rolUsuario === 'civil') {
+                        $query->whereIn('materia', ['civil', 'mercantil']);
+                    } else {
+                        $query->where('materia', $this->rolUsuario);
+                    }
+                });
             })
             ->get();
     }
+
 
     public function cambiarMes($incremento)
     {

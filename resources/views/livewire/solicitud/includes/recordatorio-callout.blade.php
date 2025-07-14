@@ -1,7 +1,7 @@
 <flux:callout variant="sparkles" icon="bell">
     <flux:callout.heading>
         Recordatorio
-        <flux:badge color="purple" size="sm" inset="top bottom">De asignación</flux:badge>
+        <flux:badge color="teal" size="sm" inset="top bottom">De asignación</flux:badge>
     </flux:callout.heading>
 
     <flux:callout.text>

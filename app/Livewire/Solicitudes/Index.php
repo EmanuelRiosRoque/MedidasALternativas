@@ -8,25 +8,35 @@ use Livewire\Component;
 class Index extends Component
 {
     public $numSolicitudes = 0;
-    
+    public $search = '';
+
     public function render()
     {
         $usuario = auth()->user();
 
-        $solicitudes = Solicitud::query()
-            ->when($usuario->hasRole('familiar'), function ($query) {
-                $query->where('materia', 'familiar');
+        $solicitudesQuery = Solicitud::query()
+            ->when(!$usuario->hasRole('admin'), function ($query) use ($usuario) {
+                $query->when($usuario->hasRole('familiar'), function ($query) {
+                    $query->where('materia', 'familiar');
+                })
+                ->when($usuario->hasRole('civil'), function ($query) {
+                    $query->whereIn('materia', ['civil', 'mercantil']);
+                });
             })
-            ->when($usuario->hasRole('civil'), function ($query) {
-                $query->whereIn('materia', ['civil', 'mercantil']);
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('folio_materia', 'like', "%{$this->search}%")
+                    ->orWhere('numero_ticket', 'like', "%{$this->search}%");
+                });
             });
 
-        // Obtener la cantidad directamente
+        $solicitudes = $solicitudesQuery->get();
         $this->numSolicitudes = $solicitudes->count();
 
         return view('livewire.solicitudes.index', [
-            'solicitudes' => $solicitudes->get()
+            'solicitudes' => $solicitudes
         ]);
     }
+
 }
 

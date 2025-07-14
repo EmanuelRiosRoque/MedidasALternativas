@@ -36,15 +36,22 @@ class PDFsController extends Controller
         $pdf->setPaper([0, 0, 600, 249], 'portrait');
         return $pdf->download('correosDeMx.pdf');
     }
-
-
-
+    
     public function servicioPostal()
     {
         $pdf = Pdf::loadView('pdfs.serviciosPostal', $this->datosBase());
-        $pdf->setPaper([0, 0, 1300, 620], 'portrait');
+        $pdf->setPaper([0, 0, 1300, 630], 'portrait');
         return $pdf->download('serviciosPostal.pdf');
     }
+
+
+    public function amparoRepre()
+    {
+        $pdf = Pdf::loadView('pdfs.amparoRepresentante', $this->datosBase());
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->download('amparoRepresentante.pdf');
+    }
+
 
 
 }

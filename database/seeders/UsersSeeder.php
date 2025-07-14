@@ -18,15 +18,24 @@ class UsersSeeder extends Seeder
         // Crea los roles si no existen
         $civilRole = Role::firstOrCreate(['name' => 'civil']);
         $familiarRole = Role::firstOrCreate(['name' => 'familiar']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
         // Usuario 1 con rol 'civil'
         $user1 = User::create([
             'n_empleado' => '0000000',
-            'name' => 'Usuario Pruebas',
+            'name' => 'Usuario civil',
             'email' => 'pruebas@example.com',
             'password' => Hash::make('12345678'),
         ]);
         $user1->assignRole($civilRole);
+
+        $user1 = User::create([
+            'n_empleado' => '0000001',
+            'name' => 'Usuario familiar',
+            'email' => 'pruebas@example.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $user1->assignRole($familiarRole);
 
         // Usuario 2 con rol 'familiar'
         $user2 = User::create([
@@ -35,6 +44,6 @@ class UsersSeeder extends Seeder
             'email' => 'emanuel.rios@example.com',
             'password' => Hash::make('12345678'),
         ]);
-        $user2->assignRole($familiarRole);
+        $user2->assignRole($adminRole);
     }
 }

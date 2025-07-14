@@ -4,14 +4,16 @@
         <div>
             <div class="flex items-center gap-x-3">
                 <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Solicitudes</h2>
-                <span class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">{{ $numSolicitudes }} Solicitudes</span>
+                <span class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">
+                    {{ $numSolicitudes }} {{ $numSolicitudes == 1 ? 'Solicitud' : 'Solicitudes' }}
+                </span>
             </div>
             <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-300 hover:text-emerald-700 transition-all cursor-default">
                 Cantidad total de solicitudes registradas.
             </p>
         </div>
 
-        <div class="flex items-center mt-4 gap-x-3">
+        {{-- <div class="flex items-center mt-4 gap-x-3">
             <a wire:navigate href={{ route('convenio.index') }}
                 class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-emerald-700 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-emerald-800 dark:hover:bg-emerald-00 dark:bg-emerald-600">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -20,7 +22,7 @@
                 </svg>
                 <span>Nueva Solicitud</span>
             </a>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Buscador -->
@@ -33,7 +35,7 @@
                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
             </span>
-            <input type="text" placeholder="Buscar por ID o #Ticket"
+            <input type="text" placeholder="Buscar por Folio o #Ticket" wire:model.live="search"
                 class="block w-full py-1.5 pr-5 bg-white border border-neutral-200 rounded-lg md:w-80 placeholder-neutral-400/70 pl-11 dark:bg-neutral-900 text-emerald-700 dark:text-neutral-300 dark:border-neutral-600 focus:border-emerald-400 dark:focus:border-emerald-300 focus:ring-emerald-300 focus:outline-none focus:ring focus:ring-opacity-40">
         </div>
     </div>
@@ -44,7 +46,7 @@
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                 <div class="overflow-visible border border-neutral-200 dark:border-neutral-700 md:rounded-lg">
                     <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
-                        <thead class="bg-neutral-50 dark:bg-neutral-800">
+                        <thead class="bg-neutral-100 dark:bg-neutral-800">
                             <tr>
                                 <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Folio</th>
                                 <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Estatus</th>
@@ -54,7 +56,7 @@
                                 <th class="py-3.5 px-4 relative text-sm font-normal text-neutral-500 dark:text-neutral-400">Opciones</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-neutral-200 dark:divide-neutral-700 dark:bg-neutral-900">
+                        <tbody class="bg-neutral-50 divide-y divide-neutral-200 dark:divide-neutral-700 dark:bg-neutral-900">
                             @forelse ($solicitudes as $solicitud)
                             <tr>
                                 <td class="px-4 py-4 text-sm font-medium whitespace-nowrap text-neutral-800 dark:text-white">{{ $solicitud->folio_materia }}</td>
@@ -65,7 +67,7 @@
                                 </td>
                                 <td class="px-12 py-4 text-sm whitespace-nowrap">
                                     <div class="
-                                        inline px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wide
+                                        inline px-3 py-1 text-xs font-semibold rounded-full  tracking-wide
                                         {{ $solicitud->modalidad === 'linea' 
                                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-800/40 dark:text-blue-300' 
                                             : 'bg-green-100 text-green-700 dark:bg-green-800/40 dark:text-green-300' 
@@ -75,10 +77,10 @@
                                 </td>
                                 <td class="px-12 py-4 text-sm whitespace-nowrap">
                                     <div class="
-                                        inline px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wide
+                                        inline px-3 py-1 text-xs font-semibold rounded-full  tracking-wide
                                         {{ $solicitud->acudiran_juntos === 1 
                                             ? 'bg-blue-100 text-green-700 dark:bg-green-800/40 dark:text-green-300' 
-                                            : 'bg-green-100 text-red-700 dark:bg-red-800/40 dark:text-red-300' 
+                                            : 'bg-red-100 text-red-700 dark:bg-red-800/40 dark:text-red-300' 
                                         }}">
                                         {{ $solicitud->modalidad === 1 ? 'Si' : 'No' }}
                                     </div>

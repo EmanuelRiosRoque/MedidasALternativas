@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Solicitud;
 use App\Models\Solicitante;
 
+use Masmerise\Toaster\Toaster;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 
 
@@ -27,6 +28,9 @@ class Index extends Component
     public $ocupaciones;
 
     public $persona;
+
+    //Materia
+    public $materia;
 
     // Persona fisica
     public $nombre;
@@ -64,29 +68,16 @@ class Index extends Component
         $this->invitados = Solicitante::where('tipo_solicitante', 'invitado')
             ->where('solicitud_id', $this->solicitudId)
             ->get();
+
+        $this->materia = $this->solicitud->materia;
     }
 
-    // public function cargarPersona($id)
-    // {
-    //     $persona = Solicitante::with(['correos', 'telefonos'])->find($id);
+    public function updatedMateria($value)
+    {
+        $this->solicitud->update(['materia' => $value]);
+        Toaster::success('Materia actualizada correctamente !');
+    }
 
-    //     if ($persona) {
-    //         // dd($persona);
-    //         $this->nombre           = $persona->nombre;
-    //         $this->apellido_p       = $persona->apellido_p;
-    //         $this->apellido_m       = $persona->apellido_m;
-    //         $this->rfc              = $persona->rfc;
-    //         $this->sexo             = $persona->sexo;
-    //         $this->edad             = $persona->edad;
-    //         $this->fecha_nacimiento = $persona->fecha_nacimiento;
-    //         $this->escolaridad        = $persona->escolaridad;
-    //         $this->ocupacion        = $persona->ocupacion;
-    //         // Arreglos
-    //         $this->correos = $persona->correos->pluck('email')->toArray();   
-    //         $this->telefonos = $persona->telefonos->pluck('numero')->toArray();  
-    //         $this->mostrarModal = true;
-    //     }
-    // }
 
     public function render()
     {

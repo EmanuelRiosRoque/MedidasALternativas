@@ -156,7 +156,7 @@
             <flux:select wire:model.live="solicitud" placeholder="Elige solicitud a asignar">
                 @foreach ($solicitudes as $solicitud)
                 <flux:select.option value="{{ $solicitud->id }}">
-                    {{ $solicitud->nombre ?? 'Solicitud #' . $solicitud->id }}
+                    {{ $solicitud->folio_materia }}
                 </flux:select.option>
                 @endforeach
             </flux:select>
@@ -177,7 +177,7 @@
                 <!-- Para modo SEPARADO -->
                 <template x-if="modo === 'separados'">
                     <div class="space-y-4">
-                        <p class="text-sm font-semibold text-white">Horario para solicitante(s)</p>
+                        <p class="text-sm font-semibold dark:text-white">Horario para solicitante(s)</p>
                         <div class="grid grid-cols-2 gap-2">
                             <flux:select wire:model="horaInicio" placeholder="Hora inicio">
                                 @foreach ($horarios as $valor => $etiqueta)
@@ -191,7 +191,7 @@
                             </flux:select>
                         </div>
 
-                        <p class="text-sm font-semibold text-white">Horario para invitado(s)</p>
+                        <p class="text-sm font-semibold dark:text-white">Horario para invitado(s)</p>
                         <div class="grid grid-cols-2 gap-2">
                             <flux:select wire:model="horaInicioInvitado" placeholder="Hora inicio">
                                 @foreach ($horarios as $valor => $etiqueta)

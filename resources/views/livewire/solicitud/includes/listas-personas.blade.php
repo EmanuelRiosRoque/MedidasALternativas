@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 md:gap-1 gap-2">
     <x-lista-personas :$solicitudId :personas="$solicitantes" titulo="Solicitantes" />
 
-    <div class="mx-auto right-0 mt-9 w-60">
+    <div class="mx-auto right-0 mt-9 w-60" x-data="{ materia: 'civil' }">
         <div class="shadow-lg">
             <div
                 class="text-center p-4 w-full max-w-md bg-white dark:bg-neutral-800 rounded-lg shadow-md sm:p-8 border border-neutral-300 dark:border-neutral-700 hover:border-emerald-600 transform transition duration-300 ease-in-out hover:scale-[1.02]">
@@ -21,7 +21,6 @@
             </div>
         </div>
     </div>
-
 
     <x-lista-personas :$solicitudId :personas="$invitados" titulo="Invitados" />
 </div>

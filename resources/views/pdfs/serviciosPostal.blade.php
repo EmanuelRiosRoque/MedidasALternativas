@@ -38,9 +38,9 @@
 </head>
 <body>
     <img class="fondo" src="{{ public_path('img/documentos/servicios_postal.jpeg') }}" alt="Fondo">
-
+{{-- 
     <p class="campo dia">{{ $dia }}</p>
     <p class="campo mes">{{ $mes }}</p>
-    <p class="campo anio">{{ $ultimoDigitoAnio }}</p>
+    <p class="campo anio">{{ $ultimoDigitoAnio }}</p> --}}
 </body>
 </html>

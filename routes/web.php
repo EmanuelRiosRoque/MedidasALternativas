@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/descargar-amparo', [PDFsController::class, 'amparo'])->name('descargar-amparo');
     Route::get('/descargar-correoMexico', [PDFsController::class, 'correoMexico'])->name('descargar-correoMexico');
     Route::get('/descargar-servicioPostal', [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
+    Route::get('/descargar-amparoRepre', [PDFsController::class, 'amparoRepre'])->name('descargar-amparoRepre');
 
 });
 
