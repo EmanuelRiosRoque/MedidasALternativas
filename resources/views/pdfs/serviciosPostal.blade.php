@@ -2,45 +2,63 @@
 <html>
 <head>
     <style>
-    @page {
-        margin: 0;
-    }
+        @page {
+            margin: 0;
+            size: letter portrait;
+        }
 
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: DejaVu Sans, sans-serif;
-        position: relative;
-    }
+        body {
+            margin: 0;
+            font-family: DejaVu Sans, sans-serif;
+        }
 
-    .fondo {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-        z-index: 0;
-    }
+        .bloque {
+            position: relative;
+            width: 612pt;
+            height: 264pt; /* 3 por hoja */
+            page-break-inside: avoid;
+        }
 
-    .campo {
-        position: absolute;
-        color: #000;
-        font-size: 16px;
-        z-index: 1;
-    }
+        .fondo {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 520pt;  /* reducido proporcionalmente */
+            height: auto;
+            z-index: 0;
+        }
 
-    /* Ajusta estos valores con prueba y error */
-    .dia  { top: 110px; left: 330px; }
-    .mes  { top: 110px; left: 470px; }
-    .anio { top: 110px; left: 610px; }
-</style>
+        .campo {
+            position: absolute;
+            color: #000;
+            font-size: 12px;
+            z-index: 1;
+        }
 
+        /* Reubicación proporcional */
+        .nombre     { top: 60pt; left: 280pt; }
+        .calle      { top: 78pt; left: 290pt; }
+        .numero     { top: 78pt; left: 490pt; }
+        .colonia    { top: 100pt; left: 290pt; }
+        .poblacion  { top: 120pt; left: 295pt; }
+        .cp         { top: 134pt; left: 480pt; }
+    </style>
 </head>
 <body>
-    <img class="fondo" src="{{ public_path('img/documentos/servicios_postal.jpeg') }}" alt="Fondo">
-{{-- 
-    <p class="campo dia">{{ $dia }}</p>
-    <p class="campo mes">{{ $mes }}</p>
-    <p class="campo anio">{{ $ultimoDigitoAnio }}</p> --}}
+
+@foreach ($documentos as $doc)
+    <div class="bloque">
+        <img class="fondo" src="{{ public_path('img/documentos/servicios_postal.jpeg') }}" alt="Fondo">
+
+        <p class="campo nombre">{{ $doc['nombre'] }}</p>
+        <p class="campo calle">{{ $doc['calle'] }}</p>
+        <p class="campo numero">{{ $doc['numero'] }}</p>
+        <p class="campo colonia">{{ $doc['colonia'] }}</p>
+        <p class="campo poblacion">{{ $doc['poblacion'] }}</p>
+        <p class="campo cp">{{ $doc['cp'] }}</p>
+    </div>
+@endforeach
+
 </body>
 </html>

@@ -19,7 +19,17 @@ class PDFsController extends Controller
             'dia' => $fechaActual->format('d'),
             'mes' => $fechaActual->translatedFormat('F'),
             'ultimoDigitoAnio' => substr($fechaActual->format('Y'), -1),
-            'curso' => 'Introducción a Laravel',
+            'nombre' => 'EMANUEL RIOS ROQUE',
+            'calle' =>  'NIÑOS HÉROES',
+            'numero'=> '133',
+            'colonia' => 'DOCTORES',
+            'poblacion' => 'CIUDAD DE MÉXICO',
+            'domicilio' => 'NIÑOS HÉROES 133 5TO PISO',
+            'lugar' => 'COL.DOCTORES ALCALDIA CUAUHTÉMOC',
+            'materia' => 'CIVIL',
+            'cp' => '06720',
+            'cdm' => 'C O N D E S A',
+            'direccion' => 'NIÑOS HEROES 133, COL.DOCTORES, ALCALDIA CUAUHTEMOC, C.P. 06720, CIUDAD DE MÉXICO',            
         ];
     }
 
@@ -28,21 +38,76 @@ class PDFsController extends Controller
         $pdf = Pdf::loadView('pdfs.amparo', $this->datosBase());
         $pdf->setPaper('letter', 'portrait');
         return $pdf->download('amparo.pdf');
+        // return $pdf->stream('amparo.pdf');
+
     }
 
-    public function correoMexico()
-    {
-        $pdf = Pdf::loadView('pdfs.correosDeMx', $this->datosBase());
-        $pdf->setPaper([0, 0, 600, 249], 'portrait');
-        return $pdf->download('correosDeMx.pdf');
-    }
+public function correoMexico()
+{
+    // Simulación de datos
+    $documentos = [
+        [
+            'nombre' => 'Emanuel Rios Roque',
+            'domicilio' => 'NIÑOS HÉROES 133 5TO PISO',
+            'lugar' => 'COL.DOCTORES ALCALDIA CUAUHTÉMOC',
+            'materia' => 'CIVIL',
+            'cp' => '06720'
+        ],
+        [
+            'nombre' => 'Lucía Martínez',
+            'domicilio' => 'NIÑOS HÉROES 133 5TO PISO',
+            'lugar' => 'COL.DOCTORES ALCALDIA CUAUHTÉMOC',
+            'materia' => 'CIVIL',
+            'cp' => '06720'
+        ],
+        // Puedes agregar más documentos...
+    ];
+
+    $pdf = Pdf::loadView('pdfs.correosDeMx', compact('documentos'));
+    $pdf->setPaper('letter', 'landscape'); // <- ¡Aquí cambia a horizontal!
+
+    return $pdf->download('correosDeMx.pdf');
+}
+
     
-    public function servicioPostal()
-    {
-        $pdf = Pdf::loadView('pdfs.serviciosPostal', $this->datosBase());
-        $pdf->setPaper([0, 0, 1300, 630], 'portrait');
-        return $pdf->download('serviciosPostal.pdf');
-    }
+public function servicioPostal()
+{
+    $documentos = [
+        [
+            'nombre' => 'Emanuel Rios',
+            'calle' => 'Av. Reforma',
+            'numero' => '123',
+            'colonia' => 'Centro',
+            'poblacion' => 'CDMX',
+            'cp' => '06000',
+            'hora' => '10:30 AM',
+        ],
+        [
+            'nombre' => 'Lucía Martínez',
+            'calle' => 'Insurgentes Sur',
+            'numero' => '456',
+            'colonia' => 'Del Valle',
+            'poblacion' => 'CDMX',
+            'cp' => '03100',
+            'hora' => '12:00 PM',
+        ],
+        [
+            'nombre' => 'Lucía Martínez',
+            'calle' => 'Insurgentes Sur',
+            'numero' => '456',
+            'colonia' => 'Del Valle',
+            'poblacion' => 'CDMX',
+            'cp' => '03100',
+            'hora' => '12:00 PM',
+        ],
+        // Puedes agregar más...
+    ];
+
+    $pdf = Pdf::loadView('pdfs.serviciosPostal', compact('documentos'));
+    $pdf->setPaper('letter', 'portrait');
+    return $pdf->download('serviciosPostal.pdf');
+}
+
 
 
     public function amparoRepre()
@@ -50,6 +115,8 @@ class PDFsController extends Controller
         $pdf = Pdf::loadView('pdfs.amparoRepresentante', $this->datosBase());
         $pdf->setPaper('letter', 'portrait');
         return $pdf->download('amparoRepresentante.pdf');
+        // return $pdf->stream('amparoRepresentante.pdf');
+
     }
 
 
