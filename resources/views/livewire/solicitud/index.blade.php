@@ -39,6 +39,7 @@
 
             <!-- Contenido dinámico según la opción -->
             <livewire:solicitud.invitacion-evento :evento="$evento" />
+
         </div>
         @else
         <div class="max-w-6xl m-auto space-y-3 mt-5 grid grid-cols-3 gap-4" x-data="{ medio_envio: 'sepomex' }">

@@ -36,4 +36,10 @@
             Aún no se ha asignado un evento.
         </p>
     @endif
+
+    {{-- TODO agregar funcionalidad --}}
+    <div class=" mt-2 flex  justify-end">
+        <flux:button variant="primary">Segunda Invitacion</flux:button>
+    </div>
+
 </div>
