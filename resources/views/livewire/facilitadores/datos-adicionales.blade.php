@@ -1,3 +1,4 @@
+<div>
 <!-- Sección 1: Datos generales del facilitador -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2" x-data="">
     <flux:input wire:model="duracion_encargo" :label="__('Duración del encargo')" type="text" required
@@ -11,6 +12,11 @@
 
 
 
+<flux:radio.group wire:model.live="apto" label="Dictamen">
+    <flux:radio value="1" label="Apto" />
+    <flux:radio value="2" label="No apto" />
+</flux:radio.group>
+
 <!-- Sección 2: Autoridades y documentos -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4" x-data="{
         autorizacion: @entangle('autorizacion').live,
@@ -19,7 +25,7 @@
         autoridad_certificacion: @entangle('autoridad_certificacion').live,
         tiene_resolucion: @entangle('tiene_resolucion').live,
     }">
-    <flux:radio.group wire:model="autoridad_certificacion"
+    <flux:radio.group wire:model.live="autoridad_certificacion"
         label="Nombre del Poder Judicial que otorgó la certificación o renovación">
         <flux:radio value="pjcdmx" label="PJCDMX" />
         <flux:radio value="pjfd" label="Poder Judicial Federal" />
@@ -61,7 +67,7 @@
             <div class="col-span-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">Documento que lo
                     avale</label>
-                <livewire:dropzone wire:model="avale_especializacion" :rules="['mimes:pdf','max:10420']" :multiple="false" />
+                <livewire:dropzone wire:model="avale_autorizado" :rules="['mimes:pdf','max:10420']" :multiple="false" />
             </div>
         </div>
     </div>
@@ -95,7 +101,7 @@
     <flux:input wire:model="convenios_ejecutados" :label="__('Número de convenios ejecutados vía de apremio')"
         type="number" required placeholder="Número de convenios ejecutados vía de apremio" />
 
-    <flux:input wire:model="procedimientos_quejas" :label="__('Procedimientos de queja')" type="text" required
+    <flux:input wire:model="Procedimientos_quejas" :label="__('Procedimientos de queja')" type="text" required
         placeholder="Infracciones cometidas" />
 
     <flux:radio.group wire:model="tiene_resolucion" label="¿Tiene resolución?">
@@ -115,7 +121,7 @@
 </div>
 
 <div class="mt-1 grid grid-cols-2">
-    <flux:radio.group wire:model="descripcion_sancion" label="Descripción de Sanciones impuestas, en su caso">
+    <flux:radio.group wire:model="cancelacion" label="Descripción de Sanciones impuestas, en su caso">
         <flux:radio value="1" label="Amonestación" />
         <flux:radio value="2" label="Sanción económica" />
         <flux:radio value="3" label="Reparación del Daño" />
@@ -156,7 +162,7 @@
 
     <div>
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1 mt-1">Documento que lo avale</label>
-        <livewire:dropzone wire:model="avale_materiales" :rules="['mimes:mp4,pdf','max:10420']" :multiple="true" />
+        <livewire:dropzone wire:model="video_supervision" :rules="['mimes:mp4,pdf','max:10420']" :multiple="true" />
     </div>
 
     <flux:radio.group wire:model="visitas_supervision" label="¿Recibió visitas de supervisión?">
@@ -198,7 +204,8 @@
     <div>
         <div x-show="dictamen_cja == 1" x-cloak class="mt-1 col-span-2">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1 mt-1">Añadir Dictamen</label>
-            <livewire:dropzone wire:model="avale_dictamen" :rules="['mimes:mp4,pdf','max:10420']" :multiple="true" />
+            <livewire:dropzone wire:model="publicacion_documento" :rules="['mimes:mp4,pdf','max:10420']" :multiple="true" />
         </div>
     </div>
+</div>
 </div>

@@ -5,6 +5,7 @@ use Livewire\Volt\Volt;
 use App\Livewire\Convenio;
 use App\Livewire\Calendario;
 use App\Livewire\Facilitadores;
+use App\Livewire\Facilitadores\Lista;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Solicitud\VerPersonas;
 use App\Livewire\Solicitud\Index as SolicitudIndex;
@@ -27,7 +28,9 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/convenio/form', Convenio::class)->name('convenio.index');
     Route::get('/convenio/edit/{id}', Convenio::class)->name('convenio.edit');
+
     Route::get('/facilitadores/form', Facilitadores::class)->name('facilitadores.index');
+    Route::get('/facilitadores/list', Lista::class)->name('facilitadores.list');
 
     Route::get('/solicitudes/table', SolicitudesIndex::class)->name('solicitudes.index');
     

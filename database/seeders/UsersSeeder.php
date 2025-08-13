@@ -32,7 +32,7 @@ class UsersSeeder extends Seeder
         $user1 = User::create([
             'n_empleado' => '0000001',
             'name' => 'Usuario familiar',
-            'email' => 'pruebas@example.com',
+            'email' => 'pruebas2@example.com',
             'password' => Hash::make('12345678'),
         ]);
         $user1->assignRole($familiarRole);

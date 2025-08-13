@@ -1,5 +1,6 @@
 <div>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 animate__animated animate__fadeIn"> 
+<div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 "> 
      
         <flux:input
             wire:model="nombre"
@@ -233,7 +234,7 @@
         </div>
     </div>
 
-    <div class="mt-5 mb-2 animate__animated animate__fadeIn text col-span-3">
+    <div class="mt-5 mb-2  text col-span-3">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Fotografía
             <flux:badge color="emerald" inset="top bottom" size="sm">Obligatorio</flux:badge>
@@ -244,4 +245,6 @@
             :rules="['mimes:jpg,png','max:10420']"
             :multiple="false" />
     </div>
+</div>
+
 </div>
