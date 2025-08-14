@@ -63,7 +63,7 @@
                                 <td class="px-4 py-4 text-sm font-medium whitespace-nowrap text-neutral-800 dark:text-white">
                                     {{ $facilitador->nombre }}
                                     <div class="text-xs text-neutral-400 ">
-                                        Clave: {{ $facilitador->clave }}
+                                        Clave: {{ $facilitador->clave_certificacion }}
                                     </div>
                                 </td>
                                <td class="px-12 py-4 text-sm whitespace-nowrap">
@@ -122,6 +122,9 @@
 
                         </tbody>
                     </table>
+                    <div class="px-4 py-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700">
+                        {{ $facilitadores->links() }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -16,8 +16,12 @@ return new class extends Migration
 
             // Datos generales
             $table->string('tipo')->nullable(); // publico / privado
+            $table->string('materia')->nullable(); // Civil / Familiar / Ambas
+            $table->string('estudios')->nullable(); // Licenciatura / Maestria /Doctorado
+            $table->string('cedula')->nullable(); // Licenciatura / Maestria /Doctorado
+
             $table->string('nombre')->nullable();
-            $table->string('clave')->nullable();
+            $table->string('clave_certificacion')->nullable();
             $table->string('folio')->nullable();
             $table->string('clave_unica')->nullable(); // CURP
             $table->date('fecha_certificacion')->nullable();

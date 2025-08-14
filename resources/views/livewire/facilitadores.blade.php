@@ -29,10 +29,33 @@
             wire:loading.remove wire:target='cambiarTab'    
         >
             @if ($tab === 1)
+            <div class=" grid grid-cols-4 gap-4 mb-4" >
                 <flux:radio.group wire:model="tipo" label="Persona facilitadora">
                     <flux:radio value="1" label="Público" />
                     <flux:radio value="2" label="Privado" />
                 </flux:radio.group>
+
+                <flux:radio.group wire:model="materia" label="Materias Certificado">
+                    <flux:radio value="1" label="Civil-Mercantil " />
+                    <flux:radio value="2" label="Familiar" />
+                    <flux:radio value="3" label="Ambas" />
+                </flux:radio.group>
+
+                <flux:radio.group wire:model="estudios" label="Grado de estudios">
+                    <flux:radio value="1" label="Licenciatura" />
+                    <flux:radio value="2" label="Maestria" />
+                    <flux:radio value="3" label="Doctorado" />
+                </flux:radio.group>
+
+                <flux:input
+                    wire:model="cedula"
+                    :label="__('Número de Cédula Profesional')"
+                    type="text"
+                    required
+                    placeholder="Número de Cédula Profesional, expedida por la Dirección General de Profesiones"
+                />
+            </div>
+
                 <div x-show="tipo !== ''" x-cloak class="mt-4">
                     @include('facilitadores.formulario.datosGenerales')
                 </div>

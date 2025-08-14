@@ -18,7 +18,7 @@ class Facilitadores extends Component
     //Datos generales
     public $tipo = '';
     public $nombre;
-    public $clave;
+    public $clave_certificacion;
     public $folio;
     public $clave_unica;
     public $fecha_certificacion;
@@ -27,6 +27,7 @@ class Facilitadores extends Component
     public $telefono_temp = '';
     public $correos = [];
     public $telefonos = [];
+    public $periodos = [];
     public $tipo_domicilio_solicitante;
     public $calle_solicitante;
     public $fotografia;
@@ -70,7 +71,11 @@ class Facilitadores extends Component
     public $publicacion_documento;
     public $dictamen_cja = '';
     public $avale_dictamen;
-
+    public $avale_jucio;
+    public $cedula;
+    public $estudios;
+    public $materia;
+    
 
     public $cp_solicitante = '';
     /** @var \Illuminate\Support\Collection|\App\Models\SepomexColonia[] */
@@ -129,6 +134,23 @@ class Facilitadores extends Component
         $this->telefonos = array_values($this->telefonos);
     }
 
+    public function agregarPeriodo()
+{
+    $periodo = trim($this->numero_renovaciones);
+
+    if ($periodo !== '') {
+        $this->periodos[] = $periodo;
+        $this->numero_renovaciones = '';
+    }
+}
+
+public function eliminarPeriodo($index)
+{
+    unset($this->periodos[$index]);
+    $this->periodos = array_values($this->periodos); // reindexar
+}
+
+
     public function cambiarTab($numero)
     {
         $this->tab = $numero;
@@ -172,10 +194,18 @@ class Facilitadores extends Component
             $rutaAvalDictamen = $this->guardarDocumentoFacilitador($this->avale_dictamen[0]);
         }
 
+         if (!empty($this->avale_jucio) && isset($this->avale_jucio[0])) {
+            $rutaAvalJuicio = $this->guardarDocumentoFacilitador($this->avale_jucio[0]);
+        }
+
         $facilitador = Facilitador::create([
             'tipo' => $this->tipo,
             'nombre' => $this->nombre,
-            'clave' => $this->clave,
+            'materia' => $this->materia,
+            'estudios' => $this->estudios,
+            'cedula' => $this->cedula,
+
+            'clave_certificacion' => $this->clave_certificacion,
             'folio' => $this->folio,
             'clave_unica' => $this->clave_unica,
             'fecha_certificacion' => $this->fecha_certificacion,
@@ -189,17 +219,17 @@ class Facilitadores extends Component
             'fotografia' => $rutaPublica ?? null, // Guarda la ruta
 
             'duracion_encargo' => $this->duracion_encargo,
-            'numero_renovaciones' => $this->numero_renovaciones,
             'area_adscrito' => $this->area_adscrito,
+            'numero_renovaciones' => json_encode($this->periodos, JSON_UNESCAPED_UNICODE),
             'autoridad_certificacion' => $this->autoridad_certificacion,
             'especificacion_autoridad' => $this->especificacion_autoridad,
             'clave_autoridad' => $this->clave_autoridad,
             'autorizacion' => $this->autorizacion,
             'avale_autorizado' => $rutaAvalAutorizado ?? null,
             'especializacion' => $this->especializacion,
-            'avale_especializacion' => $rutaAvalEspecializacion,
+            'avale_especializacion' => $rutaAvalEspecializacion ?? null,
             'especializacion_arbitra' => $this->especializacion_arbitra,
-            'avale_autorizado_arbitra' => $rutaAvalArbitra,
+            'avale_autorizado_arbitra' => $rutaAvalArbitra ?? null,
             'convenios_suscritos'=> $this->convenios_suscritos,
             'convenios_ejecutados'=> $this->convenios_ejecutados,
             'procedimientos_quejas'=> $this->procedimientos_quejas,
@@ -212,12 +242,13 @@ class Facilitadores extends Component
             'avale_materiales' => $rutaAvalMateriales ?? null,
             'visitas_supervision' => $this->visitas_supervision,
             'fecha_supervision' => $this->fecha_supervision,
-            'video_supervision' => $rutaVideo,
-            'juicio_amparo'=> $this->juicio_amparo,
+            'video_supervision' => $rutaVideo ?? null,
             'fecha_publicacion'=> $this->fecha_publicacion,
-            'publicacion_documento'=> $rutaDocuemento,
+            'publicacion_documento'=> $rutaDocuemento  ?? null,
+            'juicio_amparo'=> $this->juicio_amparo,
+            'avale_jucio'=> $rutaAvalJuicio ?? null,
             'dictamen_cja'=> $this->dictamen_cja,
-            'avale_dictamen'=> $rutaAvalDictamen,
+            'avale_dictamen'=> $rutaAvalDictamen ?? null,
         ]);
 
         if (!empty($this->correos) && is_array($this->correos)) {

@@ -3,18 +3,18 @@
      
         <flux:input
             wire:model="nombre"
-            :label="__('Nombre de la persona facilitadora')"
+            :label="__('Nombre')"
             type="text"
             required
             placeholder="Nombre de la persona facilitadora"
         />
-    
+
         <flux:input
-            wire:model="clave"
-            :label="__('Clave o número de registro')"
+            wire:model="clave_certificacion"
+            :label="__('Clave o número de certificación del Poder Judicial que la otorgó ')"
             type="text"
             required
-            placeholder="Clave o número de registro de certificación del Sistema Nacional"
+            placeholder="Clave o número de certificación del Poder Judicial que la otorgó"
         />
     
         <flux:input
@@ -35,20 +35,22 @@
      
         <flux:input
             wire:model="fecha_certificacion"
-            :label="__('Fecha de certificación')"
+            :label="__('Fecha de certificación inicial')"
             type="date"
             required
-            placeholder="Fecha de certificación de la persona facilitadora"
+            placeholder="Fecha de certificación inicial"
         />
     
         <flux:input
-            wire:model="vigencia_certificacion"
+            wire:model="vigencia_certificacion "
             :label="__('Vigencia de la certificación')"
             type="date"
             required
-            placeholder="Vigencia de la certificación de la persona facilitadora"
+            placeholder="Periodo de vigencia de certificación "
         />
     </div>
+
+
 
     <div class="grid grid-cols-2 gap-4 mt-2">
          <!-- Correos electrónicos -->

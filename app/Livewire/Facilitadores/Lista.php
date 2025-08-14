@@ -36,7 +36,7 @@ class Lista extends Component
 
         $facilitadores = $facilitadoresQuery
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(5);
 
         return view('livewire.facilitadores.lista', [
             'facilitadores' => $facilitadores

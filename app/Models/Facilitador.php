@@ -8,7 +8,7 @@ class Facilitador extends Model
 {
     protected $table = 'facilitadores'; // 👈 aquí forzamos el nombre correcto
     protected $fillable = [
-        'tipo', 'nombre', 'clave', 'folio', 'clave_unica', 'fecha_certificacion',
+        'tipo', 'nombre', 'materia', 'estudios', 'cedula', 'clave_certificacion', 'folio', 'clave_unica', 'fecha_certificacion',
         'vigencia_certificacion', 'tipo_domicilio', 'calle',
         'cp_solicitante', 'colonia', 'entidad_federativa_solicitante', 'municipio_solicitante',
         'fotografia', 
@@ -33,4 +33,8 @@ class Facilitador extends Model
     {
         return $this->hasMany(TelefonoFacilitador::class);
     }
+
+    protected $casts = [
+        'numero_renovaciones' => 'array',
+    ];
 }
