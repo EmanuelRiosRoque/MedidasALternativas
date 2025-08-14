@@ -28,7 +28,7 @@ class Facilitadores extends Component
     public $correos = [];
     public $telefonos = [];
     public $tipo_domicilio_solicitante;
-    public $calle;
+    public $calle_solicitante;
     public $fotografia;
 
     //Datos adicionales
@@ -78,6 +78,7 @@ class Facilitadores extends Component
     public $colonia = '';
     public $entidad_federativa_solicitante = '';
     public $municipio_solicitante = '';
+
 
 
     public function updatedCpSolicitante()
@@ -180,7 +181,7 @@ class Facilitadores extends Component
             'fecha_certificacion' => $this->fecha_certificacion,
             'vigencia_certificacion' => $this->vigencia_certificacion,
             'tipo_domicilio' => $this->tipo_domicilio_solicitante,
-            'calle' => $this->calle,
+            'calle' => $this->calle_solicitante,
             'cp_solicitante' => $this->cp_solicitante,
             'colonia' => $this->colonia,
             'entidad_federativa_solicitante' => $this->entidad_federativa_solicitante,
@@ -243,6 +244,8 @@ class Facilitadores extends Component
 
         // Resetear formulario si lo deseas
         $this->reset();
+        return redirect()->route('facilitadores.list')
+            ->with('success', '¡Facilitadore creado correctamente!');
     }
 
     protected function guardarDocumentoFacilitador($archivo)
@@ -265,7 +268,6 @@ class Facilitadores extends Component
         return null;
     }
 
-
     protected function guardarFotografiaFacilitador($archivo)
     {
         if (!empty($archivo['path']) && file_exists($archivo['path'])) {
@@ -285,8 +287,6 @@ class Facilitadores extends Component
         }
         return null;
     }
-
-
 
     public function render()
     {

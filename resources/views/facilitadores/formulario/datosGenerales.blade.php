@@ -65,13 +65,9 @@
                     type="email"
                     placeholder="Agregar correo"
                 />
-                <button
-                    type="button"
-                    wire:click="agregarCorreo"
-                    class="px-3 py-2 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
-                >
+                <flux:button variant="primary" wire:click="agregarCorreo">
                     Agregar
-                </button>
+                </flux:button>
             </div>
 
             @if (!empty($correos))
@@ -105,15 +101,12 @@
                     oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                     wire:model.defer="telefono_temp"
                     type="tel"
+                    maxlength="10"
                     placeholder="Agregar teléfono"
                 />
-                <button
-                    type="button"
-                    wire:click="agregarTelefono"
-                    class="px-3 py-2 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
-                >
+                <flux:button variant="primary" wire:click="agregarTelefono">
                     Agregar
-                </button>
+                </flux:button>
             </div>
 
             @if (!empty($telefonos))
@@ -181,7 +174,7 @@
             <flux:input
                 wire:model.live="cp_solicitante"
                 maxlength="5"
-                type="text"
+                type="number"
                 required
                 placeholder="Código postal"
                 oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"

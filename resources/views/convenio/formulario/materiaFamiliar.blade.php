@@ -197,6 +197,7 @@
                         oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                         wire:model.defer="telefono_temp"
                         type="tel"
+                        maxlength ="10"
                         placeholder="Agregar teléfono"
                     />                    
                     <x-boton-agregar wire-click="agregarTelefono" />

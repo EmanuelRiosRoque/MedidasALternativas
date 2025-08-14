@@ -11,6 +11,7 @@ class Lista extends Component
     use WithPagination;
 
     public $search = '';
+    public $numFacilitadores = 0;
 
     protected $paginationTheme = 'tailwind';
 
@@ -21,10 +22,19 @@ class Lista extends Component
 
     public function render()
     {
-        $facilitadores = Facilitador::query()
+        $facilitadoresQuery = Facilitador::query()
             ->when($this->search, function ($query) {
-                $query->where('nombre', 'like', '%' . $this->search . '%');
-            })
+                $query->where(function ($q) {
+                    $q->where('nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('clave', 'like', '%' . $this->search . '%');
+                });
+            });
+
+
+        // contar antes de la paginación
+        $this->numFacilitadores = $facilitadoresQuery->count();
+
+        $facilitadores = $facilitadoresQuery
             ->orderBy('id', 'desc')
             ->paginate(10);
 
@@ -33,4 +43,3 @@ class Lista extends Component
         ]);
     }
 }
-

@@ -1,28 +1,30 @@
+<div class="h-[85vh] flex items-center justify-center overflow-visible z-10 relative px-4">
+
 <section class="w-full max-w-7xl z-20 animate__animated animate__fadeInUp">
     <!-- Encabezado -->
     <div class="sm:flex sm:items-center sm:justify-between">
         <div>
             <div class="flex items-center gap-x-3">
-                <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Solicitudes</h2>
+                <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Facilitadores</h2>
                 <span class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">
-                    {{-- {{ $numSolicitudes }} {{ $numSolicitudes == 1 ? 'Solicitud' : 'Solicitudes' }} --}}
+                    {{ $numFacilitadores }} {{ $numFacilitadores == 1 ? 'Facilitador' : 'Facilitadores' }}
                 </span>
             </div>
             <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-300 hover:text-emerald-700 transition-all cursor-default">
-                Cantidad total de solicitudes registradas.
+                Cantidad total de facilitadores registrados.
             </p>
         </div>
 
-        {{-- <div class="flex items-center mt-4 gap-x-3">
-            <a wire:navigate href={{ route('convenio.index') }}
+        <div class="flex items-center mt-4 gap-x-3">
+            <a wire:navigate href={{ route('facilitadores.index') }}
                 class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-emerald-700 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-emerald-800 dark:hover:bg-emerald-00 dark:bg-emerald-600">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>Nueva Solicitud</span>
+                <span>Nuevo Facilitador</span>
             </a>
-        </div> --}}
+        </div>
     </div>
 
     <!-- Buscador -->
@@ -35,7 +37,7 @@
                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
             </span>
-            <input type="text" placeholder="Buscar por Folio o #Ticket" wire:model.live="search"
+            <input type="text" placeholder="Buscar por Nombre o Clave" wire:model.live="search"
                 class="block w-full py-1.5 pr-5 bg-white border border-neutral-200 rounded-lg md:w-80 placeholder-neutral-400/70 pl-11 dark:bg-neutral-900 text-emerald-700 dark:text-neutral-300 dark:border-neutral-600 focus:border-emerald-400 dark:focus:border-emerald-300 focus:ring-emerald-300 focus:outline-none focus:ring focus:ring-opacity-40">
         </div>
     </div>
@@ -48,11 +50,10 @@
                     <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
                         <thead class="bg-neutral-100 dark:bg-neutral-800">
                             <tr>
-                                <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Folio</th>
-                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Estatus</th>
-                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Modalidad</th>
-                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Acudirán Juntos</th>
-                                <th class="px-4 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Fecha y hora</th>
+                                <th class="py-3.5 px-4 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Nombre</th>
+                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Fotografía</th>
+                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Tipo</th>
+                                <th class="px-12 py-3.5 text-sm font-normal text-left text-neutral-500 dark:text-neutral-400">Folio</th>
                                 <th class="py-3.5 px-4 relative text-sm font-normal text-neutral-500 dark:text-neutral-400">Opciones</th>
                             </tr>
                         </thead>
@@ -60,23 +61,33 @@
                             @forelse ($facilitadores as $facilitador)
                             <tr>
                                 <td class="px-4 py-4 text-sm font-medium whitespace-nowrap text-neutral-800 dark:text-white">
-                                    {{ $facilitador->Nombre }}
-                                </td>
-                                <td class="px-12 py-4 text-sm whitespace-nowrap">
-                                    <div class="inline px-3 py-1 text-sm font-normal rounded-full text-emerald-500 bg-emerald-100/60 dark:bg-neutral-800">
-                                        {{-- {{ $solicitud->estatus->nombre ?? 'Sin estatus' }} --}}
+                                    {{ $facilitador->nombre }}
+                                    <div class="text-xs text-neutral-400 ">
+                                        Clave: {{ $facilitador->clave }}
                                     </div>
                                 </td>
-                                <td class="px-12 py-4 text-sm whitespace-nowrap">
-                                    
-                                    
+                               <td class="px-12 py-4 text-sm whitespace-nowrap">
+                                    @if($facilitador->fotografia)
+                                        <img src="{{ asset($facilitador->fotografia) }}" alt="{{ $facilitador->nombre }}"
+                                        class="w-10 h-10 rounded-full object-cover">
+                                    @else
+                                    @php
+                                        $iniciales = collect(explode(' ', $facilitador->nombre))
+                                        ->map(fn($p) => strtoupper(mb_substr($p, 0, 1)))
+                                        ->join('');
+                                    @endphp
+                                        <div class="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center font-bold">
+                                            {{ $iniciales }}
+                                        </div>
+                                    @endif                        
                                 </td>
                                 <td class="px-12 py-4 text-sm whitespace-nowrap">
-                                    
+                                    {{ $facilitador->tipo == 1 ? 'Público' : 'Privado' }}
                                 </td>
-                                <td class="px-4 py-4 text-sm whitespace-nowrap">
-                                    
+                                <td class="px-12 py-4 text-sm whitespace-nowrap">
+                                    {{ $facilitador->folio }}                                    
                                 </td>
+        
                                 <td class="px-4 py-4 text-sm whitespace-nowrap" x-data="{ open: false }" @click.away="open = false">
                                     <div class="relative inline-block text-left">
                                         <button @click="open = !open"
@@ -95,13 +106,7 @@
                                                     <a href="{{ route('solicitud.index', $facilitador->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
                                                         Ver
                                                     </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('calendario.index') }}"
-                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                                                        Asignar 
-                                                    </a>
-                                                </li>
+                                                </li>                                               
                                             </ul>
                                         </div>
                                     </div>
@@ -122,3 +127,5 @@
         </div>
     </div>
 </section>
+
+</div>

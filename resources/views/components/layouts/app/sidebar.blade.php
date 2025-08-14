@@ -25,8 +25,8 @@
                     {{-- <flux:navlist.item icon="identification" :href="route('pre-mediacion.index')" :current="request()->routeIs('pre-mediacion.index')"  wire:navigate>{{ __('Registros') }}</flux:navlist.item> --}}
                     {{-- @endif --}}
                     <flux:navlist.item icon="briefcase" :href="route('facilitadores.index')" :current="request()->routeIs('facilitadores.index')"  wire:navigate>{{ __('Nuevo Facilitador') }}</flux:navlist.item> 
+                    <flux:navlist.item icon="user" :href="route('facilitadores.list')" :current="request()->routeIs('facilitadores.list')"  wire:navigate>{{ __('Facilitadores') }}</flux:navlist.item> 
                     <flux:navlist.item icon="calendar" :href="route('calendario.index')" :current="request()->routeIs('calendario.index')"  wire:navigate>{{ __('Calendario') }}</flux:navlist.item> 
-
                 </flux:navlist.group>
                 
             </flux:navlist>

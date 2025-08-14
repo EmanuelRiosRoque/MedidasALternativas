@@ -30,8 +30,8 @@
         >
             @if ($tab === 1)
                 <flux:radio.group wire:model="tipo" label="Persona facilitadora">
-                    <flux:radio value="publico" label="Público" />
-                    <flux:radio value="privado" label="Privado" />
+                    <flux:radio value="1" label="Público" />
+                    <flux:radio value="2" label="Privado" />
                 </flux:radio.group>
                 <div x-show="tipo !== ''" x-cloak class="mt-4">
                     @include('facilitadores.formulario.datosGenerales')
