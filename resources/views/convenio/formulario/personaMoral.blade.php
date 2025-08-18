@@ -1,85 +1,83 @@
 @props(['prefix'])
 
 <div class="gap-4 mt-2 animate__animated animate__fadeIn" wire:key="{{ $key }}">
-
-
     <div class="grid grid-cols-2 gap-4">
         {{-- Razón social --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Razón social
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-        </label>
-        <flux:input
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-            wire:model="razon_social_solicitante"
-            type="text"
-            required
-            placeholder="Razón social"
-        />
-    </div>
+        <div class="space-y-1">
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                Razón social
+                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+            </label>
+            <flux:input
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="razon_social_solicitante"
+                type="text"
+                required
+                placeholder="Razón social"
+            />
+        </div>
     
+        {{-- RFC --}}
+        <div class="space-y-1">
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                RFC
+                    {{-- <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge> --}}
+            </label>
+            <flux:input
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="rfc_solicitante"
+                type="text"
+                required
+                placeholder="RFC"
+            />
+        </div>
 
-    {{-- RFC --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            RFC
-                {{-- <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge> --}}
-        </label>
-        <flux:input
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-            wire:model="rfc_solicitante"
-            type="text"
-            required
-            placeholder="RFC"
-        />
-    </div>
+        {{-- Instrumento notarial --}}
+        <div class="space-y-1">
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                Instrumento notarial 
+                @if($prefix === 'solicitante')
+                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                @endif
+                <flux:tooltip toggleable>
+                    <flux:button icon="information-circle" size="xs" variant="ghost" />
+                    <flux:tooltip.content class="max-w-[20rem] space-y-2">
+                        <ul class="list-disc list-inside text-xs text-zinc-600 dark:text-zinc-300">
+                            <li>Número de Instrumento Notarial</li>
+                            <li>Y</li>
+                            <li>Nombre de la Autoridad Fedataria</li>
+                        </ul>
+                    </flux:tooltip.content>
+                </flux:tooltip>
+            </label>
+            <flux:input
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="instrumento_solicitante"
+                type="text"
+                required
+                placeholder="Instrumento notarial"
+            />
+        </div>
 
-    {{-- Instrumento notarial --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Instrumento notarial 
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
-            <flux:tooltip toggleable>
-                <flux:button icon="information-circle" size="xs" variant="ghost" />
-                <flux:tooltip.content class="max-w-[20rem] space-y-2">
-                    <ul class="list-disc list-inside text-xs text-zinc-600 dark:text-zinc-300">
-                        <li>Número de Instrumento Notarial</li>
-                        <li>Y</li>
-                        <li>Nombre de la Autoridad Fedataria</li>
-                    </ul>
-                </flux:tooltip.content>
-            </flux:tooltip>
-        </label>
-        <flux:input
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-            wire:model="instrumento_solicitante"
-            type="text"
-            required
-            placeholder="Instrumento notarial"
-        />
-    </div>
+        {{-- Fecha del instrumento --}}
+        <div class="space-y-1">
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                Fecha del Instrumento Notarial
+                @if($prefix === 'solicitante')
+                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                @endif
+            </label>
+            <flux:input
+                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                wire:model="fecha_instrumento_solicitante"
+                type="date"
+                required
+            />
+        </div>
 
-    {{-- Fecha del instrumento --}}
-    <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-            Fecha del Instrumento Notarial
-            @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-            @endif
-        </label>
-        <flux:input
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
-            wire:model="fecha_instrumento_solicitante"
-            type="date"
-            required
-        />
-    </div>
-
-    <div class="mb-3 py-3">
-        <h1 class="text-xl border-b-2 border-emerald-700 inline-block pb-1">Datos de Contacto</h1>
+        <div class="mb-3 py-3">
+            <h1 class="text-xl border-b-2 border-emerald-700 inline-block pb-1">Datos de Contacto</h1>
+        </div>
     </div>
 
     <flux:modal.trigger name="edit-contactos">
@@ -146,7 +144,6 @@
                         oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                         wire:model.defer="telefono_temp"
                         type="tel"
-                        maxlength ="10"
                         placeholder="Agregar teléfono"
                     />                    
                     <x-boton-agregar wire-click="agregarTelefono" />

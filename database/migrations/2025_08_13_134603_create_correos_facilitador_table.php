@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('facilitador_id')->constrained('facilitadores')->onDelete('cascade');
             $table->string('email');
+            $table->integer('tipo')->nullable();
             $table->timestamps();
         });
     }

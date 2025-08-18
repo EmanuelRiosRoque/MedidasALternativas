@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('facilitador_id')->constrained('facilitadores')->onDelete('cascade');
             $table->string('numero');
-            $table->string('tipo')->nullable();
+            $table->integer('tipo')->nullable();
             $table->timestamps();
         });
     }

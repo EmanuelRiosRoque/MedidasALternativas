@@ -14,6 +14,7 @@ class CorreoFacilitador extends Model
     protected $fillable = [
         'facilitador_id',
         'email',
+        'tipo'
     ];
 
     public function facilitador()

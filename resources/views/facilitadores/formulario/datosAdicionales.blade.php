@@ -206,7 +206,6 @@
 
     <flux:radio.group wire:model="cancelacion" label="Cancelación de Registro *">
         <flux:radio value="1" label="Suspensión" />
-        <flux:radio value="2" label="Revocación" />
         <flux:radio value="3" label="Inhabilitación" />
         <flux:radio value="4" label="Revocación" />
         <flux:radio value="5" label="Solicitud" />
@@ -291,7 +290,7 @@
             <livewire:dropzone 
                 wire:model="avale_jucio" 
                 :rules="['mimes:mp4,pdf','max:10420']" 
-                :multiple="true"
+                :multiple="false"
             />
        </div>
     </div>

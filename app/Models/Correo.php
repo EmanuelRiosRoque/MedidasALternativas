@@ -9,5 +9,5 @@ class Correo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['solicitante_id','email'];
+    protected $fillable = ['solicitante_id','email','tipo'];
 }

@@ -92,6 +92,19 @@
                         type="email"
                         placeholder="Agregar correo"
                     />
+
+                    <!-- Flux Select etiqueta correo -->
+                    <flux:select 
+                        wire:model.defer="correo_etiqueta_temp" 
+                        placeholder="Etiqueta"
+                        class="max-w-fit"
+                    >
+                        <flux:select.option value="1">Laboral</flux:select.option>
+                        <flux:select.option value="2">Personal</flux:select.option>
+                    </flux:select>
+
+
+
                     <flux:button variant="primary" wire:click="agregarCorreo">
                         Agregar
                     </flux:button>
@@ -101,7 +114,10 @@
                     <ul class="mt-2 space-y-1">
                         @foreach ($correos as $i => $correo)
                             <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
-                                <span class="truncate">{{ $correo }}</span>
+                                <span class="truncate">
+                                    {{ $correo['direccion'] }}
+                                    <span class="ml-2 text-xs text-zinc-500">[{{ $correo['tipo'] }}]</span>
+                                </span>
                                 <button
                                     wire:click="eliminarCorreo({{ $i }})"
                                     class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
@@ -113,7 +129,6 @@
                         @endforeach
                     </ul>
                 @endif
-
             </div>
 
             <!-- Teléfonos -->
@@ -127,9 +142,19 @@
                         oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                         wire:model.defer="telefono_temp"
                         type="tel"
-                        maxlength="10"
                         placeholder="Agregar teléfono"
                     />
+
+                    <!-- Flux Select etiqueta teléfono -->
+                    <flux:select 
+                        wire:model.defer="telefono_etiqueta_temp"  
+                        placeholder="Etiqueta"
+                        class="max-w-fit"
+                    >
+                        <flux:select.option value="1">Laboral</flux:select.option>
+                        <flux:select.option value="2">Personal</flux:select.option>
+                    </flux:select>
+
                     <flux:button variant="primary" wire:click="agregarTelefono">
                         Agregar
                     </flux:button>
@@ -139,7 +164,10 @@
                     <ul class="mt-2 space-y-1">
                         @foreach ($telefonos as $i => $tel)
                             <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
-                                <span class="truncate">{{ $tel }}</span>
+                                <span class="truncate">
+                                    {{ $tel['numero'] }}
+                                    <span class="ml-2 text-xs text-zinc-500">[{{ $tel['tipo'] }}]</span>
+                                </span>
                                 <button
                                     wire:click="eliminarTelefono({{ $i }})"
                                     class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded"
@@ -153,6 +181,7 @@
                 @endif
             </div>
         </div>
+
 
         <!-- Seccion: documucio -->
         <div class="mb-3 py-3">

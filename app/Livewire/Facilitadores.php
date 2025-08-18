@@ -23,12 +23,17 @@ class Facilitadores extends Component
     public $clave_unica;
     public $fecha_certificacion;
     public $vigencia_certificacion;
+
     public $correo_temp = '';
+    public $correo_etiqueta_temp = '';
+
     public $telefono_temp = '';
+    public $telefono_etiqueta_temp = '';
+
     public $correos = [];
     public $telefonos = [];
     public $periodos = [];
-    public $tipo_domicilio_solicitante;
+    public $tipo_domicilio_solicitante = '';
     public $calle_solicitante;
     public $fotografia;
 
@@ -104,11 +109,13 @@ class Facilitadores extends Component
 
     public function agregarCorreo()
     {
-        $correo = trim($this->correo_temp);
-
-        if ($correo !== '' && filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-            $this->correos[] = ($correo);
+        if ($this->correo_temp) {
+            $this->correos[] = [
+                'direccion' => $this->correo_temp,
+                'tipo' => $this->correo_etiqueta_temp ?? 'Sin etiqueta',
+            ];
             $this->correo_temp = '';
+            $this->correo_etiqueta_temp = '';
         }
     }
 
@@ -120,11 +127,13 @@ class Facilitadores extends Component
 
     public function agregarTelefono()
     {
-        $telefono = trim($this->telefono_temp);
-
-        if ($telefono !== '') {
-            $this->telefonos[] = $telefono;
+        if ($this->telefono_temp) {
+            $this->telefonos[] = [
+                'numero' => $this->telefono_temp,
+                'tipo' => $this->telefono_etiqueta_temp ?? 'Sin etiqueta',
+            ];
             $this->telefono_temp = '';
+            $this->telefono_etiqueta_temp = '';
         }
     }
 
@@ -135,21 +144,20 @@ class Facilitadores extends Component
     }
 
     public function agregarPeriodo()
-{
-    $periodo = trim($this->numero_renovaciones);
+    {
+        $periodo = trim($this->numero_renovaciones);
 
-    if ($periodo !== '') {
-        $this->periodos[] = $periodo;
-        $this->numero_renovaciones = '';
+        if ($periodo !== '') {
+            $this->periodos[] = $periodo;
+            $this->numero_renovaciones = '';
+        }
     }
-}
 
-public function eliminarPeriodo($index)
-{
-    unset($this->periodos[$index]);
-    $this->periodos = array_values($this->periodos); // reindexar
-}
-
+    public function eliminarPeriodo($index)
+    {
+        unset($this->periodos[$index]);
+        $this->periodos = array_values($this->periodos); // reindexar
+    }
 
     public function cambiarTab($numero)
     {
@@ -253,10 +261,11 @@ public function eliminarPeriodo($index)
 
         if (!empty($this->correos) && is_array($this->correos)) {
             foreach ($this->correos as $correo) {
-                if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                if (filter_var($correo['direccion'], FILTER_VALIDATE_EMAIL)) {
                     CorreoFacilitador::create([
                         'facilitador_id' => $facilitador->id,
-                        'email' => $correo,
+                        'email'          => $correo['direccion'],
+                        'tipo'           => $correo['tipo'],
                     ]);
                 }
             }
@@ -267,7 +276,8 @@ public function eliminarPeriodo($index)
             foreach ($this->telefonos as $tel) {
                 TelefonoFacilitador::create([
                     'facilitador_id' => $facilitador->id,
-                    'numero' => $tel,
+                    'numero'         => $tel['numero'],
+                    'tipo'           => $tel['tipo'],
                 ]);
             }
         }
