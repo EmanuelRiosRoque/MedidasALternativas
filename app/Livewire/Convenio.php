@@ -12,15 +12,12 @@ use App\Models\Solicitante;
 use App\Models\Representante;
 use Livewire\WithFileUploads;
 
-use App\Models\SepomexColonia;
 use Masmerise\Toaster\Toaster;
 use App\Models\DocumentoSolicitud;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\File as HttpFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ConvenioTraits\HandleDocumentos;
-use App\Traits\ConvenioTraits\HandleValidaciones;
 use App\Traits\ConvenioTraits\HandleArreglosLogicos;
 use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
 use App\Traits\ConvenioTraits\HandleCrudLogicoPersonas;
@@ -32,9 +29,6 @@ class Convenio extends Component
 	
 	// Funcion para auto completar domicilio
 	use HandleAutoCompletarDomicilio;
-
-	// Validaciones por pasos
-	use HandleValidaciones;
 
 	//Documentos
 	use HandleDocumentos;
@@ -187,10 +181,14 @@ class Convenio extends Component
 		}
 
 		if ($this->tab === 2 && $nuevoTab === 3) {
+			$rules = [
+				'acudiran_juntos' => 'required',
+			];
 			if (empty($this->solicitanteArray)) {
 				Toaster::warning('Debe agregar al menos un solicitante antes de continuar !');
 				return;
 			}
+			$this->validate($rules);
 		}
 
 		if ($this->tab === 3 && $nuevoTab === 4) {
@@ -214,32 +212,53 @@ class Convenio extends Component
 
 	public function guardado()
 	{
-		// dd($this->solicitanteArray,$this->invitadoArray);
-		// 1. Crear una nueva solicitud de prueba (para asegurarnos de tener un ID válido)
+		$rutaOficio = null;
+
+		// Si existe el archivo de oficio, lo guardamos primero
+		if (!empty($this->oficio) && !empty($this->oficio['path']) && file_exists($this->oficio['path'])) {
+			$rutaOficio = $this->guardarDocumentoIndividual(
+				$this->oficio,
+				'oficio', // tipo de documento
+				null,     // no está ligado a un solicitante, es general
+				false     // no lo guardamos en la tabla Documento si no aplica
+			);
+		}
+
+		$folioFamiliar = siguienteValorSecuencia('familiar'); 
+        $folioCivil = siguienteValorSecuencia('civil');    
+
+		$folioFamiliarPresencial = $this->generarFolio('CJA', 'MF', $folioFamiliar);
+		$folioCivilPresencial    = $this->generarFolio('CJA', 'MCM', $folioCivil);
+
+		$folioSeleccionado = $this->materia === 'familiar'
+		? $folioFamiliarPresencial
+		: $folioCivilPresencial;
+
+		// Crear la solicitud
 		$solicitud = Solicitud::create([
 			"modalidad" => $this->modalidad,
+			"acudiran_juntos" => $this->acudiran_juntos,
+			"folio_materia" => $folioSeleccionado,
 			"estatus_id" => 1,
 			"materia" => $this->materia,
 			"derivado_canalizado" => $this->derivado_canalizado,
 			"numero_ticket" => $this->numero_ticket,
 			"institucion" => $this->institucion,
-			"oficio" => "oficio",
+			"oficio" => $rutaOficio,
 			"cual_otro" => $this->cual_otro
 		]);
-		 // 2. Procesar solicitantes
 
-		 foreach ($this->solicitanteArray as $datos) {
+		// Procesar personas relacionadas
+		foreach ($this->solicitanteArray as $datos) {
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
 		}
-		
+
 		foreach ($this->invitadoArray as $datos) {
 			$this->guardarPersonaRelacionada($solicitud->id, $datos, 'invitado');
 		}
-		
-	
 
-	   return Redirect::route('solicitudes.index')
-            ->success('Solicitud creada exitosamente !');
+		return Redirect::route('solicitudes.index')
+			->success('Solicitud creada exitosamente !');
 	}
 
 	protected function guardarPersonaRelacionada($solicitudId, $datos, string $rol = 'solicitante')
@@ -254,6 +273,7 @@ class Convenio extends Component
 			$datosPersona = [
 				'persona'             => $tipoPersona,
 				'nombre'              => $datos['nombre'] ?? '',
+				'representante'       => $datos['representante'] ?? null,
 				'tipo_solicitante'    => $rol,
 				'apellido_p'          => $datos['apellido_p'] ?? null,
 				'apellido_m'          => $datos['apellido_m'] ?? null,
@@ -283,6 +303,7 @@ class Convenio extends Component
 				'persona'             => $tipoPersona,
 				'tipo_solicitante'    => $rol,
 				'nombre'              => $datos['nombre'] ?? '',
+				'representante'       => $datos['representante'] ?? null,
 				'apellido_p'          => $datos['apellido_p'] ?? null,
 				'apellido_m'          => $datos['apellido_m'] ?? null,
 				'sexo'                => $datos['sexo'] ?? null,
@@ -367,7 +388,7 @@ class Convenio extends Component
 		}
 	}
 
-	protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId)
+	protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId, $guardarDB = true)
 	{
 		if ($archivo && !empty($archivo['path']) && file_exists($archivo['path'])) {
 			$nombreOriginal = $archivo['name'];
@@ -382,15 +403,30 @@ class Convenio extends Component
 
 			$rutaPublica = 'storage/' . $rutaFinal;
 
-			Documento::create([
-				'solicitante_id'    => $solicitanteId,
-				'tipo'              => $tipo,
-				'nombre_original'   => $nombreOriginal,
-				'ruta'              => $rutaPublica,
-				'extension'         => $archivo['extension'] ?? pathinfo($nombreOriginal, PATHINFO_EXTENSION),
-				'size'              => $archivo['size'] ?? null,
-			]);
+			if($guardarDB){
+				Documento::create([
+					'solicitante_id'    => $solicitanteId,
+					'tipo'              => $tipo,
+					'nombre_original'   => $nombreOriginal,
+					'ruta'              => $rutaPublica,
+					'extension'         => $archivo['extension'] ?? pathinfo($nombreOriginal, PATHINFO_EXTENSION),
+					'size'              => $archivo['size'] ?? null,
+				]);
+			}
+			
+			return $rutaPublica;
 		}
+		return null;
+	}
+
+	private function generarFolio(string $prefijo, string $clave, int $folio): string
+	{
+		$anio = now()->year;
+		$folioFormateado = str_pad($folio, 4, '0', STR_PAD_LEFT);
+
+		return ($this->materia === 'presencial')
+			? "$prefijo-$clave-$folioFormateado-$anio"
+			: "V-$prefijo-$clave-$folioFormateado-$anio";
 	}
 
 	public function save () {

@@ -7,15 +7,15 @@
 
     <div class="flex flex-wrap gap-x-6">
         @if ($materia === 'mercantil')
-        <div class="animate__animated animate__fadeIn">
+        <div>
             <flux:radio.group wire:model.live="persona" label="Persona" >
                 <flux:radio value="fisica" label="Física" />
                 <flux:radio value="moral" label="Moral" />
             </flux:radio.group>
         </div>
         @endif
-        <div class="animate__animated animate__fadeIn">
-            <flux:radio.group wire:model.live="acudiran_juntos" label="¿Acudiran juntos?" >
+        <div>
+            <flux:radio.group wire:model="acudiran_juntos" label="¿Acudirán juntos?" >
                 <flux:radio value="1" label="Si" />
                 <flux:radio value="2" label="No" />
             </flux:radio.group>

@@ -1,13 +1,8 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-// app/Models/Solicitud.php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Solicitud extends Model
 {
@@ -21,7 +16,10 @@ class Solicitud extends Model
         "numero_ticket",
         "institucion",
         "oficio",
-        "cual_otro"
+        "cual_otro",
+        "facilitador_id",
+        "folio_materia",
+        "acudiran_juntos"
     ];
 
     public function personas()
@@ -32,6 +30,11 @@ class Solicitud extends Model
     public function estatus()
     {
         return $this->belongsTo(Estatus::class);
+    }
+
+    public function facilitador()
+    {
+        return $this->belongsTo(Facilitador::class);
     }
 
 

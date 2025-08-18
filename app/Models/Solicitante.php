@@ -45,6 +45,8 @@ class Solicitante extends Model
         'fecha_instrumento',
         'domicilio',
         'estado_civil',
+        'facilitador_id',
+        'estatus_id',
     ];
 
     protected $casts = [
@@ -54,13 +56,24 @@ class Solicitante extends Model
 
     // Relaciones
 
-    // public function correos()
-    // {
-    //     return $this->hasMany(Correo::class);
-    // }
+    public function correos()
+    {
+        return $this->hasMany(Correo::class);
+    }
 
-    // public function telefonos()
-    // {
-    //     return $this->hasMany(Telefono::class);
-    // }
+    public function telefonos()
+    {
+        return $this->hasMany(Telefono::class);
+    }
+
+    public function estatus()
+    {
+        return $this->belongsTo(Estatus::class);
+    }
+
+    public function facilitador()
+    {
+        return $this->belongsTo(Facilitador::class);
+    }
+
 }

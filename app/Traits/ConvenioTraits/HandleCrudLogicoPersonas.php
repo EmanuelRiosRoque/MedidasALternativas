@@ -24,6 +24,7 @@ trait HandleCrudLogicoPersonas
         'nombre_representante',
         'apellido_p_representante',
         'apellido_m_representante',
+        'acudiran_juntos'
     ];
 
     protected function validarPersonaAntesDeAgregar(string $tipo)
@@ -244,7 +245,7 @@ trait HandleCrudLogicoPersonas
         }
 
         Toaster::success('Participante agregado !');
-        $this->limpiarCamposPersona(preservarPersona: $tipo === 'invitado');
+        $this->limpiarCamposPersona(preservarPersona: false);
     }
 
     public function cargarEdicion()
@@ -350,7 +351,7 @@ trait HandleCrudLogicoPersonas
             'apellido_m_representante',
             'doc_representante',
             'correos',
-            'telefonos'
+            'telefonos',
 		]);
 
 		$this->dispatch('filepond-reset-identificacion');

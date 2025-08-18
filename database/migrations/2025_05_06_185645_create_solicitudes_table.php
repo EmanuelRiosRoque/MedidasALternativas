@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('estatus_id')->nullable(); 
             $table->string('modalidad')->nullable();
+            $table->string('folio_materia')->nullable();
             $table->string('materia')->nullable();
             $table->string('derivado_canalizado')->nullable();
             $table->string('numero_ticket')->nullable();
             $table->string('institucion')->nullable();
             $table->string('oficio')->nullable();
             $table->string('cual_otro')->nullable();
+            $table->boolean('acudiran_juntos')->nullable();
+            $table->foreign('estatus_id')->references('id')->on('estatus')->onDelete('set null');
+            $table->foreignId('facilitador_id')->nullable()->constrained('facilitadores')->nullOnDelete();
             $table->timestamps();
         });
     }

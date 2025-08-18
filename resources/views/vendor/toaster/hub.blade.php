@@ -27,9 +27,9 @@
             x-transition:leave-end="opacity-0 translate-y-2"
             class="relative flex items-center gap-3 max-w-sm w-full p-4 rounded-md shadow-md border pointer-events-auto"
             :class="toast.select({
-                success: 'bg-white text-gray-800 border-gray-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700',
+                success: 'bg-white text-black border-gray-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700',
                 error: 'bg-red-600 text-white border-red-700',
-                warning: 'bg-white text-white border-red-700 dark:bg-zinc-900 dark:text-white dark:border-zinc-700',
+                warning: 'bg-white text-black border-red-700 dark:bg-zinc-900 dark:text-white dark:border-zinc-700',
                 info: 'bg-blue-500 text-white border-blue-600'
             })"
         >

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('solicitantes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('solicitud_id')->constrained('solicitudes')->onDelete('cascade');
+            $table->foreignId('facilitador_id')->nullable()->constrained('facilitadores')->nullOnDelete();
+            $table->foreignId('estatus_id')->nullable()->constrained('estatus')->nullOnDelete();
 
             // Tipo de persona
             $table->enum('persona', ['fisica', 'moral', 'familiar'])->nullable();

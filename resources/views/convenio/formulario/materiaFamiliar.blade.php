@@ -99,7 +99,7 @@
                 <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             @endif
         </label>
-        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupacion...">
+        <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupación...">
             @foreach ($ocupaciones as $ocupacion)
                 <flux:select.option>{{ $ocupacion }}</flux:select.option>
             @endforeach
@@ -197,6 +197,7 @@
                         oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
                         wire:model.defer="telefono_temp"
                         type="tel"
+                        maxlength ="10"
                         placeholder="Agregar teléfono"
                     />                    
                     <x-boton-agregar wire-click="agregarTelefono" />
@@ -294,7 +295,7 @@
             </label>
             <flux:select wire:model="colonia" placeholder="Selecciona una colonia...">
                 @foreach ($colonias as $col)
-                    <flux:select.option value="{{ $col->id }}" >{{ $col->colonia }}</flux:select.option>
+                    <flux:select.option>{{ $col->colonia }}</flux:select.option>
                 @endforeach
             </flux:select>
         </div>    
