@@ -34,19 +34,99 @@
         </x-solicitud.section-header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-6xl m-auto">
-            <!-- Callout de recordatorio -->
-            @include('livewire.solicitud.includes.recordatorio-callout')
+    
+            <!-- Columna izquierda: callouts -->
+            <div class="space-y-5">
+                @include('livewire.solicitud.includes.recordatorio-callout')
+                @if($segSesion)
+                @include('livewire.solicitud.includes.segunda-invitacion-callout')
+                @endif
+            </div>
 
-            <!-- Contenido dinámico según la opción -->
-            <livewire:solicitud.invitacion-evento :evento="$evento" />
+            <!-- Columna derecha: url para invitacion -->
+            <div>
+                <livewire:solicitud.invitacion-evento :evento="$evento" />
+                 {{-- TODO agregar funcionalidad --}}
+
+                @if ($evento->url != null)
+                <div class="flex mt-2 justify-end">
+                    <flux:modal.trigger name="edit-profile">
+                        <flux:button variant="primary">Segunda Invitación</flux:button>
+                    </flux:modal.trigger>
+                </div>     
+                <flux:modal name="edit-profile" class="md:w-96" :dismissible="false">
+                    <div class="space-y-6">
+                        <div>
+                            <flux:heading size="lg">Enviar segunda invitacion</flux:heading>
+                        </div>
+                        <flux:input wire:model='fechaSegundaInv' label="Fecha de atención" type="date" />
+                        <flux:input wire:model='urlSegundaInv' label="Liga de segunda" type="text" placeholder="" />
+                        @if ($evento->opcion_invitacion === 'separados')
+                        <div class="space-y-4">
+                            <p class="text-sm font-semibold dark:text-white">Horario para solicitante(s)</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <flux:select wire:model="horaInicio" placeholder="Hora inicio">
+                                    @foreach ($horarios as $valor => $etiqueta)
+                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                    @endforeach
+                                </flux:select>
+                                <flux:select wire:model="horaFin" placeholder="Hora fin">
+                                    @foreach ($horarios as $valor => $etiqueta)
+                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                    @endforeach
+                                </flux:select>
+                            </div>
+                        
+                            <p class="text-sm font-semibold dark:text-white">Horario para invitado(s)</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <flux:select wire:model="horaInicioInvitado" placeholder="Hora inicio">
+                                    @foreach ($horarios as $valor => $etiqueta)
+                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                    @endforeach
+                                </flux:select>
+                                <flux:select wire:model="horaFinInvitado" placeholder="Hora fin">
+                                    @foreach ($horarios as $valor => $etiqueta)
+                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                    @endforeach
+                                </flux:select>
+                            </div>
+                        </div>
+                        @else
+                        <div class="grid grid-cols-2 gap-2">
+                            <flux:select wire:model="horaInicio" placeholder="Hora inicio">
+                                @foreach ($horarios as $valor => $etiqueta)
+                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                @endforeach
+                            </flux:select>
+                            <flux:select wire:model="horaFin" placeholder="Hora fin">
+                                @foreach ($horarios as $valor => $etiqueta)
+                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                @endforeach
+                            </flux:select>
+                        </div>
+                        @endif
+
+                        <div class="flex">
+                            <flux:spacer />
+                                <flux:button wire:click='segundaInvitacion' variant="primary">Enviar</flux:button>
+                        </div>
+                    </div>
+                </flux:modal>
+                @endif
+            </div>
 
         </div>
+
         @else
         <div class="max-w-6xl m-auto space-y-3 mt-5 grid grid-cols-3 gap-4" x-data="{ medio_envio: 'sepomex' }">
             <!-- Callout de recordatorio -->
             <div>
                 @include('livewire.solicitud.includes.recordatorio-callout')
             </div>
+            @if($segSesion != null)
+                @include('livewire.solicitud.includes.segunda-invitacion-callout')
+            @endif
+            
 
             <div>
                 <flux:radio.group label="Medio de envío" x-model="medio_envio">

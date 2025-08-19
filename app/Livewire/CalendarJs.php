@@ -217,6 +217,8 @@ class CalendarJs extends Component
 
     private function crearNuevoEvento()
     {
+        $materia = Solicitud::where('id', 1)->value('materia');
+
         Agenda::create([
             'solicitud_id'      => $this->solicitud,
             'facilitador_id'    => $this->facilitador,
@@ -229,7 +231,7 @@ class CalendarJs extends Component
             'hora_inicio_invitado' => $this->horaInicioInvitado ?: null,
             'hora_fin_invitado'    => $this->horaFinInvitado ?: null,
             'descripcion'       => $this->actividad,
-            'materia'           => $this->rolUsuario,
+            'materia'           => $materia,
             'color'             => $this->colorEvento,
             'observacion'       => $this->observacion,
             'estatus_id'        => 2,

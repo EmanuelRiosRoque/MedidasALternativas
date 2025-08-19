@@ -1,7 +1,14 @@
 @component('mail::message')
 # Hola {{ $nombre }}
 
-Comparto la liga de acceso a la Reunión de Google Meet programada para atenderle en el Procedimiento de Mediación a distancia.
+@if ($numInvitacion === 1)
+Comparto la liga de acceso a la Reunión de Google Meet programada para atenderle en el Procedimiento de Pre-Mediación a distancia.
+@elseif ($numInvitacion === 2)
+Comparto la liga de acceso a la **segunda** Reunión de Google Meet programada para atenderle en el Procedimiento de Pre-Mediación a distancia.
+@else
+Comparto la liga de acceso a la Reunión de Google Meet programada para atenderle en el Procedimiento de Pre-Mediación a distancia.
+@endif
+
 
 **Fecha de la reunión:** {{ $fecha }}
 

@@ -18,12 +18,15 @@ class InvitacionMediacion extends Mailable
     public string $horario;
     public string $fecha;
 
-    public function __construct(string $nombre, string $enlace, string $horario, string $fecha)
+    public ?int $numInvitacion;
+
+    public function __construct(string $nombre, string $enlace, string $horario, string $fecha, ?int $numInvitacion = null)
     {
         $this->nombre = $nombre;
         $this->enlace = $enlace;
         $this->horario = $horario;
         $this->fecha = $fecha;
+        $this->numInvitacion = $numInvitacion;
     }
 
     public function envelope(): Envelope
@@ -41,9 +44,13 @@ class InvitacionMediacion extends Mailable
                 'nombre' => $this->nombre,
                 'enlace' => $this->enlace,
                 'horario' => $this->horario,
+                'fecha' => $this->fecha,
+                'numInvitacion' => $this->numInvitacion,
             ]
         );
     }
+
+
 
     public function attachments(): array
     {
