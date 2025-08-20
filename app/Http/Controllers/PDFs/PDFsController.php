@@ -65,8 +65,9 @@ public function correoMexico()
 
     $pdf = Pdf::loadView('pdfs.correosDeMx', compact('documentos'));
     $pdf->setPaper('letter', 'landscape'); // <- ¡Aquí cambia a horizontal!
+    return $pdf->stream('correosDeMx.pdf');
 
-    return $pdf->download('correosDeMx.pdf');
+    // return $pdf->download('correosDeMx.pdf');
 }
 
     

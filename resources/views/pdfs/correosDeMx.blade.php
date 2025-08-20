@@ -39,13 +39,13 @@
 
 @foreach ($documentos as $doc)
     <div class="bloque">
-        <img class="fondo" src="{{ public_path('img/documentos/correos_de_mexico.jpeg') }}" alt="Fondo">
+        <img class="fondo" src="{{ public_path('img/documentos/imagen2.jpg') }}" alt="Fondo">
 
-        <p class="campo" style="top: 154pt; left: 165pt;">{{ $doc['nombre'] }}</p>
-        <p class="campo" style="top: 167pt; left: 165pt;">{{ $doc['domicilio'] }}</p>
-        <p class="campo" style="top: 179pt; left: 165pt;">{{ $doc['lugar'] }}</p>
-        <p class="campo" style="top: 190pt; left: 165pt;">{{ $doc['materia'] }}</p>
-        <p class="campo" style="top: 190pt; left: 280pt;">{{ $doc['cp'] }}</p>
+        <p class="campo" style="top: 158pt; left: 199pt;">{{ $doc['nombre'] }}</p>
+        <p class="campo" style="top: 172pt; left: 199pt;">{{ $doc['domicilio'] }}</p>
+        <p class="campo" style="top: 186pt; left: 199pt;">{{ $doc['lugar'] }}</p>
+        <p class="campo" style="top: 200pt; left: 199pt;">{{ $doc['materia'] }}</p>
+        <p class="campo" style="top: 200pt; left: 322pt;">{{ $doc['cp'] }}</p>
     </div>
 @endforeach
 
