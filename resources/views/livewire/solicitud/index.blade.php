@@ -38,80 +38,79 @@
             <!-- Columna izquierda: callouts -->
             <div class="space-y-5">
                 @include('livewire.solicitud.includes.recordatorio-callout')
+            </div>
+            <div>
                 @if($segSesion)
-                @include('livewire.solicitud.includes.segunda-invitacion-callout')
+                    @include('livewire.solicitud.includes.segunda-invitacion-callout')
                 @endif
             </div>
 
             <!-- Columna derecha: url para invitacion -->
             <div>
-                <livewire:solicitud.invitacion-evento :evento="$evento" />
-                 {{-- TODO agregar funcionalidad --}}
-
-                @if ($evento->url != null)
-                <div class="flex mt-2 justify-end">
-                    <flux:modal.trigger name="edit-profile">
-                        <flux:button variant="primary">Segunda Invitación</flux:button>
-                    </flux:modal.trigger>
-                </div>     
-                <flux:modal name="edit-profile" class="md:w-96" :dismissible="false">
-                    <div class="space-y-6">
-                        <div>
-                            <flux:heading size="lg">Enviar segunda invitacion</flux:heading>
-                        </div>
-                        <flux:input wire:model='fechaSegundaInv' label="Fecha de atención" type="date" />
-                        <flux:input wire:model='urlSegundaInv' label="Liga de segunda" type="text" placeholder="" />
-                        @if ($evento->opcion_invitacion === 'separados')
-                        <div class="space-y-4">
-                            <p class="text-sm font-semibold dark:text-white">Horario para solicitante(s)</p>
+                @if ($evento->url != null && !$segSesion)
+                    <div class="flex mt-2 justify-end">
+                        <flux:modal.trigger name="edit-profile">
+                            <flux:button variant="primary">Segunda Invitación</flux:button>
+                        </flux:modal.trigger>
+                    </div>     
+                    <flux:modal name="edit-profile" class="md:w-96" :dismissible="false">
+                        <div class="space-y-6">
+                            <div>
+                                <flux:heading size="lg">Enviar segunda invitacion</flux:heading>
+                            </div>
+                            <flux:input wire:model='fechaSegundaInv' label="Fecha de atención" type="date" />
+                            <flux:input wire:model='urlSegundaInv' label="Liga de segunda" type="text" placeholder="" />
+                            @if ($evento->opcion_invitacion === 'separados')
+                            <div class="space-y-4">
+                                <p class="text-sm font-semibold dark:text-white">Horario para solicitante(s)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <flux:select wire:model="horaInicio" placeholder="Hora inicio">
+                                        @foreach ($horarios as $valor => $etiqueta)
+                                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                        @endforeach
+                                    </flux:select>
+                                    <flux:select wire:model="horaFin" placeholder="Hora fin">
+                                        @foreach ($horarios as $valor => $etiqueta)
+                                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                        @endforeach
+                                    </flux:select>
+                                </div>
+                            
+                                <p class="text-sm font-semibold dark:text-white">Horario para invitado(s)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <flux:select wire:model="horaInicioInvitado" placeholder="Hora inicio">
+                                        @foreach ($horarios as $valor => $etiqueta)
+                                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                        @endforeach
+                                    </flux:select>
+                                    <flux:select wire:model="horaFinInvitado" placeholder="Hora fin">
+                                        @foreach ($horarios as $valor => $etiqueta)
+                                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                        @endforeach
+                                    </flux:select>
+                                </div>
+                            </div>
+                            @else
                             <div class="grid grid-cols-2 gap-2">
                                 <flux:select wire:model="horaInicio" placeholder="Hora inicio">
                                     @foreach ($horarios as $valor => $etiqueta)
-                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
                                     @endforeach
                                 </flux:select>
                                 <flux:select wire:model="horaFin" placeholder="Hora fin">
                                     @foreach ($horarios as $valor => $etiqueta)
-                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
+                                        <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
                                     @endforeach
                                 </flux:select>
                             </div>
-                        
-                            <p class="text-sm font-semibold dark:text-white">Horario para invitado(s)</p>
-                            <div class="grid grid-cols-2 gap-2">
-                                <flux:select wire:model="horaInicioInvitado" placeholder="Hora inicio">
-                                    @foreach ($horarios as $valor => $etiqueta)
-                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
-                                    @endforeach
-                                </flux:select>
-                                <flux:select wire:model="horaFinInvitado" placeholder="Hora fin">
-                                    @foreach ($horarios as $valor => $etiqueta)
-                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
-                                    @endforeach
-                                </flux:select>
-                            </div>
-                        </div>
-                        @else
-                        <div class="grid grid-cols-2 gap-2">
-                            <flux:select wire:model="horaInicio" placeholder="Hora inicio">
-                                @foreach ($horarios as $valor => $etiqueta)
-                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
-                                @endforeach
-                            </flux:select>
-                            <flux:select wire:model="horaFin" placeholder="Hora fin">
-                                @foreach ($horarios as $valor => $etiqueta)
-                                    <flux:select.option value="{{ $valor }}">{{ $etiqueta }}</flux:select.option>
-                                @endforeach
-                            </flux:select>
-                        </div>
-                        @endif
+                            @endif
 
-                        <div class="flex">
-                            <flux:spacer />
-                                <flux:button wire:click='segundaInvitacion' variant="primary">Enviar</flux:button>
+                            <div class="flex">
+                                <flux:spacer />
+                                    <flux:button wire:click='segundaInvitacion' variant="primary">Enviar</flux:button>
+                            </div>
                         </div>
-                    </div>
-                </flux:modal>
+                    </flux:modal>
                 @endif
             </div>
 

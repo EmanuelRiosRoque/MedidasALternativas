@@ -6,7 +6,7 @@
     <div class="grid grid-cols-2 gap-6">
         <!-- Correos -->
         <div class="p-4 rounded-md shadow">
-            <h2 class="text-lg font-semibold text-white mb-4">Correos</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Correos</h2>
 
             @foreach ($correos as $index => $correo)
                 <div class="flex items-center gap-3 mb-3">
@@ -27,7 +27,7 @@
 
         <!-- Teléfonos -->
         <div class="p-4 rounded-md shadow">
-            <h2 class="text-lg font-semibold text-white mb-4">Teléfonos</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Teléfonos</h2>
 
             @foreach ($telefonos as $index => $telefono)
                 <div class="flex items-center gap-3 mb-3">

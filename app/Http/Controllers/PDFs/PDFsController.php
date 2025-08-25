@@ -38,13 +38,10 @@ class PDFsController extends Controller
         $pdf = Pdf::loadView('pdfs.amparo', $this->datosBase());
         $pdf->setPaper('letter', 'portrait');
         return $pdf->download('amparo.pdf');
-        // return $pdf->stream('amparo.pdf');
-
     }
 
 public function correoMexico()
 {
-    // Simulación de datos
     $documentos = [
         [
             'nombre' => 'Emanuel Rios Roque',
@@ -60,14 +57,13 @@ public function correoMexico()
             'materia' => 'CIVIL',
             'cp' => '06720'
         ],
-        // Puedes agregar más documentos...
     ];
 
     $pdf = Pdf::loadView('pdfs.correosDeMx', compact('documentos'));
-    $pdf->setPaper('letter', 'landscape'); // <- ¡Aquí cambia a horizontal!
-    return $pdf->stream('correosDeMx.pdf');
+    $pdf->setPaper('letter', 'landscape');
+    // return $pdf->stream('correosDeMx.pdf');
 
-    // return $pdf->download('correosDeMx.pdf');
+    return $pdf->download('correosDeMx.pdf');
 }
 
     
@@ -115,9 +111,7 @@ public function servicioPostal()
     {
         $pdf = Pdf::loadView('pdfs.amparoRepresentante', $this->datosBase());
         $pdf->setPaper('letter', 'portrait');
-        return $pdf->download('amparoRepresentante.pdf');
-        // return $pdf->stream('amparoRepresentante.pdf');
-
+        return $pdf->download('amparoRepresentante.pdf');   
     }
 
 

@@ -48,6 +48,8 @@
                     </span>.
                 @endif
             </li>
+                <livewire:solicitud.invitacion-evento :evento="$evento" />
+
         </ul>
     </flux:callout.text>
 </flux:callout>

@@ -66,16 +66,15 @@ class Index extends \Livewire\Component
     public function mount($solicitudId)
     {
         $this->escolaridades = $this->escolaridades();
-        $this->ocupaciones = $this->ocupaciones();
+        $this->ocupaciones   = $this->ocupaciones();
 
-        $this->solicitud = Solicitud::with('facilitador')->findOrFail($solicitudId);
+        $this->solicitud   = Solicitud::with('facilitador')->findOrFail($solicitudId);
+        $this->solicitudId = (int) $solicitudId;
 
-        $evento = $this->evento = Agenda::where('solicitud_id', $solicitudId)
+        // El evento puede no existir con activo=1. Maneja null.
+        $this->evento = Agenda::where('solicitud_id', $this->solicitudId)
             ->where('activo', 1)
             ->first();
-        
-          
-        $this->solicitudId = $solicitudId;
 
         $this->solicitantes = Solicitante::where('tipo_solicitante', 'solicitante')
             ->where('solicitud_id', $this->solicitudId)
@@ -85,19 +84,20 @@ class Index extends \Livewire\Component
             ->where('solicitud_id', $this->solicitudId)
             ->get();
 
-        $this->materia = $this->solicitud->materia;
+        $this->materia  = $this->solicitud->materia;
         $this->horarios = $this->generarHorarios('09:00', '19:00');
 
-        $solicitanteIds = $this->getPersonaIds($evento, 'solicitante');
-        $invitadoIds = $this->getPersonaIds($evento, 'invitado');
+        // Ahora pasamos el ID directo
+        $solicitanteIds = $this->getPersonaIds($this->solicitudId, 'solicitante');
+        $invitadoIds    = $this->getPersonaIds($this->solicitudId, 'invitado');
 
         $this->correosSolicitantes = $this->getCorreosBySolicitantes($solicitanteIds);
-        $this->correosInvitados = $this->getCorreosBySolicitantes($invitadoIds);
+        $this->correosInvitados    = $this->getCorreosBySolicitantes($invitadoIds);
 
         $this->segSesion = Agenda::where('solicitud_id', $this->solicitudId)
-        ->where('activo', 1)
-        ->where('estatus_id', 7) // Segunda sesion
-        ->first();
+            ->where('activo', 1)
+            ->where('estatus_id', 7) // Segunda sesión
+            ->first();
     }
 
     public function updatedMateria($value)
@@ -107,10 +107,19 @@ class Index extends \Livewire\Component
     }
 
 
-    private function getPersonaIds($evento, $tipo = 'solicitante')
+    // private function getPersonaIds($evento, $tipo = 'solicitante')
+    // {
+    //     return Solicitante::where('solicitud_id', $evento->solicitud_id)
+    //         ->where('tipo_solicitante', $tipo) 
+    //         ->whereNotNull('facilitador_id')
+    //         ->whereNotNull('estatus_id')
+    //         ->pluck('id');
+    // }
+
+    private function getPersonaIds(int $solicitudId, string $tipo = 'solicitante')
     {
-        return Solicitante::where('solicitud_id', $evento->solicitud_id)
-            ->where('tipo_solicitante', $tipo) 
+        return Solicitante::where('solicitud_id', $solicitudId)
+            ->where('tipo_solicitante', $tipo)
             ->whereNotNull('facilitador_id')
             ->whereNotNull('estatus_id')
             ->pluck('id');
