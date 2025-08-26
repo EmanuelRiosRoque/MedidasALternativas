@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PDFs\PDFsController;
 use Livewire\Volt\Volt;
 use App\Livewire\Convenio;
 use App\Livewire\Calendario;
@@ -8,6 +7,8 @@ use App\Livewire\Facilitadores;
 use App\Livewire\Facilitadores\Lista;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Solicitud\VerPersonas;
+use App\Http\Controllers\DOCs\DOCxController;
+use App\Http\Controllers\PDFs\PDFsController;
 use App\Livewire\Solicitud\Index as SolicitudIndex;
 use App\Livewire\Solicitudes\Index as SolicitudesIndex;
 
@@ -45,7 +46,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/descargar-servicioPostal', [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
     Route::get('/descargar-amparoRepre', [PDFsController::class, 'amparoRepre'])->name('descargar-amparoRepre');
 
+    //**Documentos DOCX */
+    Route::get('/descargar-inv1/{id}', [DOCxController::class, 'invitacion_uno'])->name('descargar-inv1');
+    Route::get('/descargar-inv2/{id}', [DOCxController::class, 'invitacion_dos'])->name('descargar-inv2');
+    Route::get('/descargar-segui/{fecha}', [DOCxController::class, 'invitacion_segui'])->name('descargar-segui');
+    
+
+
 });
+
+
 
 
 require __DIR__.'/auth.php';

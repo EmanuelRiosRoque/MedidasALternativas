@@ -48,7 +48,9 @@
                     </span>.
                 @endif
             </li>
-                <livewire:solicitud.invitacion-evento :evento="$evento" />
+            @if ($solicitud->modalidad == 'linea')
+            <livewire:solicitud.invitacion-evento :evento="$evento" />
+            @endif
 
         </ul>
     </flux:callout.text>

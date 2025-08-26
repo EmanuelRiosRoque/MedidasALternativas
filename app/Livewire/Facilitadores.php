@@ -38,12 +38,12 @@ class Facilitadores extends Component
     public $fotografia;
 
     //Datos adicionales
-    public $duracion_encargo;
+    public $duracion_encargo = '5 años en el encargo';
     public $numero_renovaciones;
     public $area_adscrito;
     public $autoridad_certificacion = '';
     public $especificacion_autoridad;
-    public $clave_autoridad;
+    public $clave_autoridad = '';
 
     public $autorizacion = '';
     public $avale_autorizado;
@@ -61,7 +61,7 @@ class Facilitadores extends Component
     public $tiene_resolucion = '';
     public $avale_resolucion;
 
-    public $infracciones;
+    public $infracciones = [];
     public $descripcion_sancion;
     public $cancelacion;
 
@@ -228,7 +228,7 @@ class Facilitadores extends Component
 
             'duracion_encargo' => $this->duracion_encargo,
             'area_adscrito' => $this->area_adscrito,
-            'numero_renovaciones' => json_encode($this->periodos, JSON_UNESCAPED_UNICODE),
+            'numero_renovaciones' => $this->numero_renovaciones,
             'autoridad_certificacion' => $this->autoridad_certificacion,
             'especificacion_autoridad' => $this->especificacion_autoridad,
             'clave_autoridad' => $this->clave_autoridad,

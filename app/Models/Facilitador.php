@@ -35,6 +35,6 @@ class Facilitador extends Model
     }
 
     protected $casts = [
-        'numero_renovaciones' => 'array',
+        'infracciones' => 'array',
     ];
 }

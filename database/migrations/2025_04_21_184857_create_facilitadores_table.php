@@ -37,7 +37,7 @@ return new class extends Migration
 
             // Datos adicionales
             $table->string('duracion_encargo')->nullable();
-            $table->string('numero_renovaciones')->nullable();
+            $table->integer('numero_renovaciones')->nullable();
             $table->string('area_adscrito')->nullable();
             $table->string('autoridad_certificacion')->nullable();
             $table->string('especificacion_autoridad')->nullable();
@@ -59,7 +59,7 @@ return new class extends Migration
             $table->string('tiene_resolucion')->nullable();
             $table->string('avale_resolucion')->nullable();
 
-            $table->string('infracciones')->nullable();
+            $table->json('infracciones')->nullable();
             $table->text('descripcion_sancion')->nullable();
             $table->string('cancelacion')->nullable();
 

@@ -1,14 +1,14 @@
 <!-- Sección 1: Datos generales del facilitador -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2" x-data="">
     <flux:input wire:model="duracion_encargo" :label="__('Duración del encargo *')" type="text" required
-        placeholder="Duración del encargo" />
+        placeholder="Duración del encargo" value="5 años en el encargo"/>
     
     <flux:input wire:model="area_adscrito" :label="__('Área de adscripción territorial *')" type="number" required
         placeholder="Área de adscripción territorial" />
 </div>
 
 <!-- Sección 1.1: Numero renovacion -->
-<div class="space-y-1 mt-2">
+{{-- <div class="space-y-1 mt-2">
     <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
         Número de renovaciones de certificación *
     </label>
@@ -46,7 +46,21 @@
         @endforeach
     </ul>
     @endif
+</div> --}}
+
+<div class="mt-2">
+    <flux:input 
+        wire:model="numero_renovaciones"
+        :label="__('Número de renovaciones de certificación *')" 
+        type="text"
+        maxlength="2"
+        pattern="\d*" 
+        inputmode="numeric"
+        required
+        placeholder="Hasta 15 renovaciones (máx. 2 dígitos)"
+    />
 </div>
+
 
 <!-- Sección 2: Autoridades y documentos -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4" x-data="{
@@ -76,13 +90,19 @@
                 placeholder="Especificar" 
             />
         </div>
-        <flux:input 
-            wire:model="clave_autoridad" 
-            :label="__('Clave de la Entidad Federativa que otorgó la Certificación o renovación *')" 
-            type="text" 
-            maxlength="4"  
-            placeholder="Clave" 
-        />
+
+        <div>
+            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
+                Clave de la Entidad Federativa que otorgó la Certificación o renovación *
+            </label>
+            <flux:select wire:model="clave_autoridad" placeholder="Elige una clave">
+                <flux:select.option>20145</flux:select.option>
+                <flux:select.option>35416</flux:select.option>
+                <flux:select.option>35416</flux:select.option>
+                <flux:select.option>35416</flux:select.option>
+                <flux:select.option>35416</flux:select.option>
+            </flux:select>
+        </div>
     </div>
 
 
@@ -183,18 +203,46 @@
         </div>
     </div>
         
-    <div class="col-span-2">
+    {{-- <div class="col-span-2">
         <flux:input
             wire:model="infracciones" 
             :label="__('Infracciones cometidas *')" 
             type="text" 
             placeholder="Infracciones cometidas" 
         />
+    </div> --}}
+
+
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-2">
+            Infracciones cometidas *
+        </label>   
+        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Suspensión</p>
+        <div class="space-y-1">
+            <flux:checkbox wire:model="infracciones" value="s1" label="Ostentarse como persona Facilitadora en algún MASC, del que no forme parte"/>
+            <flux:checkbox wire:model="infracciones" value="s2" label="Ejercer coacción o violencia contra alguna de las partes"/>
+            <flux:checkbox wire:model="infracciones" value="s3" label="Abstenerse de informar la improcedencia del MASC"/>
+            <flux:checkbox wire:model="infracciones" value="s4" label="Realizar actuaciones de pública fuera de los casos previstos en la LGMASC"/>
+            <flux:checkbox wire:model="infracciones" value="s5" label="Otra conducta determinada por la normatividad aplicable"/>
+        </div>
     </div>
+
+    <div class=" mt-2">
+        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4 mb-1">Revocación</p>
+        <div class="space-y-1">
+            <flux:checkbox wire:model="infracciones" value="r1" label="Falta grave en términos de la LGMASC"/>
+            <flux:checkbox wire:model="infracciones" value="r2" label="Sentencia condenatoria por delito doloso con pena privativa de libertad"/>
+            <flux:checkbox wire:model="infracciones" value="r3" label="Reincidir participando en MASC con causa de impedimento sin excusarse"/>
+            <flux:checkbox wire:model="infracciones" value="r4" label="Delegar o permitir a un tercero el uso de su certificación"/>
+            <flux:checkbox wire:model="infracciones" value="r5" label="Las demás señaladas en la LGMASC y normatividad aplicable"/>
+        </div>
+    </div>
+
+
 </div>
 
 <!-- Sección 4: Descripcion y cancelacion -->
-<div class="mt-1 grid grid-cols-2">
+<div class="mt-4 grid grid-cols-2">
     <flux:radio.group wire:model="descripcion_sancion" label="Descripción de Sanciones impuestas, en su caso *">
         <flux:radio value="1" label="Amonestación" />
         <flux:radio value="2" label="Sanción económica" />
