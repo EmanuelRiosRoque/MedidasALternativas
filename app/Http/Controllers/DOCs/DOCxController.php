@@ -9,7 +9,6 @@ use PhpOffice\PhpWord\TemplateProcessor;
 
 class DOCxController extends Controller
 {
-    // ✅ Endpoints mínimos que delegan en un método común
     public function invitacion_uno($id)
     {
         return $this->renderInvitation($id, 'inv_uno.docx', 'invitacion-uno.docx');
@@ -18,14 +17,40 @@ class DOCxController extends Controller
     public function invitacion_dos($id)
     {
         return $this->renderInvitation($id, 'inv_dos.docx', 'invitacion-dos.docx');
+    }   
+
+    public function invitacion_segui($fecha)
+    {
+        try {
+            $templatePath = public_path('docs/seguimiento.docx');
+            if (!file_exists($templatePath)) {
+                return "Plantilla no encontrada en: $templatePath";
+            }
+
+            $fechaCarbon = Carbon::parse($fecha)->addDay();
+            $mesTexto    = $fechaCarbon->locale('es')->translatedFormat('F');
+
+            $template = new TemplateProcessor($templatePath);
+            $template->setValue('dia',  $fechaCarbon->format('d'));
+            $template->setValue('mes',  ucfirst($mesTexto));
+            $template->setValue('anio', $fechaCarbon->format('Y'));
+
+            $tmp = tempnam(sys_get_temp_dir(), 'PHPWord');
+            $template->saveAs($tmp);
+
+            return response()->download($tmp, 'seguimiento.docx')->deleteFileAfterSend(true);
+        } catch (\Throwable $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
-    private function renderInvitation($id, string $templateFile, string $downloadName)
+
+     private function renderInvitation($id, string $templateFile, string $downloadName)
     {
         try {
             $templatePath = public_path("docs/{$templateFile}");
             if (!file_exists($templatePath)) {
-                return "❌ Plantilla no encontrada en: $templatePath";
+                return "Plantilla no encontrada en: $templatePath";
             }
 
             $values = $this->buildPlaceholdersForSolicitud($id);
@@ -82,30 +107,5 @@ class DOCxController extends Controller
             'num_solicitante'     => $telSol,
             'email_solicitante'   => $mailSol,
         ];
-    }
-
-    public function invitacion_segui($fecha)
-    {
-        try {
-            $templatePath = public_path('docs/seguimiento.docx');
-            if (!file_exists($templatePath)) {
-                return "❌ Plantilla no encontrada en: $templatePath";
-            }
-
-            $fechaCarbon = Carbon::parse($fecha)->addDay();
-            $mesTexto    = $fechaCarbon->locale('es')->translatedFormat('F');
-
-            $template = new TemplateProcessor($templatePath);
-            $template->setValue('dia',  $fechaCarbon->format('d'));
-            $template->setValue('mes',  ucfirst($mesTexto));
-            $template->setValue('anio', $fechaCarbon->format('Y'));
-
-            $tmp = tempnam(sys_get_temp_dir(), 'PHPWord');
-            $template->saveAs($tmp);
-
-            return response()->download($tmp, 'seguimiento.docx')->deleteFileAfterSend(true);
-        } catch (\Throwable $e) {
-            return back()->with('error', $e->getMessage());
-        }
     }
 }
