@@ -50,6 +50,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/descargar-inv1/{id}', [DOCxController::class, 'invitacion_uno'])->name('descargar-inv1');
     Route::get('/descargar-inv2/{id}', [DOCxController::class, 'invitacion_dos'])->name('descargar-inv2');
     Route::get('/descargar-segui/{fecha}', [DOCxController::class, 'invitacion_segui'])->name('descargar-segui');
+    
+    Route::get('/sobre-sepomex/{id}', [DOCxController::class, 'sobreSepomex'])
+    ->name('sobre-sepomex');    
+
+    Route::get('/sobre-personal/{id}', [DOCxController::class, 'sobrePersonal'])
+    ->name('sobre-personal');    
 });
 
 
