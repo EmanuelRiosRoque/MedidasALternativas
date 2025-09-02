@@ -46,7 +46,7 @@
 
                 <!-- Columna derecha: url para invitacion -->
                 <div>
-                    @if ($evento->url != null && !$segSesion)
+                    @if ($evento && $evento->url != null && !$segSesion)
                         <div class="flex mt-2 justify-end">
                             <flux:modal.trigger name="edit-profile">
                                 <flux:button variant="primary">Segunda Invitación</flux:button>
@@ -182,7 +182,7 @@
                                 </flux:button>
                             </a>
 
-                            <a href="{{ route('descargar-segui', ['fecha' => $evento->fecha]) }}">
+                            <a href="{{ route('descargar-segui',  ['fecha' => $evento->fecha ?? date('Y-m-d')]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Seguimiento
                                 </flux:button>
