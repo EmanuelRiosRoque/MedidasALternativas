@@ -1,82 +1,82 @@
-<div class="relative h-full place-items-center px-4 dark:from-neutral-800 dark:to-neutral-900 overflow-hidden">
+@php
+    $tabs = [
+        1 => ['label' => 'Datos generales',  'icon' => 'document',   'view' => 'convenio.datosGenerales'],
+        2 => ['label' => 'Solicitante',      'icon' => 'hand-raised','view' => 'convenio.datosSolicitante'],
+        3 => ['label' => 'Invitado',         'icon' => 'users',      'view' => 'convenio.datosInvitado'],
+        4 => ['label' => 'Documentos',       'icon' => 'paper-clip', 'view' => 'convenio.combosDocumentos'],
+    ];
+    $maxTab = count($tabs);
+@endphp
 
-    <div class="relative mt-2 mb-2 z-10 w-full max-w-5xl rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeInUp">
+<div class="relative h-full px-4 overflow-hidden dark:from-neutral-800 dark:to-neutral-900">
+    <div class="relative z-10 w-full max-w-5xl mx-auto mt-2 mb-2 rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeInUp">
 
-        <!-- Navbar como Tab Bar -->
-        <flux:navbar class="mb-6 justify-center">
-            <flux:navbar.item 
-                wire:click.prevent="cambiarTab(1)" 
-                icon="document" 
-                :current="$tab === 1"
-            >
-                Datos generales
-            </flux:navbar.item>
-
-            <flux:navbar.item 
-                wire:click.prevent="cambiarTab(2)" 
-                icon="hand-raised" 
-                :current="$tab === 2"
-            >
-                Solicitante
-            </flux:navbar.item>
-
-            <flux:navbar.item 
-                wire:click.prevent="cambiarTab(3)" 
-                icon="users" 
-                :current="$tab === 3"
-            >
-                Invitado
-            </flux:navbar.item>
-
-            <flux:navbar.item 
-                wire:click.prevent="cambiarTab(4)" 
-                icon="paper-clip" 
-                :current="$tab === 4"
-            >
-                Documentos
-            </flux:navbar.item>
-
+        <flux:navbar class="mb-6 justify-center" role="tablist" aria-label="Pestañas de convenio">
+            @foreach ($tabs as $id => $tabDef)
+                <flux:navbar.item
+                    :wire:key="'tab-item-' . $id"
+                    wire:click.prevent="cambiarTab({{ $id }})"
+                    icon="{{ $tabDef['icon'] }}"
+                    :current="$tab === $id"
+                    role="tab"
+                    aria-selected="{{ $tab === $id ? 'true' : 'false' }}"
+                    aria-controls="panel-tab-{{ $id }}"
+                    id="tab-{{ $id }}"
+                >
+                    {{ $tabDef['label'] }}
+                </flux:navbar.item>
+            @endforeach
         </flux:navbar>
 
-        <!-- Skeleton Loader cuando se está cambiando de tab -->
-        <div wire:loading wire:target='cambiarTab' class="mb-6 w-full mx-auto">
+        <div wire:loading.delay wire:target="cambiarTab" class="mb-6 w-full mx-auto" aria-live="polite">
             @include('components.convenio.includes.skeleton-loader')
         </div>
-        
-        
-        <!-- Contenido del tab -->
-        <div class="p-4 rounded-md dark:bg-neutral-900" wire:loading.remove wire:target='cambiarTab'>
-            @if ($tab === 1)
-                @include('convenio.datosGenerales')
-            @elseif ($tab === 2)
-                @include('convenio.datosSolicitante')
-            @elseif ($tab === 3)
-                @include('convenio.datosInvitado')
-            @elseif ($tab === 4)
-                @include('convenio.combosDocumentos')
-            @endif
+
+        <div
+            class="p-4 rounded-md dark:bg-neutral-900"
+            wire:loading.remove
+            wire:target="cambiarTab"
+            wire:key="tab-panel-{{ $tab }}"
+            id="panel-tab-{{ $tab }}"
+            role="tabpanel"
+            aria-labelledby="tab-{{ $tab }}"
+        >
+            @includeIf($tabs[$tab]['view'] ?? null)
         </div>
 
+        <!-- Navegación inferior -->
         <div class="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
             @if ($tab > 1)
-                <flux:button wire:click="cambiarTab({{ $tab - 1 }})" icon="arrow-left">
+                <flux:button
+                    :wire:key="'btn-prev-' . $tab"
+                    wire:click="cambiarTab({{ $tab - 1 }})"
+                    icon="arrow-left"
+                >
                     Anterior
                 </flux:button>
             @else
                 <div></div>
             @endif
-        
-            @if ($tab < 4)
-                <flux:button wire:click="cambiarTab({{ $tab + 1 }})" icon:trailing="arrow-right" variant='primary'>
+
+            @if ($tab < $maxTab)
+                <flux:button
+                    :wire:key="'btn-next-' . $tab"
+                    wire:click="cambiarTab({{ $tab + 1 }})"
+                    icon:trailing="arrow-right"
+                    variant="primary"
+                >
                     Siguiente
                 </flux:button>
             @endif
-            
-   
-            @if ($tab === 4)
-            <flux:button wire:click="guardado"  variant='primary'>
-                Guardar
-            </flux:button>
+
+            @if ($tab === $maxTab)
+                <flux:button
+                    wire:key="btn-guardar"
+                    wire:click="guardado"
+                    variant="primary"
+                >
+                    Guardar
+                </flux:button>
             @endif
         </div>
     </div>

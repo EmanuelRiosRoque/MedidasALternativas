@@ -192,6 +192,9 @@ class CalendarJs extends Component
 
     private function crearReasignacion()
     {
+        $materia = Solicitud::where('id', $this->solicitud)->value('materia');
+
+
         Agenda::create([
             'solicitud_id'      => $this->solicitud,
             'opcion_invitacion' => $this->solicitante,
@@ -200,7 +203,7 @@ class CalendarJs extends Component
             'hora_inicio'       => $this->horaInicio,
             'hora_fin'          => $this->horaFin,
             'descripcion'       => $this->actividad,
-            'materia'           => $this->rolUsuario,
+            'materia'           => $materia,
             'color'             => $this->colorEvento,
             'observacion'       => $this->observacion,
             'estatus_id'        => 4,
@@ -217,7 +220,7 @@ class CalendarJs extends Component
 
     private function crearNuevoEvento()
     {
-        $materia = Solicitud::where('id', 1)->value('materia');
+        $materia = Solicitud::where('id', $this->solicitud)->value('materia');
 
         Agenda::create([
             'solicitud_id'      => $this->solicitud,

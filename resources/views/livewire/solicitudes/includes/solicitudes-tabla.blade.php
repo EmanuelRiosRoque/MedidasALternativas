@@ -117,11 +117,14 @@
                                             class="absolute right-0 mt-2 w-40 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-md shadow-lg z-50"
                                             style="display: none;">
                                             <ul class="text-sm text-gray-700 dark:text-gray-200">
+                                                @if ($solicitud->estatus_id != "1")
                                                 <li>
-                                                    <a href="{{ route('solicitud.index', $solicitud->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                    <a href="{{ route('solicitud.index', $solicitud->id) }}"
+                                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
                                                         Ver
                                                     </a>
                                                 </li>
+                                                @endif
                                                 <li>
                                                     <a href="{{ route('calendario.index') }}"
                                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">

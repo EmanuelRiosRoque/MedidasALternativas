@@ -122,9 +122,7 @@
 
                         </tbody>
                     </table>
-                    <div class="px-4 py-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700">
                         {{ $facilitadores->links() }}
-                    </div>
                 </div>
             </div>
         </div>

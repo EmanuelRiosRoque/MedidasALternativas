@@ -7,46 +7,6 @@
         placeholder="Área de adscripción territorial" />
 </div>
 
-<!-- Sección 1.1: Numero renovacion -->
-{{-- <div class="space-y-1 mt-2">
-    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-        Número de renovaciones de certificación *
-    </label>
-
-    <div class="flex gap-2">
-        <flux:input oninput="
-            let nums = this.value.replace(/[^0-9]/g, ''); // solo números
-            let v = '';
-
-            if (nums.length > 0) v = nums.slice(0, 2);
-            if (nums.length > 2) v += '/' + nums.slice(2, 4);
-            if (nums.length > 4) v += '/' + nums.slice(4, 8);
-            if (nums.length > 8) v += ' - ' + nums.slice(8, 10);
-            if (nums.length > 10) v += '/' + nums.slice(10, 12);
-            if (nums.length > 12) v += '/' + nums.slice(12, 16);
-
-            this.value = v;
-        " wire:model.defer="numero_renovaciones" type="text" placeholder="DD/MM/YYYY - DD/MM/YYYY" />
-        <flux:button variant="primary" wire:click="agregarPeriodo">
-            Agregar
-        </flux:button>
-    </div>
-
-    @if (!empty($periodos))
-    <ul class="mt-2 space-y-1">
-        @foreach ($periodos as $i => $per)
-        <li
-            class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
-            <span class="truncate">{{ $per }}</span>
-            <button wire:click="eliminarPeriodo({{ $i }})"
-                class="ml-3 text-xs text-red-600 hover:underline hover:bg-red-100 px-1 rounded" title="Eliminar">
-                ×
-            </button>
-        </li>
-        @endforeach
-    </ul>
-    @endif
-</div> --}}
 
 <div class="mt-2">
     <flux:input 

@@ -8,15 +8,17 @@ use App\Models\Telefono;
 use App\Models\Documento;
 use App\Models\Solicitud;
 use App\Models\Solicitante;
-
 use App\Models\Representante;
-use Livewire\WithFileUploads;
 
+use Livewire\WithFileUploads;
 use Masmerise\Toaster\Toaster;
+
 use App\Models\DocumentoSolicitud;
 use Illuminate\Http\File as HttpFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\Catalogos\CatDocumentoCivil;
+use App\Models\Catalogos\CatDocumentoFamiliar;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 use App\Traits\ConvenioTraits\HandleArreglosLogicos;
 use App\Traits\ConvenioTraits\HandleUpdatedConvenio;
@@ -73,7 +75,7 @@ class Convenio extends Component
 	// Fisica
 	public $acudiran_juntos;
 	public $formato_privacidad;
-	public $representante;
+	public $representante = 0;
 	public string $nombre_solicitante = '';
 	public string $apellido_p_solicitante = '';
 	public string $apellido_m_solicitante = '';
@@ -108,6 +110,7 @@ class Convenio extends Component
 	public $acta_notarial;
 	public $acta_de_nacimiento;
 	public $resolucion_judicial;
+	public $titulo_credito;
 	public $formato_Privacidad;
 	
 	public $detalleSeleccionado = [];
@@ -143,13 +146,12 @@ class Convenio extends Component
 
   	public function mount($id = null)
 	{
-		$this->tiposDisponibles = array_keys($this->documentosOpcionalesPorTipo());
-		$this->temasFamiliaresDisponibles = array_keys($this->documentosPorTemaFamiliar());
-		$this->entidades = $this->entidadesFederativas();
+	    $this->tiposDisponibles = CatDocumentoCivil::tipos();
+		$this->temasFamiliaresDisponibles = CatDocumentoFamiliar::tipos();
+
 		$this->ocupaciones = $this->ocupaciones();
 		$this->escolaridades = $this->escolaridades();
-		$this->mediosSolicitante = $this->difucionSolicitante();
-		$this->mediosInvitado = $this->difucionInvitado();
+		$this->mediosInvitado = $this->mediosDifusion();
 	}
 	
 	public function updated($propertyName)
@@ -371,6 +373,7 @@ class Convenio extends Component
 		$this->guardarDocumentoIndividual($datos['acta_notarial'][0] ?? null, 'acta notarial', $solicitante->id);
 		$this->guardarDocumentoIndividual($datos['acta_de_nacimiento'][0] ?? null, 'acta de nacimiento', $solicitante->id);
 		$this->guardarDocumentoIndividual($datos['resolucion_judicial'][0] ?? null, 'resolucion judicial', $solicitante->id);
+		$this->guardarDocumentoIndividual($datos['titulo_credito'][0] ?? null, 'titulo o credito', $solicitante->id);
 
 
 		// 7. Documentos generales de la solicitud

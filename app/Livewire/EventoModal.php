@@ -161,6 +161,8 @@ class EventoModal extends Component
                 }
             }
         } else {
+            $materia = Solicitud::where('id', $this->solicitud)->value('materia');
+
             Agenda::create([
                 'solicitud_id'   => $this->solicitud,
                 'facilitador_id' => $this->facilitador,
@@ -168,7 +170,7 @@ class EventoModal extends Component
                 'hora_inicio'    => $this->horaInicio,
                 'hora_fin'       => $this->horaFin,
                 'descripcion'    => $this->actividad,
-                'materia'        => $this->rolUsuario,
+                'materia'        => $materia,
                 'color'          => $this->colorEvento, 
             ]);
 

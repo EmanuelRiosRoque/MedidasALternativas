@@ -6,10 +6,16 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Razón social
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                 wire:model="razon_social_solicitante"
                 type="text"
                 required
@@ -21,10 +27,16 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 RFC
-                    {{-- <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge> --}}
+                    {{-- * --}}
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                 wire:model="rfc_solicitante"
                 type="text"
                 required
@@ -37,21 +49,34 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Instrumento notarial 
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
                 <flux:tooltip toggleable>
                     <flux:button icon="information-circle" size="xs" variant="ghost" />
-                    <flux:tooltip.content class="max-w-[20rem] space-y-2">
-                        <ul class="list-disc list-inside text-xs text-zinc-600 dark:text-zinc-300">
+
+                    <flux:tooltip.content
+                        class="max-w-[20rem] space-y-2 
+                            bg-white text-zinc-800 border border-zinc-200 shadow-md 
+                            dark:bg-neutral-800 dark:text-zinc-200 dark:border-neutral-700">
+                        <ul class="list-disc list-inside text-xs">
                             <li>Número de Instrumento Notarial</li>
                             <li>Y</li>
                             <li>Nombre de la Autoridad Fedataria</li>
+                            <li>Póliza</li>
+                            <li>Título de Crédito</li>
                         </ul>
                     </flux:tooltip.content>
                 </flux:tooltip>
+
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                 wire:model="instrumento_solicitante"
                 type="text"
                 required
@@ -64,11 +89,17 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Fecha del Instrumento Notarial
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                 wire:model="fecha_instrumento_solicitante"
                 type="date"
                 required
@@ -98,7 +129,7 @@
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Correos electrónicos
                     @if (!($modalidad === 'presencial' && $prefix === 'invitado'))
-                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                        *
                     @endif
 
                 </label>
@@ -136,12 +167,18 @@
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Teléfonos
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 </label>
 
                 <div class="flex gap-2">
                     <flux:input
-                        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                        oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                         wire:model.defer="telefono_temp"
                         type="tel"
                         placeholder="Agregar teléfono"
@@ -189,7 +226,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
                 Tipo domicilio
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:select wire:model="tipo_domicilio_solicitante" placeholder="Elige tipo domicilio...">
@@ -203,11 +240,17 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Calle
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                 wire:model="calle_solicitante"
                 type="text"
                 required
@@ -219,7 +262,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Código Postal
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
@@ -228,7 +271,13 @@
                 type="text"
                 required
                 placeholder="Código postal"
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
             />
         </div>
         
@@ -236,7 +285,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Colonia
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:select wire:model="colonia" placeholder="Selecciona una colonia...">
@@ -250,7 +299,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Municipio
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
@@ -265,7 +314,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Entidad Federativa
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input

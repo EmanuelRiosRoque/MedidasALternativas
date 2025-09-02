@@ -14,7 +14,13 @@
             type="text"
             required
             placeholder="Nombre"
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
         />
     </div>
     <div class="space-y-1">
@@ -27,7 +33,13 @@
             type="text"
             required
             placeholder="Apellido paterno"
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
         />
     </div>
     <div class="space-y-1">
@@ -40,7 +52,13 @@
             type="text"
             required
             placeholder="Apellido materno"
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
         />
     </div>
     {{-- Edad --}}
@@ -56,7 +74,13 @@
             type="text"
             required
             placeholder="Edad "
-            oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+            oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
         />
     </div>
 
@@ -194,7 +218,13 @@
 
                 <div class="flex gap-2">
                     <flux:input
-                        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                        oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                         wire:model.defer="telefono_temp"
                         type="tel"
                         placeholder="Agregar teléfono"
@@ -260,7 +290,13 @@
                 @endif
             </label>
             <flux:input
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
                 wire:model="calle_solicitante"
                 type="text"
                 required
@@ -281,7 +317,13 @@
                 type="text"
                 required
                 placeholder="Código postal"
-                oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                oninput="this.value = this.value
+                    .toUpperCase()
+                    .replace(/[ÁÀÂÄ]/g,'A')
+                    .replace(/[ÉÈÊË]/g,'E')
+                    .replace(/[ÍÌÎÏ]/g,'I')
+                    .replace(/[ÓÒÔÖ]/g,'O')
+                    .replace(/[ÚÙÛÜ]/g,'U')"
             />
         </div>
         
