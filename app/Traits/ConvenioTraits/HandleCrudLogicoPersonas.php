@@ -23,7 +23,7 @@ trait HandleCrudLogicoPersonas
         'domicilio_solicitante', 'estado_civil_solicitante', 'correos', 'telefonos',
 
         // Representante
-        'nombre_representante', 'apellido_p_representante', 'apellido_m_representante',
+        'nombre_representante', 'apellido_p_representante', 'apellido_m_representante', 'doc_representante',
 
         // Otros
         'acudiran_juntos',

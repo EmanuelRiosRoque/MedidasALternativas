@@ -96,10 +96,10 @@
     <!-- Opciones de documentos (visible solo si es representante) -->
     <div class="mb-2" x-show="isRep()" x-transition.opacity.duration.150ms>
         <flux:checkbox.group wire:model.live="doc_representante" label="Documento(s)" wire:key="docgrp-{{ $prefix }}">
-            <flux:checkbox label="Acta notarial" value="1" />
-            <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2" />
-            <flux:checkbox label="Resolución judicial" value="3" />
-            <flux:checkbox label="Título de crédito y póliza" value="4" />
+            <flux:checkbox label="Acta notarial" value="1" :checked="in_array(1, $doc_representante)" />
+            <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2" :checked="in_array(2, $doc_representante)" />
+            <flux:checkbox label="Resolución judicial" value="3" :checked="in_array(3, $doc_representante)" />
+            <flux:checkbox label="Título de crédito y póliza" value="4" :checked="in_array(4, $doc_representante)" />
         </flux:checkbox.group>
     </div>
 

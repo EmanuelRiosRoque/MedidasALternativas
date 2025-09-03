@@ -116,7 +116,9 @@
                             <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
                                 <span class="truncate">
                                     {{ $correo['direccion'] }}
-                                    <span class="ml-2 text-xs text-zinc-500">[{{ $correo['tipo'] }}]</span>
+                                    <span class="ml-2 text-xs text-zinc-500">
+                                        [{{ $correo['tipo'] == 1 ? 'Laboral' : ($correo['tipo'] == 2 ? 'Personal' : 'Sin etiqueta') }}]
+                                    </span>
                                 </span>
                                 <button
                                     wire:click="eliminarCorreo({{ $i }})"
@@ -139,11 +141,13 @@
 
                 <div class="flex gap-2">
                     <flux:input
-                        oninput="this.value = this.value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" 
                         wire:model.defer="telefono_temp"
                         type="tel"
+                        maxlength="10"
                         placeholder="Agregar teléfono"
                     />
+
 
                     <!-- Flux Select etiqueta teléfono -->
                     <flux:select 
@@ -166,7 +170,9 @@
                             <li class="flex justify-between items-center text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800 px-3 py-1 rounded">
                                 <span class="truncate">
                                     {{ $tel['numero'] }}
-                                    <span class="ml-2 text-xs text-zinc-500">[{{ $tel['tipo'] }}]</span>
+                                    <span class="ml-2 text-xs text-zinc-500">
+                                        [{{ $tel['tipo'] == 1 ? 'Laboral' : ($tel['tipo'] == 2 ? 'Personal' : 'Sin etiqueta') }}]
+                                    </span>
                                 </span>
                                 <button
                                     wire:click="eliminarTelefono({{ $i }})"

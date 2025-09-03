@@ -3,8 +3,15 @@
     <flux:input wire:model="duracion_encargo" :label="__('Duración del encargo *')" type="text" required
         placeholder="Duración del encargo" value="5 años en el encargo"/>
     
-    <flux:input wire:model="area_adscrito" :label="__('Área de adscripción territorial *')" type="number" required
-        placeholder="Área de adscripción territorial" />
+    <flux:input 
+        wire:model="area_adscrito" 
+        :label="__('Área de adscripción territorial *')" 
+        type="number" 
+        required
+        placeholder="Área de adscripción territorial" 
+        min="1"
+    />
+
 </div>
 
 
