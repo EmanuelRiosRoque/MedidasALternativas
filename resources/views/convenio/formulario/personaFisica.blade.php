@@ -206,7 +206,10 @@
 
       {{-- Teléfonos (solo dígitos) --}}
       <div class="space-y-1">
-        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">Teléfonos *</label>
+        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+          Teléfonos
+          @if (!($modalidad === 'linea' && $prefix === 'invitado')) * @endif
+        </label>
 
         <div class="flex gap-2">
           <flux:input

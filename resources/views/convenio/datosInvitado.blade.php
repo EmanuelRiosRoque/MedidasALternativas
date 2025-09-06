@@ -67,7 +67,7 @@
     @endif
 
     {{-- Dropzones --}}
-    @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'invitado'])
+    @include('convenio.complements.datosComplementarios', ['prefix' => 'invitado'])
 
     {{-- Botón acción --}}
     <div class="flex justify-end gap-3">

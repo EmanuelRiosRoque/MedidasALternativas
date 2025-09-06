@@ -7,7 +7,7 @@
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             Nombre 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
         </label>
         <flux:input
             wire:model="nombre_solicitante"
@@ -26,7 +26,7 @@
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             Apellido paterno 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
         </label>
         <flux:input
             wire:model="apellido_p_solicitante"
@@ -45,7 +45,7 @@
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             Apellido materno 
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
         </label>
         <flux:input
             wire:model="apellido_m_solicitante"
@@ -66,7 +66,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             Edad 
             @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
             @endif
         </label>
         <flux:input
@@ -89,7 +89,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Sexo 
             @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
             @endif
         </label>
         <flux:select wire:model="sexo_solicitante" placeholder="Elige sexo...">
@@ -103,7 +103,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Escolaridad 
             @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
             @endif
         </label>
         <flux:select wire:model="escolaridad_solicitante" placeholder="Elige escolaridad ...">
@@ -120,7 +120,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
             Ocupación 
             @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
             @endif
         </label>
         <flux:select wire:model="ocupacion_solicitante" placeholder="Elige ocupación...">
@@ -136,7 +136,7 @@
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
             Estado civil 
             @if($prefix === 'solicitante')
-                <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                *
             @endif
         </label>
         <flux:select wire:model="estado_civil_solicitante" placeholder="Elige estado civil  ...">
@@ -148,6 +148,16 @@
             <flux:select.option>Viudo</flux:select.option>
             <flux:select.option>Otro</flux:select.option>
         </flux:select>        
+    </div>
+
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+        Nacionalidad @if($prefix === 'solicitante') * @endif
+      </label>
+      <flux:select wire:model="nacionalidad_solicitante" placeholder="Elige tipo nacionalidad...">
+        <flux:select.option>Méxicana</flux:select.option>
+        <flux:select.option>Extranjera</flux:select.option>
+      </flux:select>
     </div>
 
     </div>
@@ -175,7 +185,7 @@
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Correos electrónicos
                     @if (!($modalidad === 'presencial' && $prefix === 'invitado'))
-                        <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                        *
                     @endif
 
                 </label>
@@ -213,7 +223,7 @@
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Teléfonos
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 </label>
 
                 <div class="flex gap-2">
@@ -272,7 +282,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
                 Tipo domicilio
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:select wire:model="tipo_domicilio_solicitante" placeholder="Elige tipo domicilio...">
@@ -286,7 +296,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Calle
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
@@ -308,7 +318,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Código Postal
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
@@ -331,7 +341,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Colonia
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:select wire:model="colonia" placeholder="Selecciona una colonia...">
@@ -343,9 +353,9 @@
     
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Municipio
+                Municipio o alcaldia
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input
@@ -360,7 +370,7 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 Entidad Federativa
                 @if($prefix === 'solicitante')
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
+                    *
                 @endif
             </label>
             <flux:input

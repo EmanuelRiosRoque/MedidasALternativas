@@ -11,21 +11,21 @@
                 @endif
             </div>
             <flux:tooltip toggleable>
-                <flux:button icon="information-circle" size="xs" variant="ghost" />
-                <flux:tooltip.content class="max-w-[20rem] space-y-2">
-                    <p>Identificaciones (Con fotografía):</p>
-                    <ul class="list-disc list-inside text-xs text-zinc-600 dark:text-zinc-300">
-                        <li>INE</li>
-                        <li>Pasaporte</li>
-                        <li>Cédula profesional</li>
-                        <li>Licencia de conducir</li>
-                        <li>Cartilla del servicio militar</li>
-                        <li>INAPAM</li>
-                        <li>Documento migratorio</li>
-                    </ul>
-                </flux:tooltip.content>
-            </flux:tooltip>
+            <flux:button icon="information-circle" size="sm" variant="ghost" />
+            <flux:tooltip.content class="max-w-[20rem] space-y-2">
+                <p>Identificaciones (Con fotografía):</p>
+                <p>INE</p>
+                <p>Pasaporte</p>
+                <p>Cédula profesional</p>
+                <p>Licencia de conducir</p>
+                <p>Cartilla del servicio militar</p>
+                <p>INAPAM</p>
+                <p>Documento migratorio</p>
+            </flux:tooltip.content>
+        </flux:tooltip>
         </div>
+
+       
 
         <livewire:dropzone
             wire:model="identificacion"
@@ -96,7 +96,7 @@
     <!-- Opciones de documentos (visible solo si es representante) -->
     <div class="mb-2" x-show="isRep()" x-transition.opacity.duration.150ms>
         <flux:checkbox.group wire:model.live="doc_representante" label="Documento(s)" wire:key="docgrp-{{ $prefix }}">
-            <flux:checkbox label="Acta notarial" value="1" :checked="in_array(1, $doc_representante)" />
+            <flux:checkbox label="Intrumento notarial" value="1" :checked="in_array(1, $doc_representante)" />
             <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2" :checked="in_array(2, $doc_representante)" />
             <flux:checkbox label="Resolución judicial" value="3" :checked="in_array(3, $doc_representante)" />
             <flux:checkbox label="Título de crédito y póliza" value="4" :checked="in_array(4, $doc_representante)" />

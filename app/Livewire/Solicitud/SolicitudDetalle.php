@@ -12,11 +12,12 @@ use App\Models\Solicitud;
 use App\Models\Solicitante;
 use Masmerise\Toaster\Toaster;
 use App\Mail\InvitacionMediacion;
+use App\Models\Invitacion;
 use Illuminate\Support\Facades\Mail;
 use App\Traits\ConvenioTraits\HandleDocumentos;
 
 
-class Index extends \Livewire\Component  
+class SolicitudDetalle  extends \Livewire\Component  
 {
 	use HandleDocumentos;
 
@@ -61,6 +62,11 @@ class Index extends \Livewire\Component
 
     public $correosSolicitantes;
     public $correosInvitados;
+    public $invitacion2;
+
+    public $invitaciones = [];
+
+    protected $listeners = ['evento-actualizado' => 'refrescarEvento'];
 
     // Montar con ID
     public function mount($solicitudId)
@@ -98,6 +104,14 @@ class Index extends \Livewire\Component
             ->where('activo', 1)
             ->where('estatus_id', 7) // Segunda sesión
             ->first();
+
+        $this->invitacion2 = Invitacion::where('solicitud_id', $this->solicitudId)->where('numero_inv', 2)->first();
+        $this->invitaciones = Invitacion::where('solicitud_id', $this->solicitudId)->get();
+    }
+
+    public function refrescarEvento($eventoId)
+    {
+        $this->evento = Agenda::find($eventoId);
     }
 
     public function updatedMateria($value)
@@ -105,16 +119,6 @@ class Index extends \Livewire\Component
         $this->solicitud->update(['materia' => $value]);
         Toaster::success('Materia actualizada correctamente !');
     }
-
-
-    // private function getPersonaIds($evento, $tipo = 'solicitante')
-    // {
-    //     return Solicitante::where('solicitud_id', $evento->solicitud_id)
-    //         ->where('tipo_solicitante', $tipo) 
-    //         ->whereNotNull('facilitador_id')
-    //         ->whereNotNull('estatus_id')
-    //         ->pluck('id');
-    // }
 
     private function getPersonaIds(int $solicitudId, string $tipo = 'solicitante')
     {
@@ -170,7 +174,7 @@ class Index extends \Livewire\Component
             Mail::to($correo)->send(new InvitacionMediacion('Invitado', $this->urlSegundaInv, $horarioInvitados, $fecha, 2));
         }
 
-        $this->segSesion = Agenda::where('solicitud_id', $this->solicitudId)
+        $this->segSesion = Invitacion::where('solicitud_id', $this->solicitudId)
         ->where('activo', 1)
         ->where('estatus_id', 7) // Segunda sesion
         ->first();
@@ -197,7 +201,7 @@ class Index extends \Livewire\Component
 
     public function render()
     {
-        return view('livewire.solicitud.index', [
+        return view('livewire.solicitud.solicitud-detalle', [
             'solicitantes' => $this->solicitantes,
             'invitados' => $this->invitados,
         ]);

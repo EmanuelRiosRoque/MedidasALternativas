@@ -14,13 +14,13 @@
     
         <flux:radio.group wire:model="estudios" label="Grado de estudios *">
             <flux:radio value="1" label="Licenciatura" />
-            <flux:radio value="2" label="Maestria" />
+            <flux:radio value="2" label="Maestría" />
             <flux:radio value="3" label="Doctorado" />
         </flux:radio.group>
     
         <flux:input 
             wire:model="cedula" 
-            :label="__('Num.Cédula Profesional *')" 
+            :label="__('Núm.Cédula Profesional *')" 
             type="text"
             placeholder="Número de Cédula Profesional, expedida por la Dirección General de Profesiones" 
         />

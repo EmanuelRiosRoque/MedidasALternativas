@@ -10,9 +10,10 @@
             <li>
                 Para esta pre mediación se asignó a:
                 <span class="text-emerald-600 font-semibold">
-                    {{ $evento->opcion_invitacion ?? 'Sin asignar' }}
+                    {{ $evento->opcion_invitacion ? 'Solicitante e Invitado (juntos)' : 'Por separado' }}
                 </span>.
             </li>
+
             <li>
                 Con fecha de atención:
                 <span class="text-emerald-600 font-semibold">
@@ -22,7 +23,7 @@
             </li>
             <li>
                 Horario asignado:
-                @if ($evento?->opcion_invitacion === 'separados')
+                @if ($evento?->opcion_invitacion == 0)
                     <br>
                     <span class="text-emerald-600 font-semibold">
                         {{$evento && $evento->hora_inicio ? \Carbon\Carbon::parse($evento->hora_inicio)->format('g:i a') :
@@ -48,9 +49,7 @@
                     </span>.
                 @endif
             </li>
-            @if ($solicitud->modalidad == 'linea')
-            <livewire:solicitud.invitacion-evento :evento="$evento" />
-            @endif
+            
 
         </ul>
     </flux:callout.text>

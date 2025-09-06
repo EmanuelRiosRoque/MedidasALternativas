@@ -103,7 +103,7 @@
                                             style="display: none;">
                                             <ul class="text-sm text-gray-700 dark:text-gray-200">
                                                 <li>
-                                                    <a href="{{ route('solicitud.index', $facilitador->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                    <a href="{{ route('solicitud.detalle', $facilitador->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
                                                         Ver
                                                     </a>
                                                 </li>                                               

@@ -268,14 +268,14 @@ class Convenio extends Component
 
             DB::commit();
 
-            return Redirect::route('solicitudes.index')
+            return Redirect::route('solicitudes.lista')
                 ->success('Solicitud creada exitosamente !');
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            report($e);
-            Toaster::error('Ocurrió un error al guardar la solicitud.');
+            dd($e); // detiene la ejecución y muestra toda la excepción
         }
+
     }
 
     protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId, $guardarDB = true)

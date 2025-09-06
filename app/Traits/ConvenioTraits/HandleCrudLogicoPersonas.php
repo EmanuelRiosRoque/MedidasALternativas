@@ -82,7 +82,6 @@ trait HandleCrudLogicoPersonas
                 $rules = array_merge($rules, $this->rulesSolicitanteFamiliar());
             }
 
-            // Reglas condicionadas por representante (aplica para solicitante en civil/mercantil y familiar)
             if ((int) $this->representante === 1) {
                 $rules = array_merge($rules, $this->rulesRepresentanteObligatorio());
                 $rules = array_merge($rules, $this->rulesDocumentosRepresentanteCondicionales());
@@ -103,8 +102,19 @@ trait HandleCrudLogicoPersonas
             }
         }
 
+        // 🔹 3) Reglas adicionales según modalidad
+        if ($this->modalidad === 'presencial') {
+            // Teléfono obligatorio, correo opcional
+            $rules['telefonos'] = 'required|array|min:1';
+            // correo puede existir pero no se fuerza
+        } elseif ($this->modalidad === 'linea') {
+            // Correo obligatorio, teléfono opcional
+            $rules['correos'] = 'required|array|min:1';
+        }
+
         $this->validate($rules);
     }
+
 
     /** -------- BLOQUE: Generadores de reglas de validación -------- */
 
@@ -140,6 +150,7 @@ trait HandleCrudLogicoPersonas
             'identificacion'                => 'required|array|min:1',
             'formato_privacidad'            => 'required|array|min:1',
             'como_se_entero'                => 'required',
+            'representante'                 => 'required',
         ];
     }
 
@@ -162,6 +173,7 @@ trait HandleCrudLogicoPersonas
             'formato_privacidad'            => 'required|array|min:1',
             'representante'                 => 'required',
             'como_se_entero'                => 'required',
+            
         ];
     }
 
@@ -199,8 +211,8 @@ trait HandleCrudLogicoPersonas
             'nombre_solicitante'            => 'required|string|max:255',
             'apellido_p_solicitante'        => 'required|string|max:255',
             'apellido_m_solicitante'        => 'required|string|max:255',
-            'telefonos'                     => 'required|array|min:1',
-            'correos'                       => 'required|array|min:1',
+            // 'telefonos'                     => 'required|array|min:1',
+            // 'correos'                       => 'required|array|min:1',
         ];
     }
 
@@ -211,8 +223,10 @@ trait HandleCrudLogicoPersonas
             'nombre_solicitante'            => 'required|string|max:255',
             'apellido_p_solicitante'        => 'required|string|max:255',
             'apellido_m_solicitante'        => 'required|string|max:255',
-            'telefonos'                     => 'required|array|min:1',
-            'correos'                       => 'required|array|min:1',
+            'como_se_entero'         => 'required',
+
+            // 'telefonos'                     => 'required|array|min:1',
+            // 'correos'                       => 'required|array|min:1',
         ];
     }
 
@@ -221,8 +235,10 @@ trait HandleCrudLogicoPersonas
     {
         return [
             'razon_social_solicitante'      => 'required',
-            'telefonos'                     => 'required|array|min:1',
-            'correos'                       => 'required|array|min:1',
+            'como_se_entero'         => 'required',
+
+            // 'telefonos'                     => 'required|array|min:1',
+            // 'correos'                       => 'required|array|min:1',
         ];
     }
 

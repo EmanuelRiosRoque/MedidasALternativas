@@ -52,19 +52,12 @@
                     *
                 @endif
                 <flux:tooltip toggleable>
-                    <flux:button icon="information-circle" size="xs" variant="ghost" />
-
-                    <flux:tooltip.content
-                        class="max-w-[20rem] space-y-2 
-                            bg-white text-zinc-800 border border-zinc-200 shadow-md 
-                            dark:bg-neutral-800 dark:text-zinc-200 dark:border-neutral-700">
-                        <ul class="list-disc list-inside text-xs">
-                            <li>Número de Instrumento Notarial</li>
-                            <li>Y</li>
-                            <li>Nombre de la Autoridad Fedataria</li>
-                            <li>Póliza</li>
-                            <li>Título de Crédito</li>
-                        </ul>
+                    <flux:button icon="information-circle" size="sm" variant="ghost" />
+                    <flux:tooltip.content class="max-w-[20rem] space-y-2">
+                        <p>Número de Instrumento Notarial</p>
+                        <p>Nombre de la Autoridad Fedataria</p>
+                        <p>Póliza</p>
+                        <p>Título de Crédito</p>
                     </flux:tooltip.content>
                 </flux:tooltip>
 
@@ -297,7 +290,7 @@
     
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Municipio
+                Municipio o alcaldia
                 @if($prefix === 'solicitante')
                     *
                 @endif

@@ -7,10 +7,12 @@ use App\Livewire\Facilitadores;
 use App\Livewire\Facilitadores\Lista;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Solicitud\VerPersonas;
+
 use App\Http\Controllers\DOCs\DOCxController;
 use App\Http\Controllers\PDFs\PDFsController;
-use App\Livewire\Solicitud\Index as SolicitudIndex;
-use App\Livewire\Solicitudes\Index as SolicitudesIndex;
+
+use App\Livewire\Solicitud\SolicitudDetalle;
+use App\Livewire\Solicitudes\SolicitudesLista;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,9 +35,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/facilitadores/form', Facilitadores::class)->name('facilitadores.index');
     Route::get('/facilitadores/list', Lista::class)->name('facilitadores.list');
 
-    Route::get('/solicitudes/table', SolicitudesIndex::class)->name('solicitudes.index');
+    Route::get('/solicitudes/table', SolicitudesLista::class)->name('solicitudes.lista');
     
-    Route::get('/solicitud/{solicitudId}', SolicitudIndex::class)->name('solicitud.index');
+    Route::get('/solicitud/{solicitudId}', SolicitudDetalle::class)->name('solicitud.detalle');
     Route::get('/solicitud/{solicitudId}/personas', VerPersonas::class)->name('personas.update');
 
     Route::get('/calendario', Calendario::class)->name("calendario.index");

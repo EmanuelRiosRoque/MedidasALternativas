@@ -69,7 +69,7 @@
     @endif
 
     {{-- Dropzones y representante (complementos) --}}
-    @include('convenio.complements.datosGeneralesDropzones', ['prefix' => 'solicitante'])
+    @include('convenio.complements.datosComplementarios', ['prefix' => 'solicitante'])
 
     {{-- Acción principal (dos botones para mayor claridad y evitar interpolaciones en wire:click) --}}
     <div class="flex justify-end gap-3">

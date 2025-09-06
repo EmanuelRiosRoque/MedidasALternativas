@@ -6,7 +6,7 @@ use App\Models\Solicitud;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Index extends Component
+class SolicitudesLista extends Component
 {
     use WithPagination;
 
@@ -44,7 +44,7 @@ class Index extends Component
 
         $this->numSolicitudes = $solicitudes->total();
 
-        return view('livewire.solicitudes.index', [
+        return view('livewire.solicitudes.solicitudes-lista', [
             'solicitudes' => $solicitudes
         ]);
     }

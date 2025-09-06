@@ -20,6 +20,7 @@ class EstatusSeeder extends Seeder
             ['nombre' => 'Re-Asignado'],
             ['nombre' => 'Re-Asignacion Fallida'],
             ['nombre' => 'Oculto'],
+            ['nombre' => 'Primera Invitación'],
             ['nombre' => 'Segunda Invitación'],
         ]);
     }

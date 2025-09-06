@@ -21,9 +21,9 @@
             x-data="{tipo: @entangle('tipo').live}"
             wire:loading.remove wire:target='cambiarTab'>
             @if ($tab === 1)
-                @include('facilitadores.formulario.datosGenerales')
+                @include('facilitadores.formulario.datosGeneralesFacilitador')
             @elseif ($tab === 2)
-                @include('facilitadores.formulario.datosAdicionales')
+                @include('facilitadores.formulario.datosAdicionalesFacilitador')
             @endif
         </div>
 

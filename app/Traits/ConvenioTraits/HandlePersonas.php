@@ -44,13 +44,13 @@ trait HandlePersonas
             'entidad_federativa'  => $datos['entidad_federativa'] ?? null,
             'cp'                  => $datos['cp'] ?? null,
             'como_se_entero'      => $datos['como_se_entero'] ?? '',
+            'nacionalidad'       => $datos['nacionalidad'] ?? null,
             'solicitud_id'        => $solicitudId,
         ];
 
         if (in_array($this->materia, ['mercantil', 'civil'])) {
             $civil = [
                 'persona'            => $datos['persona'] ?? 'fisica',
-                'nacionalidad'       => $datos['nacionalidad'] ?? null,
                 'rfc'                => $datos['rfc'] ?? null,
                 'razon_social'       => $datos['razon_social'] ?? null,
                 'instrumento'        => $datos['instrumento'] ?? null,

@@ -83,14 +83,14 @@
                                         {{ $solicitud->modalidad === 'linea' ? 'En Línea' : 'Presencial' }}
                                     </div>
                                 </td>
-                                <td class="px-12 py-4 text-sm whitespace-nowrap">
+                               <td class="px-12 py-4 text-sm whitespace-nowrap">
                                     <div class="
-                                        inline px-3 py-1 text-xs font-semibold rounded-full  tracking-wide
-                                        {{ $solicitud->acudiran_juntos === 1 
+                                        inline px-3 py-1 text-xs font-semibold rounded-full tracking-wide
+                                        {{ $solicitud->acudiran_juntos == 1 
                                             ? 'bg-blue-100 text-green-700 dark:bg-green-800/40 dark:text-green-300' 
                                             : 'bg-red-100 text-red-700 dark:bg-red-800/40 dark:text-red-300' 
                                         }}">
-                                        {{ $solicitud->modalidad === 1 ? 'Si' : 'No' }}
+                                        {{ $solicitud->acudiran_juntos == 1 ? 'Sí' : 'No' }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-4 text-sm whitespace-nowrap">
@@ -119,7 +119,7 @@
                                             <ul class="text-sm text-gray-700 dark:text-gray-200">
                                                 @if ($solicitud->estatus_id != "1")
                                                 <li>
-                                                    <a href="{{ route('solicitud.index', $solicitud->id) }}"
+                                                    <a href="{{ route('solicitud.detalle', $solicitud->id) }}"
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
                                                         Ver
                                                     </a>

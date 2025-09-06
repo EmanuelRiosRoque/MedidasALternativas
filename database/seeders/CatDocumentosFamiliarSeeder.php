@@ -29,7 +29,7 @@ class CatDocumentosFamiliarSeeder extends Seeder
             ],
             'Cuestiones patrimoniales derivadas de juicio sucesorio' => [
                 'Resolución judicial',
-                'Acta notarial',
+                'Instrumento notarial',
                 'Otro',
             ],
             'Derivados de la disolución de la sociedad conyugal' => [

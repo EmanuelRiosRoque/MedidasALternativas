@@ -10,45 +10,44 @@
             <li>
                 Para esta pre mediación se asignó a:
                 <span class="text-yellow-600 font-semibold">
-                    {{ $segSesion->opcion_invitacion ?? 'Sin asignar' }}
+                    {{ $evento->acudira_juntos ? 'Solicitante e Invitado (juntos)' : 'Por separado' }}
                 </span>.
             </li>
             <li>
                 Con fecha de atención:
                 <span class="text-yellow-600 font-semibold">
-                    {{$segSesion && $segSesion->fecha ? \Carbon\Carbon::parse($segSesion->fecha)->format('d/m/Y') : 'Sin asignar'
+                    {{$invitacion2 && $invitacion2->fecha_atencion ? \Carbon\Carbon::parse($invitacion2->fecha_atencion)->format('d/m/Y') : 'Sin asignar'
                     }}
                 </span>.
             </li>
             <li>
                 Horario asignado:
-                @if ($segSesion?->opcion_invitacion === 'separados')
+                @if ($invitacion2?->acudira_juntos == 0)
                     <br>
                     <span class="text-yellow-600 font-semibold">
-                        {{$segSesion && $segSesion->hora_inicio ? \Carbon\Carbon::parse($segSesion->hora_inicio)->format('g:i a') :
+                        {{$invitacion2 && $invitacion2->hora_inicio ? \Carbon\Carbon::parse($invitacion2->hora_inicio)->format('g:i a') :
                         'Sin asignar' }} a
-                        {{$segSesion && $segSesion->hora_fin ? \Carbon\Carbon::parse($segSesion->hora_fin)->format('g:i a') : 'Sin
+                        {{$invitacion2 && $invitacion2->hora_fin ? \Carbon\Carbon::parse($invitacion2->hora_fin)->format('g:i a') : 'Sin
                         asignar' }}
                         - Solicitantes
                     </span>.
                     <br>
                     <span class="text-yellow-600 font-semibold">
-                        {{$segSesion && $segSesion->hora_inicio_invitado ?
-                        \Carbon\Carbon::parse($segSesion->hora_inicio_invitado)->format('g:i a') : 'Sin asignar' }} a
-                        {{$segSesion && $segSesion->hora_fin_invitado ?
-                        \Carbon\Carbon::parse($segSesion->hora_fin_invitado)->format('g:i a') : 'Sin asignar' }}
+                        {{$invitacion2 && $invitacion2->hora_inicio_invitado ?
+                        \Carbon\Carbon::parse($invitacion2->hora_inicio_invitado)->format('g:i a') : 'Sin asignar' }} a
+                        {{$invitacion2 && $invitacion2->hora_fin_invitado ?
+                        \Carbon\Carbon::parse($invitacion2->hora_fin_invitado)->format('g:i a') : 'Sin asignar' }}
                         - Invitados
                     </span>.
                 @else
                     <span class="text-yellow-600 font-semibold">
-                        {{$segSesion && $segSesion->hora_inicio ? \Carbon\Carbon::parse($segSesion->hora_inicio)->format('g:i a') :
+                        {{$invitacion2 && $invitacion2->hora_inicio ? \Carbon\Carbon::parse($invitacion2->hora_inicio)->format('g:i a') :
                         'Sin asignar' }} a
-                        {{$segSesion && $segSesion->hora_fin ? \Carbon\Carbon::parse($segSesion->hora_fin)->format('g:i a') : 'Sin
+                        {{$invitacion2 && $invitacion2->hora_fin ? \Carbon\Carbon::parse($invitacion2->hora_fin)->format('g:i a') : 'Sin
                         asignar' }}
                     </span>.
                 @endif
             </li>
-            <livewire:solicitud.invitacion-evento :evento="$segSesion" />
         </ul>
     </flux:callout.text>
 </flux:callout>
