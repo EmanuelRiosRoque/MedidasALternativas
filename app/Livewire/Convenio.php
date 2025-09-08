@@ -268,6 +268,9 @@ class Convenio extends Component
 
             DB::commit();
 
+            //TODO: Para el rol que registra 
+            // return back()->with('success', "¡Solicitud creada exitosamente! Folio: {$folio}");
+
             return Redirect::route('solicitudes.lista')
                 ->success('Solicitud creada exitosamente !');
 

@@ -205,10 +205,7 @@
     
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Municipio
-                
-                    <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
-                
+                Municipio o alcaldia <flux:badge color="emerald" size="sm" class="ml-2">Obligatorio</flux:badge>
             </label>
             <flux:input
                 wire:model="municipio_solicitante"

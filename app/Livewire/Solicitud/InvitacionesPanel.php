@@ -274,7 +274,7 @@ class InvitacionesPanel extends Component
             'hora_fin_invitado'    => $horaFinInvitado,
             'numero_inv'           => $siguienteNumero,
             'asistio'              => null,
-            'tipo_invitacion_id'   => null,
+            'tipo_proceso_id'      => null ?? $solicitud->tipo_proceso_id,
             'estatus_id'           => 5,
             'acudiran_juntos'      => (bool) ($this->evento->opcion_invitacion ?? true),
             'acepta_proceso'       => null,

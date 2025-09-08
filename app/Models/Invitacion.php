@@ -15,6 +15,7 @@ class Invitacion extends Model
         'modalidad',
         'solicitud_id',
         'facilitador_id',
+        'tipo_proceso_id',
         'url',
         'fecha_envio',
         'fecha_atencion',

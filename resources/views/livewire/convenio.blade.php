@@ -10,7 +10,11 @@
 
 <div class="relative h-full px-4 overflow-hidden dark:from-neutral-800 dark:to-neutral-900">
     <div class="relative z-10 w-full max-w-5xl mx-auto mt-2 mb-2 rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeInUp">
-
+        @if (session('success'))
+            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                <span class="font-medium">Exito!</span> {{ session('success') }}.
+            </div>
+        @endif
         <flux:navbar class="mb-6 justify-center" role="tablist" aria-label="Pestañas de convenio">
             @foreach ($tabs as $id => $tabDef)
                 <flux:navbar.item

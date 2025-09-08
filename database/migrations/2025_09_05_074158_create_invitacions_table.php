@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('modalidad')->nullable();
             $table->unsignedBigInteger('solicitud_id')->nullable();
             $table->unsignedBigInteger('facilitador_id')->nullable();
+            
             $table->foreignId('tipo_proceso_id')
             ->nullable()
             ->constrained('cat_tipo_proceso')
