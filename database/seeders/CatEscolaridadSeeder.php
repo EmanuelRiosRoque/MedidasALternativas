@@ -27,6 +27,7 @@ class CatEscolaridadSeeder extends Seeder
             'Doctorado inconcluso',
             'Doctorado terminado',
             'Otra',
+            'Niguno'            
         ];
 
         foreach ($escolaridades as $nombre) {

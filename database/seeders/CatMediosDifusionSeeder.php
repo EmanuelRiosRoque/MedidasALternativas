@@ -28,7 +28,10 @@ class CatMediosDifusionSeeder extends Seeder
             'Televisión',
             'UGJ-Civil Postulatoria',
             'UGJ-Civil Preliminar',
+            'UGJ-Familiar Postulatoria',
+            'UGJ-Familiar Preliminar',
             'Juzgado Cívico',
+            'Niguno',
         ];
 
         foreach ($medios as $nombre) {

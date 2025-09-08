@@ -99,9 +99,13 @@
             <flux:checkbox label="Intrumento notarial" value="1" :checked="in_array(1, $doc_representante)" />
             <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2" :checked="in_array(2, $doc_representante)" />
             <flux:checkbox label="Resolución judicial" value="3" :checked="in_array(3, $doc_representante)" />
-            <flux:checkbox label="Título de crédito y póliza" value="4" :checked="in_array(4, $doc_representante)" />
+            
+            @if ($materia !== 'familiar')
+                <flux:checkbox label="Título de crédito y póliza" value="4" :checked="in_array(4, $doc_representante)" />
+            @endif
         </flux:checkbox.group>
     </div>
+
 
     <!-- Datos del representante (visible solo si es rep y materia civil/mercantil) -->
     <div class="grid grid-cols-3 gap-2"
