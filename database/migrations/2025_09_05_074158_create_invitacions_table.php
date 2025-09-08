@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('modalidad')->nullable();
             $table->unsignedBigInteger('solicitud_id')->nullable();
             $table->unsignedBigInteger('facilitador_id')->nullable();
+            $table->foreignId('tipo_proceso_id')
+            ->nullable()
+            ->constrained('cat_tipo_proceso')
+            ->nullOnDelete();
             $table->string('url')->nullable();
 
             $table->date('fecha_envio')->nullable();
@@ -27,7 +31,7 @@ return new class extends Migration
             $table->time('hora_fin_invitado')->nullable();
             $table->integer('numero_inv')->nullable();
             $table->boolean('asistio')->nullable();
-            $table->unsignedBigInteger('tipo_invitacion_id')->nullable();
+            $table->boolean('acepta_proceso')->nullable();
 
             $table->unsignedBigInteger('estatus_id')->nullable();
             $table->boolean('acudiran_juntos')->nullable();

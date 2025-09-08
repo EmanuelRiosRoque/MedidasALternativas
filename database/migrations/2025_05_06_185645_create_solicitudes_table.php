@@ -13,7 +13,25 @@ return new class extends Migration
     {
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('estatus_id')->nullable(); 
+
+            // Relaciones
+            $table->unsignedBigInteger('estatus_id')->nullable();
+            $table->foreign('estatus_id')
+                  ->references('id')
+                  ->on('estatus')
+                  ->onDelete('set null');
+
+            $table->foreignId('tipo_proceso_id')
+                  ->nullable()
+                  ->constrained('cat_tipo_proceso')
+                  ->nullOnDelete();
+
+            $table->foreignId('facilitador_id')
+                  ->nullable()
+                  ->constrained('facilitadores')
+                  ->nullOnDelete();
+
+            // Campos generales
             $table->string('modalidad')->nullable();
             $table->string('folio_materia')->nullable();
             $table->string('materia')->nullable();
@@ -23,8 +41,7 @@ return new class extends Migration
             $table->string('oficio')->nullable();
             $table->string('cual_otro')->nullable();
             $table->boolean('acudiran_juntos')->nullable();
-            $table->foreign('estatus_id')->references('id')->on('estatus')->onDelete('set null');
-            $table->foreignId('facilitador_id')->nullable()->constrained('facilitadores')->nullOnDelete();
+
             $table->timestamps();
         });
     }
@@ -34,6 +51,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+     
+
         Schema::dropIfExists('solicitudes');
     }
 };

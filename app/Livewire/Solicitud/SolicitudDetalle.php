@@ -102,7 +102,7 @@ class SolicitudDetalle  extends \Livewire\Component
 
         $this->segSesion = Agenda::where('solicitud_id', $this->solicitudId)
             ->where('activo', 1)
-            ->where('estatus_id', 7) // Segunda sesión
+            ->where('estatus_id', 5) // Segunda sesión
             ->first();
 
         $this->invitacion2 = Invitacion::where('solicitud_id', $this->solicitudId)->where('numero_inv', 2)->first();
@@ -152,7 +152,7 @@ class SolicitudDetalle  extends \Livewire\Component
             'color'             => $evento->color,
             'observacion'       => $evento->observacion,
             'url'               => $this->urlSegundaInv,
-            'estatus_id'        => 7, // Segunda Invitación
+            'estatus_id'        => 5, // Segunda Invitación
             'activo'            => 1,
         ]);
 
@@ -176,7 +176,7 @@ class SolicitudDetalle  extends \Livewire\Component
 
         $this->segSesion = Invitacion::where('solicitud_id', $this->solicitudId)
         ->where('activo', 1)
-        ->where('estatus_id', 7) // Segunda sesion
+        ->where('estatus_id', 5) // Segunda sesion
         ->first();
 
         Flux::modal('edit-profile')->close();

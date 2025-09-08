@@ -16,12 +16,10 @@ class EstatusSeeder extends Seeder
         DB::table('estatus')->insert([
             ['nombre' => 'Registrado'],
             ['nombre' => 'Asignado'],
-            ['nombre' => 'Pre-Mediación'],
             ['nombre' => 'Re-Asignado'],
-            ['nombre' => 'Re-Asignacion Fallida'],
+            ['nombre' => 'Cancelado'],
             ['nombre' => 'Oculto'],
-            ['nombre' => 'Primera Invitación'],
-            ['nombre' => 'Segunda Invitación'],
+            ['nombre' => 'Activo'],
         ]);
     }
 }

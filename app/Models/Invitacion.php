@@ -24,10 +24,11 @@ class Invitacion extends Model
         'hora_fin_invitado',
         'numero_inv',
         'asistio',
-        'tipo_invitacion_id',
+        'acepta_proceso',
         'estatus_id',
         'acudiran_juntos',
     ];
+    
 
     // Relaciones
     public function solicitud()

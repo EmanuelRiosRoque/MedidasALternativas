@@ -12,6 +12,7 @@ class Solicitud extends Model
         "modalidad",
         "materia",
         "estatus_id",
+        "tipo_proceso_id",
         "derivado_canalizado",
         "numero_ticket",
         "institucion",

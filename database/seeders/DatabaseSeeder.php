@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CatOcupacionesSeeder::class,
             CatDocumentosCivilSeeder::class,
             CatDocumentosFamiliarSeeder::class,
+            CatTipoProcesoSeeder::class,
         ]);
     }
 }

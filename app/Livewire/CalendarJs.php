@@ -214,7 +214,7 @@ class CalendarJs extends Component
         Agenda::where('solicitud_id', $this->solicitud)
             ->whereIn('estatus_id', [2, 4])
             ->update([
-                'estatus_id' => 5,
+                'estatus_id' => 5, // Ocultos
                 'activo'     => 0,
             ]);
     }
@@ -236,12 +236,12 @@ class CalendarJs extends Component
             'materia'              => $sol->materia,
             'color'                => $this->colorEvento,
             'observacion'          => $this->observacion,
-            'estatus_id'           => 4,
+            'estatus_id'           => 3, // Re-asignado
             'activo'               => 1,
         ]);
 
         Solicitud::whereKey($this->solicitud)->update([
-            'estatus_id'     => 4,
+            'estatus_id'     => 3,
             'facilitador_id' => $this->facilitador,
         ]);
     }
@@ -263,7 +263,7 @@ class CalendarJs extends Component
             'materia'              => $sol->materia,
             'color'                => $this->colorEvento,
             'observacion'          => $this->observacion,
-            'estatus_id'           => 2,
+            'estatus_id'           => 2, // Asignado
             'activo'               => 1,
         ]);
 
