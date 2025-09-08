@@ -143,6 +143,7 @@
                     </ul>
                 </div>
 
+
                 {{-- Documentos --}}
                 {{-- @foreach (['identificacion' => 'Identificación', 'formato_privacidad' => 'Formato de privacidad'] as $campo => $label)
                     @if (!empty($detalleSeleccionado[$campo]) && is_array($detalleSeleccionado[$campo]))
@@ -156,6 +157,9 @@
                 @endforeach --}}
             </div>
         @endif
+
+      
+
         
         @if ($materia === "familiar")
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-neutral-500 dark:text-neutral-300">
@@ -206,6 +210,13 @@
             </div>
         @endif
 
+          @if ($detalleSeleccionado['representante'] != null)
+          <div class="text-sm text-neutral-500 dark:text-neutral-300">
+              <p><span class="font-semibold text-neutral-800 dark:text-neutral-100">Nombre representante:</span> {{ $detalleSeleccionado['nombre_representante'] }}</p>
+              <p><span class="font-semibold text-neutral-800 dark:text-neutral-100">Apellido paterno:</span> {{ $detalleSeleccionado['apellido_p_representante'] }}</p>
+              <p><span class="font-semibold text-neutral-800 dark:text-neutral-100">Apellido materno:</span> {{ $detalleSeleccionado['apellido_m_representante'] }}</p>
+          </div>
+        @endif
     
         <div class="flex justify-end pt-4">
             <button 

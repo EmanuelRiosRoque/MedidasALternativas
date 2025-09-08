@@ -223,7 +223,6 @@ trait HandleCrudLogicoPersonas
             'nombre_solicitante'            => 'required|string|max:255',
             'apellido_p_solicitante'        => 'required|string|max:255',
             'apellido_m_solicitante'        => 'required|string|max:255',
-            'como_se_entero'         => 'required',
 
             // 'telefonos'                     => 'required|array|min:1',
             // 'correos'                       => 'required|array|min:1',
