@@ -12,6 +12,7 @@ class CatTipoProcesoSeeder extends Seeder
         $data = [
             ['nombre' => 'Pre-Mediación','descripcion' => 'Proceso previo a mediación'],
             ['nombre' => 'Mediación',    'descripcion' => 'Proceso en etapa de mediación'],
+            ['nombre' => 'Convenio',     'descripcion' => 'Proceso en etapa de subir documentos del convenio'],
             ['nombre' => 'Remediación',  'descripcion' => 'Proceso en etapa de remediación'],
         ];
 

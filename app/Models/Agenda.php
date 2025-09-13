@@ -11,6 +11,7 @@ class Agenda extends Model
         'solicitud_id',
         'facilitador_id',
         'estatus_id',
+        'tipo_proceso_id',
         'fecha',
         'hora_inicio',
         'hora_fin',

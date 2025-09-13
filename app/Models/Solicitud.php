@@ -13,6 +13,8 @@ class Solicitud extends Model
         "materia",
         "estatus_id",
         "tipo_proceso_id",
+        "tipo_cancelacion_id",
+        "co_mediador_id",
         "derivado_canalizado",
         "numero_ticket",
         "institucion",
@@ -38,5 +40,13 @@ class Solicitud extends Model
         return $this->belongsTo(Facilitador::class);
     }
 
+    public function coMediador()
+    {
+        return $this->belongsTo(Facilitador::class, 'co_mediador_id');
+    }
 
+    public function proceso()
+    {
+        return $this->belongsTo(CatTipoProceso::class, 'tipo_proceso_id');
+    }
 }

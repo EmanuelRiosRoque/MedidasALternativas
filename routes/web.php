@@ -10,7 +10,7 @@ use App\Livewire\Solicitud\VerPersonas;
 
 use App\Http\Controllers\DOCs\DOCxController;
 use App\Http\Controllers\PDFs\PDFsController;
-
+use App\Livewire\CalendarJs;
 use App\Livewire\Solicitud\SolicitudDetalle;
 use App\Livewire\Solicitudes\SolicitudesLista;
 
@@ -40,13 +40,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/solicitud/{solicitudId}', SolicitudDetalle::class)->name('solicitud.detalle');
     Route::get('/solicitud/{solicitudId}/personas', VerPersonas::class)->name('personas.update');
 
-    Route::get('/calendario', Calendario::class)->name("calendario.index");
+    Route::get('/calendario', CalendarJs::class)->name("calendario.index");
+    Route::get('/reasignacion/{solicitudID?}', CalendarJs::class)->name("reasignacion.index");
 
     //**Documentos */
     Route::get('/descargar-amparo', [PDFsController::class, 'amparo'])->name('descargar-amparo');
     Route::get('/descargar-correoMexico', [PDFsController::class, 'correoMexico'])->name('descargar-correoMexico');
     Route::get('/descargar-servicioPostal', [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
     Route::get('/descargar-amparoRepre', [PDFsController::class, 'amparoRepre'])->name('descargar-amparoRepre');
+    Route::get('/manifestacion/{id}', [PDFsController::class, 'manifestacion'])->name('manifestacion.download');
 
     //**Documentos DOCX */
     Route::get('/descargar-inv1/{id}', [DOCxController::class, 'invitacion_uno'])->name('descargar-inv1');

@@ -26,7 +26,17 @@ return new class extends Migration
                   ->constrained('cat_tipo_proceso')
                   ->nullOnDelete();
 
+            $table->foreignId('tipo_cancelacion_id')
+                  ->nullable()
+                  ->constrained('cat_cancelacion')
+                  ->nullOnDelete();
+
             $table->foreignId('facilitador_id')
+                  ->nullable()
+                  ->constrained('facilitadores')
+                  ->nullOnDelete();
+            
+            $table->foreignId('co_mediador_id')
                   ->nullable()
                   ->constrained('facilitadores')
                   ->nullOnDelete();

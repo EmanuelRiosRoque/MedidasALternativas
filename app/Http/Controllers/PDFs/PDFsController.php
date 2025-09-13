@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\PDFs;
 
+use ZipArchive;
 use Carbon\Carbon;
+use App\Models\Solicitante;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
@@ -102,8 +104,80 @@ public function servicioPostal()
 
     $pdf = Pdf::loadView('pdfs.serviciosPostal', compact('documentos'));
     $pdf->setPaper('letter', 'portrait');
+    
     return $pdf->download('serviciosPostal.pdf');
 }
+
+
+ public function manifestacion($id)
+{
+    $solicitante = Solicitante::where('solicitud_id', $id)
+        ->where('tipo_solicitante', 'solicitante')
+        ->first();
+
+    $invitados = Solicitante::where('solicitud_id', $id)
+        ->where('tipo_solicitante', 'invitado')
+        ->get();
+
+    // Nombre completo del solicitante
+    $nombreSolicitante = $solicitante
+        ? trim("{$solicitante->nombre} {$solicitante->apellido_p} {$solicitante->apellido_m}")
+        : '—';
+
+    // Nombres completos de invitados (pueden ser varios)
+    $nombresInvitados = $invitados->map(function ($inv) {
+        return trim("{$inv->nombre} {$inv->apellido_p} {$inv->apellido_m}");
+    })->implode(', '); // 👈 todos juntos en un string
+
+    // Generar PDFs según existan
+    $pdfFiles = [];
+
+    // === PDF del solicitante (si existe) ===
+    if ($solicitante) {
+        $pdfSol = Pdf::loadView('pdfs.manifestacionSol', [
+            'nombreSolicitante' => $nombreSolicitante,
+            'nombreInvitado'    => $nombresInvitados ?: '—', // uno o todos concatenados
+        ])->setPaper('letter', 'portrait');
+
+        $pdfFiles['manifestacion_solicitante.pdf'] = $pdfSol->output();
+    }
+
+    // === PDFs de cada invitado (si existen) ===
+    if ($invitados->isNotEmpty()) {
+        foreach ($invitados as $index => $inv) {
+            $nombreInvitado = trim("{$inv->nombre} {$inv->apellido_p} {$inv->apellido_m}");
+
+            $pdfInv = Pdf::loadView('pdfs.manifestacionInv', [
+                'nombreSolicitante' => $nombreSolicitante,
+                'nombreInvitado'    => $nombreInvitado,
+            ])->setPaper('letter', 'portrait');
+
+            $filename = 'manifestacion_invitado_' . ($index + 1) . '.pdf';
+            $pdfFiles[$filename] = $pdfInv->output();
+        }
+    }
+
+    // === Si solo hay un archivo, devolverlo directo ===
+    if (count($pdfFiles) === 1) {
+        $filename = array_key_first($pdfFiles);
+        return response($pdfFiles[$filename])
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
+    // === Si hay más de un archivo, generar ZIP ===
+    $zipFile = storage_path("app/manifestaciones_{$id}.zip");
+    $zip = new ZipArchive();
+    if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+        foreach ($pdfFiles as $filename => $content) {
+            $zip->addFromString($filename, $content);
+        }
+        $zip->close();
+    }
+
+    return response()->download($zipFile)->deleteFileAfterSend(true);
+}
+
 
 
 

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\DOCs;
 
+use ZipArchive;
 use Carbon\Carbon;
 use App\Models\Solicitante;
+use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\IOFactory;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class DOCxController extends Controller
@@ -126,37 +130,36 @@ class DOCxController extends Controller
     // }
 
     public function sobreSepomex()
-{
-    try {
-        $templatePath = public_path('docs/sobreSepomex.docx');
-        if (!file_exists($templatePath)) {
-            return "❌ Plantilla no encontrada en: $templatePath";
+    {
+        try {
+            $templatePath = public_path('docs/sobreSepomex.docx');
+            if (!file_exists($templatePath)) {
+                return "❌ Plantilla no encontrada en: $templatePath";
+            }
+
+            $template = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
+
+            // 🔹 Forzar 3 sobres de ejemplo
+            $numEjemplo = 3;
+            $template->cloneBlock('sobres', $numEjemplo, true, true);
+
+            for ($i = 1; $i <= $numEjemplo; $i++) {
+                $template->setValue("nombre",   "Invitado de Prueba {$i}");
+                $template->setValue("calle",    "Calle Falsa {$i}");
+                $template->setValue("colonia",  "Colonia Test {$i}");
+                $template->setValue("alcaldía", "Alcaldía Ejemplo");
+                $template->setValue("cp",       "1234{$i}");
+            }
+
+            $tmp = tempnam(sys_get_temp_dir(), 'PHPWord');
+            $template->saveAs($tmp);
+
+            return response()->download($tmp, 'sobres-sepomex-ejemplo.docx')->deleteFileAfterSend(true);
+
+        } catch (\Throwable $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        $template = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
-
-        // 🔹 Forzar 3 sobres de ejemplo
-        $numEjemplo = 3;
-        $template->cloneBlock('sobres', $numEjemplo, true, true);
-
-        for ($i = 1; $i <= $numEjemplo; $i++) {
-            $template->setValue("nombre",   "Invitado de Prueba {$i}");
-            $template->setValue("calle",    "Calle Falsa {$i}");
-            $template->setValue("colonia",  "Colonia Test {$i}");
-            $template->setValue("alcaldía", "Alcaldía Ejemplo");
-            $template->setValue("cp",       "1234{$i}");
-        }
-
-        $tmp = tempnam(sys_get_temp_dir(), 'PHPWord');
-        $template->saveAs($tmp);
-
-        return response()->download($tmp, 'sobres-sepomex-ejemplo.docx')->deleteFileAfterSend(true);
-
-    } catch (\Throwable $e) {
-        return back()->with('error', $e->getMessage());
     }
-}
-
 
     public function sobrePersonal($id)
     {
@@ -187,6 +190,120 @@ class DOCxController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+public function manifestacionDocumento($id)
+{
+    try {
+        // 1) Configurar renderer de PDF (DomPDF)
+        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+        Settings::setPdfRendererPath(base_path('vendor/dompdf/dompdf'));
+
+        // 2) Rutas de plantillas
+        $tplSolicitante = public_path('docs/manifestacionSolicitantedocx.docx');
+        $tplInvitado    = public_path('docs/manifestacionInvitadosdocx.docx');
+
+        if (!file_exists($tplSolicitante) || !file_exists($tplInvitado)) {
+            throw new \RuntimeException("No se encontraron las plantillas en /public/docs");
+        }
+
+        // 3) Helpers
+        $fullName = function ($p) {
+            return trim(sprintf('%s %s %s', $p->nombre ?? '', $p->apellido_p ?? '', $p->apellido_m ?? '')) ?: '—';
+        };
+        $slug = function ($s) {
+            return preg_replace('/[^A-Za-z0-9_\-]/', '_', $s);
+        };
+
+        // 4) Consultas
+        $solicitante = \App\Models\Solicitante::where('solicitud_id', $id)
+            ->where('tipo_solicitante', 'solicitante')
+            ->first();
+
+        $invitados = \App\Models\Solicitante::where('solicitud_id', $id)
+            ->where('tipo_solicitante', 'invitado')
+            ->get();
+
+        if (!$solicitante && $invitados->isEmpty()) {
+            throw new \RuntimeException('No se encontraron personas en la solicitud.');
+        }
+
+        $nombreSolicitante = $solicitante ? $fullName($solicitante) : '—';
+
+        // 5) Directorio temporal y ZIP
+        $tmpDir = storage_path('app/tmp_manifestaciones_' . uniqid());
+        if (!File::exists($tmpDir)) {
+            File::makeDirectory($tmpDir, 0777, true);
+        }
+
+        $zipFile = storage_path("app/manifestaciones_{$id}.zip");
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \RuntimeException('No se pudo crear el archivo ZIP.');
+        }
+
+        // 6) Función para convertir DOCX -> PDF
+        $convertToPdf = function (string $docxPath, string $pdfPath) {
+            // Carga DOCX
+            $phpWord = IOFactory::load($docxPath, 'Word2007');
+
+            // Crea writer PDF (usa el renderer configurado arriba)
+            $writer = IOFactory::createWriter($phpWord, 'PDF');
+            $writer->save($pdfPath);
+
+            if (!file_exists($pdfPath) || filesize($pdfPath) === 0) {
+                throw new \RuntimeException('Fallo al convertir a PDF: ' . basename($pdfPath));
+            }
+        };
+
+        // 7) Documentos para cada invitado (PDF) — ambos nombres completos
+        foreach ($invitados as $inv) {
+            $nombreInvitado = $fullName($inv);
+            $baseName       = $slug($nombreInvitado) . '_INVITADO';
+            $docxPath       = "{$tmpDir}/{$baseName}.docx";
+            $pdfPath        = "{$tmpDir}/{$baseName}.pdf";
+
+            $template = new TemplateProcessor($tplInvitado);
+            $template->setValue('nombre_solicitante', $nombreSolicitante);
+            $template->setValue('nombre_invitado', $nombreInvitado);
+            $template->saveAs($docxPath);
+
+            $convertToPdf($docxPath, $pdfPath);
+            $zip->addFile($pdfPath, "{$baseName}.pdf");
+        }
+
+        // 8) Documento del solicitante (PDF) — ambos nombres completos
+        if ($solicitante) {
+            $nombresInvitados = $invitados->map(fn ($inv) => $fullName($inv))->implode(', ');
+            $baseName         = $slug($nombreSolicitante) . '_SOLICITANTE';
+            $docxPath         = "{$tmpDir}/{$baseName}.docx";
+            $pdfPath          = "{$tmpDir}/{$baseName}.pdf";
+
+            $template = new TemplateProcessor($tplSolicitante);
+            $template->setValue('nombre_solicitante', $nombreSolicitante);
+            $template->setValue('nombre_invitado', $nombresInvitados ?: '—');
+            $template->saveAs($docxPath);
+
+            $convertToPdf($docxPath, $pdfPath);
+            $zip->addFile($pdfPath, "{$baseName}.pdf");
+        }
+
+        // 9) Cerrar ZIP
+        $zip->close();
+
+        // 10) Limpiar temporales (DOCX/PDF) antes de enviar (el ZIP ya está cerrado)
+        File::deleteDirectory($tmpDir);
+
+        // 11) Descargar ZIP y borrarlo después de enviar
+        return response()->download($zipFile)->deleteFileAfterSend(true);
+
+    } catch (\Throwable $e) {
+        // Si quieres ver el error exacto durante pruebas, descomenta:
+        // dd($e->getMessage(), $e->getTraceAsString());
+
+        return back()->with('error', $e->getMessage());
+    }
+}
+
+
 
     private function renderInvitation($id, string $templateFile, string $downloadName)
     {
@@ -251,4 +368,7 @@ class DOCxController extends Controller
             'email_solicitante'   => $mailSol,
         ];
     }
+
+
+    
 }

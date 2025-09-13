@@ -23,6 +23,8 @@
         "omnia-digital/livewire-calendar": "^3.2",
         "phpoffice/phpword": "^1.4",
         "power-components/livewire-powergrid": "^6.3",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.6",
         "spatie/laravel-permission": "^6.17",
         "spatie/pdf-to-text": "^1.54"
     },

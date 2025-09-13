@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CatDocumentosCivilSeeder::class,
             CatDocumentosFamiliarSeeder::class,
             CatTipoProcesoSeeder::class,
+            CatCancelacionSeeder::class,
         ]);
     }
 }

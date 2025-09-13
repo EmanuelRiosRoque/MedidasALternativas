@@ -12,6 +12,7 @@ use App\Models\Solicitud;
 use App\Models\Solicitante;
 use Masmerise\Toaster\Toaster;
 use App\Mail\InvitacionMediacion;
+use App\Models\Facilitador;
 use App\Models\Invitacion;
 use Illuminate\Support\Facades\Mail;
 use App\Traits\ConvenioTraits\HandleDocumentos;
@@ -65,8 +66,11 @@ class SolicitudDetalle  extends \Livewire\Component
     public $invitacion2;
 
     public $invitaciones = [];
+    public $coMediadorId = '';
 
-    protected $listeners = ['evento-actualizado' => 'refrescarEvento'];
+    public $facilitadores;
+
+    protected $listeners = ['proceso-actualizado' => 'refrescarSolicitud'];
 
     // Montar con ID
     public function mount($solicitudId)
@@ -92,6 +96,7 @@ class SolicitudDetalle  extends \Livewire\Component
 
         $this->materia  = $this->solicitud->materia;
         $this->horarios = $this->generarHorarios('09:00', '19:00');
+        $this->facilitadores = Facilitador::all(); // o con filtros
 
         // Ahora pasamos el ID directo
         $solicitanteIds = $this->getPersonaIds($this->solicitudId, 'solicitante');
@@ -109,9 +114,9 @@ class SolicitudDetalle  extends \Livewire\Component
         $this->invitaciones = Invitacion::where('solicitud_id', $this->solicitudId)->get();
     }
 
-    public function refrescarEvento($eventoId)
+    public function refrescarSolicitud(int $id): void
     {
-        $this->evento = Agenda::find($eventoId);
+        $this->solicitud = Solicitud::find($id);
     }
 
     public function updatedMateria($value)
@@ -129,7 +134,7 @@ class SolicitudDetalle  extends \Livewire\Component
             ->pluck('id');
     }
 
-      private function getCorreosBySolicitantes($solicitanteIds)
+    private function getCorreosBySolicitantes($solicitanteIds)
     {
         return Correo::whereIn('solicitante_id', $solicitanteIds)
             ->pluck('email');
@@ -197,6 +202,29 @@ class SolicitudDetalle  extends \Livewire\Component
         }
 
         return $horarios;
+    }
+
+    public function guardarCoMediador(): void
+    {
+        $this->validate([
+            'coMediadorId' => ['required'],
+        ], [
+            'coMediadorId.required' => 'Seleccione un co-mediador.',
+        ]);
+
+        // Actualiza usando la instancia ya cargada
+        $this->solicitud->forceFill([
+            'co_mediador_id' => (int) $this->coMediadorId,
+        ])->save();
+
+        // Refresca la instancia y su relación para que Blade muestre el cambio de inmediato
+        $this->solicitud->refresh()->loadMissing('coMediador');
+
+        // Limpia el select y cierra el modal
+        $this->reset('coMediadorId');
+        Flux::modal('co-mediador')->close();
+
+        Toaster::success('Co-mediador asignado correctamente.');
     }
 
     public function render()

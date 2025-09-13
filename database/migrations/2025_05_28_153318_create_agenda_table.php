@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('solicitud_id')->constrained('solicitudes')->onDelete('cascade');
             $table->foreignId('facilitador_id')->constrained('facilitadores')->onDelete('cascade');
             $table->foreignId('estatus_id')->nullable()->constrained('estatus')->nullOnDelete();
+            $table->foreignId('tipo_proceso_id')
+                  ->nullable()
+                  ->constrained('cat_tipo_proceso')
+                  ->nullOnDelete();
             $table->date('fecha');
             $table->time('hora_inicio'); // para todos o solicitante en caso de ser separados
             $table->time('hora_fin');  // para todos o solicitante en caso de ser separados

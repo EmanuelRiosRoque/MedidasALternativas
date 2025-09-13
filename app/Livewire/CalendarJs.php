@@ -31,23 +31,26 @@ class CalendarJs extends Component
     public $solicitudes;
 
     public $eventoId = '';
-    public  $observacion = '';
+    public $observacion = '';
 
     public $solicitud = '';
     public $actividad = '';
     public $facilitador = '';
 
-    public  $horaInicio = '';
-    public  $horaFin = '';
-    public  $horaInicioInvitado = '';
-    public  $horaFinInvitado = '';
+    public $horaInicio = '';
+    public $horaFin = '';
+    public $horaInicioInvitado = '';
+    public $horaFinInvitado = '';
 
-    public  $colorEvento = '';
-    public  $fechaNueva = '';
-    public  $reasignacion = 2; // 1=Sí, 2=No
-    public  $acudiran_juntos = ''; // se define al elegir solicitud o al editar
+    public $colorEvento = '';
+    public $fechaNueva = '';
+    public $reasignacion = 2; // 1=Sí, 2=No
+    public $acudiran_juntos = ''; // se define al elegir solicitud o al editar
 
-    public function mount()
+    /**
+     * Recibe {solicitudID} desde la ruta: /calendario/{solicitudID}
+     */
+    public function mount(?int $solicitudID = null)
     {
         $now = Carbon::now();
         $this->currentMonth = (int) $now->month;
@@ -56,24 +59,44 @@ class CalendarJs extends Component
 
         $this->rolUsuario = auth()->user()->getRoleNames()->first() ?? 'user';
 
-        // Cache 10 min para lista estática
+        // Cache 10 min para lista estática de facilitadores
         $this->facilitadores = Cache::remember('facilitadores_list_v1', 600, function () {
             return Facilitador::select('id', 'nombre')->get();
         });
 
-        // Si prefieres, carga solicitudes sólo al abrir modal (ver abrirModalDia)
+        // Lista base de solicitudes
         $this->cargarSolicitudes();
 
+        // Horarios y eventos del mes actual
         $this->horarios = $this->generarHorarios('09:00', '19:00');
-
         $this->cargarEventosYDias();
+
+        // Abrir en modo edición con el evento más reciente/activo de esa solicitud
+        if ($solicitudID) {
+            if ($evento = $this->eventoParaEdicionPorSolicitud($solicitudID)) {
+                $this->editarEvento($evento->id);
+            } else {
+                // Fallback: si no hay evento, abrir modal de creación con la solicitud precargada
+                $this->abrirModalDia($solicitudID);
+            }
+        }
     }
 
-    public function cargarSolicitudes()
+    /**
+     * Carga solicitudes que cumplan los filtros.
+     * Si $includeId viene y no cumple filtros, se inyecta para que aparezca en el select.
+     */
+   public function cargarSolicitudes(?int $includeId = null)
     {
-        $this->solicitudes = Solicitud::select('id', 'folio_materia', 'materia', 'estatus_id', 'facilitador_id')
+        $base = Solicitud::select('id', 'folio_materia', 'materia', 'estatus_id', 'facilitador_id', 'tipo_proceso_id')
             ->whereNull('facilitador_id')
-            ->where('estatus_id', 1)
+            ->where(function ($q) {
+                $q->where('estatus_id', 1)
+                ->orWhere(function ($q2) {
+                    $q2->where('estatus_id', 2)
+                        ->where('tipo_proceso_id', 2);
+                });
+            })
             ->when($this->rolUsuario !== 'admin', function ($query) {
                 $query->where(function ($q) {
                     if ($this->rolUsuario === 'civil') {
@@ -84,7 +107,17 @@ class CalendarJs extends Component
                 });
             })
             ->get();
+
+        if ($includeId && !$base->contains('id', $includeId)) {
+            if ($extra = Solicitud::select('id','folio_materia','materia','estatus_id','facilitador_id','tipo_proceso_id')
+                                ->find($includeId)) {
+                $base->push($extra);
+            }
+        }
+
+        $this->solicitudes = $base;
     }
+
 
     public function cambiarMes($incremento)
     {
@@ -102,7 +135,6 @@ class CalendarJs extends Component
 
     public function cargarEventos()
     {
-        // Sólo columnas necesarias y relaciones acotadas
         $this->eventos = Agenda::select(
                 'id','fecha',
                 'hora_inicio','hora_fin',
@@ -111,10 +143,10 @@ class CalendarJs extends Component
                 'estatus_id','opcion_invitacion'
             )
             ->with([
-                    'facilitador:id,nombre',
-                    'solicitud:id,folio_materia',
-                    'estatus:id,nombre',
-                ])
+                'facilitador:id,nombre',
+                'solicitud:id,folio_materia',
+                'estatus:id,nombre',
+            ])
             ->whereDate('fecha', $this->fechaSeleccionada)
             ->where('activo', 1)
             ->get();
@@ -124,7 +156,6 @@ class CalendarJs extends Component
     {
         $fecha = Carbon::create($this->currentYear, $this->currentMonth, 1);
 
-        // Días con eventos desde SQL (más rápido)
         $this->diasConEventos = Agenda::whereMonth('fecha', $fecha->month)
             ->whereYear('fecha', $fecha->year)
             ->where('activo', 1)
@@ -176,7 +207,6 @@ class CalendarJs extends Component
         $evento = Agenda::find($this->eventoId);
         if (!$evento) return;
 
-        // Trae una sola vez lo necesario de la solicitud
         $sol = Solicitud::select('materia', 'acudiran_juntos', 'facilitador_id')->findOrFail($this->solicitud);
         $acudiran_juntos = (bool) $sol->acudiran_juntos;
 
@@ -198,7 +228,7 @@ class CalendarJs extends Component
             'hora_inicio_invitado' => $this->horaInicioInvitado ?: null,
             'hora_fin_invitado'    => $this->horaFinInvitado ?: null,
             'descripcion'          => $this->actividad,
-            'materia'              => $this->rolUsuario,
+            'materia'              => $sol->materia,
             'color'                => $this->colorEvento,
         ]);
 
@@ -221,7 +251,7 @@ class CalendarJs extends Component
 
     private function crearReasignacion()
     {
-        $sol = Solicitud::select('materia', 'acudiran_juntos')->findOrFail($this->solicitud);
+        $sol = Solicitud::select('materia', 'acudiran_juntos', 'tipo_proceso_id')->findOrFail($this->solicitud);
 
         Agenda::create([
             'solicitud_id'         => $this->solicitud,
@@ -238,6 +268,7 @@ class CalendarJs extends Component
             'observacion'          => $this->observacion,
             'estatus_id'           => 3, // Re-asignado
             'activo'               => 1,
+            'tipo_proceso_id'      => $sol->tipo_proceso_id ?: null,
         ]);
 
         Solicitud::whereKey($this->solicitud)->update([
@@ -248,7 +279,7 @@ class CalendarJs extends Component
 
     private function crearNuevoEvento()
     {
-        $sol = Solicitud::select('materia', 'acudiran_juntos')->findOrFail($this->solicitud);
+        $sol = Solicitud::select('materia', 'acudiran_juntos', 'tipo_proceso_id')->findOrFail($this->solicitud);
 
         Agenda::create([
             'solicitud_id'         => $this->solicitud,
@@ -264,12 +295,15 @@ class CalendarJs extends Component
             'color'                => $this->colorEvento,
             'observacion'          => $this->observacion,
             'estatus_id'           => 2, // Asignado
+            'tipo_proceso_id'      => 1, // pre-mediacion
             'activo'               => 1,
+            'tipo_proceso_id'      => $sol->tipo_proceso_id ?: null,
         ]);
 
         Solicitud::whereKey($this->solicitud)->update([
             'estatus_id'     => 2,
             'facilitador_id' => $this->facilitador,
+            'tipo_proceso_id' => $sol->tipo_proceso_id ?? 1,
         ]);
 
         $this->reasignarFacilitadores();
@@ -281,6 +315,9 @@ class CalendarJs extends Component
 
         $evento = Agenda::findOrFail($id);
 
+        // Garantiza que la solicitud del evento aparezca en el select aunque no cumpla filtros
+        $this->cargarSolicitudes((int) $evento->solicitud_id);
+
         $this->eventoId          = $evento->id;
         $this->fechaSeleccionada = $evento->fecha;
         $this->fechaNueva        = $evento->fecha;
@@ -288,11 +325,11 @@ class CalendarJs extends Component
         $this->facilitador = (int) $evento->facilitador_id;
         $this->solicitud   = (int) $evento->solicitud_id;
 
-        // Si en DB están como 'H:i:s', tomamos 'H:i' sin Carbon
-        $this->horaInicio        = $this->hi($evento->hora_inicio);
-        $this->horaFin           = $this->hi($evento->hora_fin);
-        $this->horaInicioInvitado= $this->hi($evento->hora_inicio_invitado);
-        $this->horaFinInvitado   = $this->hi($evento->hora_fin_invitado);
+        // Si en DB están como 'H:i:s', tomamos 'H:i'
+        $this->horaInicio         = $this->hi($evento->hora_inicio);
+        $this->horaFin            = $this->hi($evento->hora_fin);
+        $this->horaInicioInvitado = $this->hi($evento->hora_inicio_invitado);
+        $this->horaFinInvitado    = $this->hi($evento->hora_fin_invitado);
 
         $this->actividad   = (string) $evento->descripcion;
         $this->colorEvento = (string) $evento->color;
@@ -357,16 +394,18 @@ class CalendarJs extends Component
         return substr($time, 0, 5);
     }
 
-    public function abrirModalDia()
+    /**
+     * Abrir modal de creación. Puede recibir una solicitud para precargarla.
+     */
+    public function abrirModalDia(?int $solicitudID = null)
     {
         $this->resetValidation();
 
-        // Cargar solicitudes sólo al abrir para evitar golpe inicial si prefieres
-        $this->cargarSolicitudes();
+        // Trae la lista e incluye la solicitud pedida (si aplica)
+        $this->cargarSolicitudes($solicitudID);
 
         $this->reset([
             'eventoId',
-            'solicitud',
             'facilitador',
             'horaInicio', 'horaFin',
             'horaInicioInvitado', 'horaFinInvitado',
@@ -377,7 +416,21 @@ class CalendarJs extends Component
             'reasignacion',
         ]);
 
-        $this->acudiran_juntos = null;
+        if ($solicitudID) {
+            $this->solicitud = $solicitudID;
+
+            // Pre-cargar acudiran_juntos
+            $v = Solicitud::whereKey($solicitudID)->value('acudiran_juntos');
+            $this->acudiran_juntos = is_null($v) ? null : (bool) $v;
+
+            if ($this->acudiran_juntos === true) {
+                $this->horaInicioInvitado = null;
+                $this->horaFinInvitado    = null;
+            }
+        } else {
+            $this->acudiran_juntos = null;
+        }
+
         $this->modoEditar = false;
         $this->showModalDia = true;
     }
@@ -416,5 +469,31 @@ class CalendarJs extends Component
             'currentMonth' => $this->currentMonth,
             'currentYear'  => $this->currentYear,
         ]);
+    }
+
+    /**
+     * Devuelve el evento preferible para editar por solicitud:
+     * 1) activo y estatus asignado/reasignado (2,3), más reciente
+     * 2) si no hay, el más reciente que exista
+     */
+    private function eventoParaEdicionPorSolicitud(int $solicitudID): ?Agenda
+    {
+        $preferido = Agenda::query()
+            ->where('solicitud_id', $solicitudID)
+            ->where('activo', 1)
+            ->whereIn('estatus_id', [2, 3]) // 2=Asignado, 3=Re-asignado (ajusta a tu catálogo)
+            ->orderByDesc('fecha')
+            ->orderByDesc('hora_inicio')
+            ->first();
+
+        if ($preferido) {
+            return $preferido;
+        }
+
+        return Agenda::query()
+            ->where('solicitud_id', $solicitudID)
+            ->orderByDesc('fecha')
+            ->orderByDesc('hora_inicio')
+            ->first();
     }
 }
