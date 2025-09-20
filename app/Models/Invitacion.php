@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Livewire\Facilitadores;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,11 +40,16 @@ class Invitacion extends Model
 
     public function facilitador()
     {
-        return $this->belongsTo(User::class, 'facilitador_id');
+        return $this->belongsTo(Facilitador::class, 'facilitador_id');
     }
 
     public function estatus()
     {
         return $this->belongsTo(Estatus::class);
+    }
+
+     public function evento()
+    {
+        return $this->hasOne(Agenda::class, 'invitacion_id', 'id');
     }
 }

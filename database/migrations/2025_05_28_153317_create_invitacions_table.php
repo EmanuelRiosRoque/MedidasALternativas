@@ -22,7 +22,9 @@ return new class extends Migration
             ->nullable()
             ->constrained('cat_tipo_proceso')
             ->nullOnDelete();
+
             $table->string('url')->nullable();
+
 
             $table->date('fecha_envio')->nullable();
             $table->date('fecha_atencion')->nullable();

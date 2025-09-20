@@ -10,6 +10,7 @@ class Agenda extends Model
     protected $fillable = [
         'solicitud_id',
         'facilitador_id',
+        'invitacion_id',
         'estatus_id',
         'tipo_proceso_id',
         'fecha',

@@ -20,6 +20,13 @@ return new class extends Migration
                   ->nullable()
                   ->constrained('cat_tipo_proceso')
                   ->nullOnDelete();
+
+              $table->foreignId('invitacion_id')
+            ->nullable()
+            ->constrained('invitaciones')
+            ->nullOnDelete();
+
+            
             $table->date('fecha');
             $table->time('hora_inicio'); // para todos o solicitante en caso de ser separados
             $table->time('hora_fin');  // para todos o solicitante en caso de ser separados

@@ -131,6 +131,19 @@
                 <flux:text class="mt-2">Información relevante del evento seleccionado.</flux:text>
             </div>
 
+            @if ($modoEditar)
+                   <div class="space-y-4">
+                    <flux:radio.group x-model="mostrarObservacion" label="¿Reasignación?">
+                        <flux:radio value="1" label="Sí" />
+                        <flux:radio value="2" label="No" />
+                    </flux:radio.group>
+
+                    <template x-if="mostrarObservacion == 1">
+                        <flux:input wire:model.defer="observacion" label="Motivo de reasignación" placeholder="Ingrese el motivo" />
+                    </template>
+                </div>
+            @endif
+
             <div class="grid grid-cols-2 gap-2">
                 <flux:select
                     wire:model.defer="facilitador"
@@ -218,17 +231,6 @@
 
             @if ($modoEditar)
                 <flux:input wire:model.defer="fechaNueva" type="date" label="Cambiar fecha" placeholder="Ingrese la observación" />
-
-                <div class="space-y-4">
-                    <flux:radio.group x-model="mostrarObservacion" label="¿Reasignación?">
-                        <flux:radio value="1" label="Sí" />
-                        <flux:radio value="2" label="No" />
-                    </flux:radio.group>
-
-                    <template x-if="mostrarObservacion == 1">
-                        <flux:input wire:model.defer="observacion" label="Observación" placeholder="Ingrese la observación" />
-                    </template>
-                </div>
             @endif
 
             <div class="flex justify-end">
@@ -243,5 +245,4 @@
             </div>
         </div>
     </flux:modal>
-
 </div>
