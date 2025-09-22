@@ -33,6 +33,10 @@
             font-size: 7px;
             z-index: 1;
         }
+
+        .nombre {
+            width: 216px;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +45,7 @@
     <div class="bloque">
         <img class="fondo" src="{{ public_path('img/documentos/imagen2.jpg') }}" alt="Fondo">
 
-        <p class="campo" style="top: 158pt; left: 199pt;">{{ $doc['nombre'] }}</p>
+        <p class="campo nombre" style="top: 151pt; left: 199pt;">{{ $doc['nombre'] }}</p>
         <p class="campo" style="top: 172pt; left: 199pt;">{{ $doc['domicilio'] }}</p>
         <p class="campo" style="top: 186pt; left: 199pt;">{{ $doc['lugar'] }}</p>
         <p class="campo" style="top: 200pt; left: 199pt;">{{ $doc['materia'] }}</p>

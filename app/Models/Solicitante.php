@@ -76,4 +76,9 @@ class Solicitante extends Model
         return $this->belongsTo(Facilitador::class);
     }
 
+   public function solicitud()
+{
+    return $this->belongsTo(Solicitud::class, 'solicitud_id');
+}
+
 }

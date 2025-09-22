@@ -37,7 +37,7 @@
         }
 
         /* Reubicación proporcional */
-        .nombre     { top: 60pt; left: 280pt; }
+        .nombre     { top: 60pt; left: 280pt; width: 350px }
         .calle      { top: 78pt; left: 290pt; }
         .numero     { top: 78pt; left: 490pt; }
         .colonia    { top: 100pt; left: 290pt; }
@@ -51,9 +51,13 @@
     <div class="bloque">
         <img class="fondo" src="{{ public_path('img/documentos/servicios_postal.jpeg') }}" alt="Fondo">
 
-        <p class="campo nombre">{{ $doc['nombre'] }}</p>
+        <p class="campo nombre" 
+            style="top: {{ strlen($doc['nombre']) > 30 ? '48pt' : '60pt' }};">
+            {{ $doc['nombre'] }}
+        </p>
+
         <p class="campo calle">{{ $doc['calle'] }}</p>
-        <p class="campo numero">{{ $doc['numero'] }}</p>
+        {{-- <p class="campo numero">{{ $doc['numero'] }}</p> --}}
         <p class="campo colonia">{{ $doc['colonia'] }}</p>
         <p class="campo poblacion">{{ $doc['poblacion'] }}</p>
         <p class="campo cp">{{ $doc['cp'] }}</p>

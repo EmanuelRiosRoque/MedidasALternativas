@@ -40,19 +40,19 @@
                     <div x-show="medio_envio === 'personal'" x-cloak>
                         <div class="flex flex-col space-y-2">
     
-                            <a href="{{ route('descargar-inv1', [$solicitudId]) }}">
+                            <a href="{{ route('invitacionUno.download', [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Invitación para invitación 1
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('descargar-inv2', [$solicitudId]) }}">
+                            <a href="{{ route('invitacionDos.download', [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Entrega personal invitación 2
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('sobre-personal', [$solicitudId]) }}">
+                            <a href="{{ route('sobrePersonal.download', [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Descargar Sobre personal
                                 </flux:button>
@@ -74,25 +74,25 @@
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('descargar-correoMexico') }}">
+                            <a href="{{ route('descargar-correoMexico',  [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Correos México
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('descargar-servicioPostal') }}">
+                            <a href="{{ route('descargar-servicioPostal', [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Servicio Postal
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('descargar-segui',  ['fecha' => $evento->fecha ?? date('Y-m-d')]) }}">
+                            <a href="{{ route('seguimiento.download',  ['fecha' => $evento->fecha ?? date('Y-m-d')]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Seguimiento
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('sobre-sepomex', [$solicitudId]) }}">
+                            <a href="{{ route('sobreSepomex.download', [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Descargar Sobre
                                 </flux:button>

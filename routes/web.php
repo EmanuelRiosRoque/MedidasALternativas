@@ -44,22 +44,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reasignacion/{solicitudID?}', CalendarJs::class)->name("reasignacion.index");
 
     //**Documentos */
-    Route::get('/descargar-amparo', [PDFsController::class, 'amparo'])->name('descargar-amparo');
-    Route::get('/descargar-correoMexico', [PDFsController::class, 'correoMexico'])->name('descargar-correoMexico');
-    Route::get('/descargar-servicioPostal', [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
-    Route::get('/descargar-amparoRepre', [PDFsController::class, 'amparoRepre'])->name('descargar-amparoRepre');
-    Route::get('/manifestacion/{id}', [PDFsController::class, 'manifestacion'])->name('manifestacion.download');
+    Route::get('/descargar-correoMexico/{id}'   , [PDFsController::class, 'correoMexico'])->name('descargar-correoMexico');
+    Route::get('/descargar-servicioPostal/{id}' , [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
+    Route::get('/descargar-amparoRepre' , [PDFsController::class, 'amparoRepre'])->name('descargar-amparoRepre');
+    Route::get('/descargar-amparo'      , [PDFsController::class, 'amparo'])->name('descargar-amparo');
+    Route::get('/manifestacion/{id}'    , [PDFsController::class, 'manifestacion'])->name('manifestacion.download');
+    Route::get('/seguimiento/{fecha}'   , [PDFsController::class, 'seguimiento'])->name('seguimiento.download');
+    Route::get('/sobre-sepomex/{id}'    , [PDFsController::class, 'sobreSepomex'])->name('sobreSepomex.download');
+    Route::get('/sobre-personal/{id}'   , [PDFsController::class, 'sobrePersonal'])->name('sobrePersonal.download');
+    Route::get('/invitacion/1/{id}'   , [PDFsController::class, 'invitacionUno'])->name('invitacionUno.download');
+    Route::get('/invitacion/2/{id}'   , [PDFsController::class, 'invitacionDos'])->name('invitacionDos.download');
 
     //**Documentos DOCX */
     Route::get('/descargar-inv1/{id}', [DOCxController::class, 'invitacion_uno'])->name('descargar-inv1');
     Route::get('/descargar-inv2/{id}', [DOCxController::class, 'invitacion_dos'])->name('descargar-inv2');
-    Route::get('/descargar-segui/{fecha}', [DOCxController::class, 'invitacion_segui'])->name('descargar-segui');
-    
-    Route::get('/sobre-sepomex/{id}', [DOCxController::class, 'sobreSepomex'])
-    ->name('sobre-sepomex');    
-
-    Route::get('/sobre-personal/{id}', [DOCxController::class, 'sobrePersonal'])
-    ->name('sobre-personal');    
 });
 
 

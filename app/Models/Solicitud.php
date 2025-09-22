@@ -49,4 +49,10 @@ class Solicitud extends Model
     {
         return $this->belongsTo(CatTipoProceso::class, 'tipo_proceso_id');
     }
+
+public function solicitud()
+{
+    return $this->belongsTo(Solicitud::class, 'solicitud_id');
+}
+
 }
