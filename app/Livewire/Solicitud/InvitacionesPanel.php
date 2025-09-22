@@ -11,17 +11,24 @@ use App\Models\Solicitud;
 use App\Models\Invitacion;
 use App\Models\Facilitador;
 use Masmerise\Toaster\Toaster;
+use App\Livewire\Concerns\UiText;
 use App\Mail\InvitacionMediacion;
 use App\Models\DocumentoSolicitud;
 use Illuminate\Support\Collection;
+use App\Livewire\Concerns\Bloqueos;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\File as HttpFile;
 use Illuminate\Support\Facades\Cache;
+use App\Livewire\Concerns\EtapasState;
+use App\Livewire\Concerns\InvCounters;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Livewire\Concerns\EventosAccessors;
 
 class InvitacionesPanel extends Component
 {
+    use EtapasState, InvCounters, EventosAccessors, Bloqueos, UiText;
+
     // Props de entrada
     public ?Agenda $evento = null;                 // Evento de Pre-mediación (1ra invitación)
     public ?Agenda $eventoMediacion = null;        // Evento de Mediación
@@ -64,8 +71,7 @@ class InvitacionesPanel extends Component
     public ?int $tipoProcesoId = null;
 
     /** Config: máximos por etapa */
-    protected int $maxInvPre = 2;   // Pre-mediación
-    protected int $maxInvMed = 10;  // Mediación
+
 
     /** Estatus (solo 5) */
     public array $estatusLabels = [5 => 'Activo'];
