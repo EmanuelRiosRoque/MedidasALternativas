@@ -27,7 +27,6 @@
         <div class="space-y-1">
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 RFC
-                    {{-- * --}}
             </label>
             <flux:input
                 oninput="this.value = this.value

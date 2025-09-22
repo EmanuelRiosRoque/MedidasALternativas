@@ -70,18 +70,14 @@
             @endif
         </label>
         <flux:input
-            wire:model="edad_solicitante"
-            type="text"
-            required
-            placeholder="Edad "
-            oninput="this.value = this.value
-                    .toUpperCase()
-                    .replace(/[ÁÀÂÄ]/g,'A')
-                    .replace(/[ÉÈÊË]/g,'E')
-                    .replace(/[ÍÌÎÏ]/g,'I')
-                    .replace(/[ÓÒÔÖ]/g,'O')
-                    .replace(/[ÚÙÛÜ]/g,'U')"
-        />
+        wire:model="edad_solicitante"
+        type="text"
+        required
+        placeholder="Edad"
+        inputmode="numeric"
+        maxlength="3"
+        oninput="this.value = this.value.replace(/\D+/g,'').slice(0,3)"
+      />
     </div>
 
      {{-- Sexo --}}
@@ -183,12 +179,12 @@
              <!-- Correos electrónicos -->
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                    Correos electrónicos
-                    @if (!($modalidad === 'presencial' && $prefix === 'invitado'))
+                Correos electrónicos
+                    @if ($modalidad === 'linea' && $prefix === 'invitado')
                         *
                     @endif
-
                 </label>
+
 
                 <div class="flex gap-2">
                     <flux:input
@@ -223,7 +219,9 @@
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Teléfonos
-                    *
+                    @if ($modalidad === 'presencial' && $prefix === 'invitado')
+                        *
+                    @endif
                 </label>
 
                 <div class="flex gap-2">
@@ -322,19 +320,14 @@
                 @endif
             </label>
             <flux:input
-                wire:model.live="cp_solicitante"
-                maxlength="5"
-                type="text"
-                required
-                placeholder="Código postal"
-                oninput="this.value = this.value
-                    .toUpperCase()
-                    .replace(/[ÁÀÂÄ]/g,'A')
-                    .replace(/[ÉÈÊË]/g,'E')
-                    .replace(/[ÍÌÎÏ]/g,'I')
-                    .replace(/[ÓÒÔÖ]/g,'O')
-                    .replace(/[ÚÙÛÜ]/g,'U')"
-            />
+        wire:model.live="cp_solicitante"
+        type="text"
+        required
+        placeholder="Código postal"
+        maxlength="5"
+        inputmode="numeric"
+        oninput="this.value = this.value.replace(/\D+/g,'').slice(0,5)"
+      />
         </div>
         
         <div class="space-y-1">

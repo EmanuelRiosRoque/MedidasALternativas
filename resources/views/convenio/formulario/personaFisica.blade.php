@@ -61,7 +61,11 @@
 
     {{-- RFC --}}
     <div class="space-y-2">
-      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">RFC *</label>
+      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">RFC
+        @if ($prefix === 'solicitante')
+          *
+        @endif
+      </label>
       <flux:input
         wire:model="rfc_solicitante"
         type="text"
