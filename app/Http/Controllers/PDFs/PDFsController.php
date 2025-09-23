@@ -323,7 +323,7 @@ class PDFsController extends Controller
         return $pdf->stream('sobre_persoanl.pdf');
     }
 
-     public function invitacionUno($id)
+    public function invitacionUno($id)
     {
         // reutilizamos la función para obtener placeholders
         $documentos = $this->buildPlaceholdersForSolicitud($id);
@@ -333,6 +333,18 @@ class PDFsController extends Controller
             ->setPaper('letter', 'portrait');
 
         return $pdf->stream('invitacion_uno.pdf');
+    }
+
+     public function invitacionDos($id)
+    {
+        // reutilizamos la función para obtener placeholders
+        $documentos = $this->buildPlaceholdersForSolicitud($id);
+
+        // ahora lo pasamos a la vista
+        $pdf = Pdf::loadView('pdfs.invitacionDos', $documentos)
+            ->setPaper('letter', 'portrait');
+
+        return $pdf->stream('invitacion_dos.pdf');
     }
 
     public function seguimiento($fecha)
@@ -352,42 +364,42 @@ class PDFsController extends Controller
     }
 
     private function buildPlaceholdersForSolicitud($id): array
-{
-    $personas = Solicitante::with(['telefonos', 'correos'])
-        ->where('solicitud_id', $id)
-        ->get()
-        ->groupBy('tipo_solicitante'); // 'solicitante' | 'invitado'
+    {
+        $personas = Solicitante::with(['telefonos', 'correos'])
+            ->where('solicitud_id', $id)
+            ->get()
+            ->groupBy('tipo_solicitante'); // 'solicitante' | 'invitado'
 
-    $invitado     = optional($personas->get('invitado'))->first();
-    $solicitante  = optional($personas->get('solicitante'))->first();
+        $invitado     = optional($personas->get('invitado'))->first();
+        $solicitante  = optional($personas->get('solicitante'))->first();
 
-    $nombreInv = $invitado
-        ? trim("{$invitado->nombre} {$invitado->apellido_p} {$invitado->apellido_m}")
-        : 'Sin invitado';
-    $telInv = $invitado
-        ? $invitado->telefonos->pluck('numero')->filter()->unique()->implode(', ')
-        : '—';
-    $mailInv = $invitado
-        ? $invitado->correos->pluck('email')->filter()->unique()->implode(', ')
-        : '—';
+        $nombreInv = $invitado
+            ? trim("{$invitado->nombre} {$invitado->apellido_p} {$invitado->apellido_m}")
+            : 'Sin invitado';
+        $telInv = $invitado
+            ? $invitado->telefonos->pluck('numero')->filter()->unique()->implode(', ')
+            : '—';
+        $mailInv = $invitado
+            ? $invitado->correos->pluck('email')->filter()->unique()->implode(', ')
+            : '—';
 
-    $nombreSol = $solicitante
-        ? trim("{$solicitante->nombre} {$solicitante->apellido_p} {$solicitante->apellido_m}")
-        : 'Sin solicitante';
-    $telSol = $solicitante
-        ? $solicitante->telefonos->pluck('numero')->filter()->unique()->implode(', ')
-        : '—';
-    $mailSol = $solicitante
-        ? $solicitante->correos->pluck('email')->filter()->unique()->implode(', ')
-        : '—';
+        $nombreSol = $solicitante
+            ? trim("{$solicitante->nombre} {$solicitante->apellido_p} {$solicitante->apellido_m}")
+            : 'Sin solicitante';
+        $telSol = $solicitante
+            ? $solicitante->telefonos->pluck('numero')->filter()->unique()->implode(', ')
+            : '—';
+        $mailSol = $solicitante
+            ? $solicitante->correos->pluck('email')->filter()->unique()->implode(', ')
+            : '—';
 
-    return [
-        'nombre_invitado'     => $nombreInv,
-        'num_invitado'        => $telInv,
-        'email_invitado'      => $mailInv,
-        'nombre_solicitante'  => $nombreSol,
-        'num_solicitante'     => $telSol,
-        'email_solicitante'   => $mailSol,
-    ];
-}
+        return [
+            'nombre_invitado'     => $nombreInv,
+            'num_invitado'        => $telInv,
+            'email_invitado'      => $mailInv,
+            'nombre_solicitante'  => $nombreSol,
+            'num_solicitante'     => $telSol,
+            'email_solicitante'   => $mailSol,
+        ];
+    }
 }

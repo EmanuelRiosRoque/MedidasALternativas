@@ -182,7 +182,7 @@ class EventoModal extends Component
 
         $this->cerrar();
 
-        return redirect()->route('calendario.index')
+        return redirect()->route('calendar.index')
             ->with('success', '¡Evento guardado correctamente!');
     }
 

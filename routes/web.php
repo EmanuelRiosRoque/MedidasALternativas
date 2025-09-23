@@ -23,41 +23,45 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
+
+    // === Settings ===
     Route::redirect('settings', 'settings/profile');
-
-    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
+    Volt::route('settings/profile',    'settings.profile')->name('settings.profile');
+    Volt::route('settings/password',   'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-    
-    Route::get('/convenio/form', Convenio::class)->name('convenio.index');
-    Route::get('/convenio/edit/{id}', Convenio::class)->name('convenio.edit');
 
-    Route::get('/facilitadores/form', Facilitadores::class)->name('facilitadores.index');
-    Route::get('/facilitadores/list', Lista::class)->name('facilitadores.list');
 
-    Route::get('/solicitudes/table', SolicitudesLista::class)->name('solicitudes.lista');
-    
-    Route::get('/solicitud/{solicitudId}', SolicitudDetalle::class)->name('solicitud.detalle');
-    Route::get('/solicitud/{solicitudId}/personas', VerPersonas::class)->name('personas.update');
+    // === Solicitud ===
+    Route::prefix('solicitud')->name('solicitud.')->group(function () {
+        Route::get('/create', Convenio::class)->name('create');
+        Route::get('/list', SolicitudesLista::class)->name('list');
+        Route::get('/{solicitudId}', SolicitudDetalle::class)->name('show');
+        Route::get('/{solicitudId}/personas', VerPersonas::class)->name('personas');
+    });
 
-    Route::get('/calendario', CalendarJs::class)->name("calendario.index");
-    Route::get('/reasignacion/{solicitudID?}', CalendarJs::class)->name("reasignacion.index");
+    // === Facilitadiores ===
+    Route::prefix('facilitadores')->name('facilitadores.')->group(function () {
+        Route::get('/create', Facilitadores::class)->name('create');
+        Route::get('/list', Lista::class)->name('list');
+    });
 
-    //**Documentos */
-    Route::get('/descargar-correoMexico/{id}'   , [PDFsController::class, 'correoMexico'])->name('descargar-correoMexico');
+    // === Calendario ===
+    Route::prefix('calendar')->name('calendar.')->group(function () {
+        Route::get('/', CalendarJs::class)->name('index');
+        Route::get('/reasignacion/{solicitudID?}',  CalendarJs::class)->name("reasignacion");
+    });
+
+    // === Documentos ===
+    Route::get('/descargar-correoMexico/{id}'   , [PDFsController::class, 'correoMexico'  ])->name('descargar-correoMexico');
     Route::get('/descargar-servicioPostal/{id}' , [PDFsController::class, 'servicioPostal'])->name('descargar-servicioPostal');
-    Route::get('/descargar-amparoRepre' , [PDFsController::class, 'amparoRepre'])->name('descargar-amparoRepre');
-    Route::get('/descargar-amparo'      , [PDFsController::class, 'amparo'])->name('descargar-amparo');
+    Route::get('/descargar-amparoRepre' , [PDFsController::class, 'amparoRepre'  ])->name('descargar-amparoRepre');
+    Route::get('/descargar-amparo'      , [PDFsController::class, 'amparo'       ])->name('descargar-amparo');
     Route::get('/manifestacion/{id}'    , [PDFsController::class, 'manifestacion'])->name('manifestacion.download');
-    Route::get('/seguimiento/{fecha}'   , [PDFsController::class, 'seguimiento'])->name('seguimiento.download');
-    Route::get('/sobre-sepomex/{id}'    , [PDFsController::class, 'sobreSepomex'])->name('sobreSepomex.download');
+    Route::get('/seguimiento/{fecha}'   , [PDFsController::class, 'seguimiento'  ])->name('seguimiento.download');
+    Route::get('/sobre-sepomex/{id}'    , [PDFsController::class, 'sobreSepomex' ])->name('sobreSepomex.download');
     Route::get('/sobre-personal/{id}'   , [PDFsController::class, 'sobrePersonal'])->name('sobrePersonal.download');
-    Route::get('/invitacion/1/{id}'   , [PDFsController::class, 'invitacionUno'])->name('invitacionUno.download');
-    Route::get('/invitacion/2/{id}'   , [PDFsController::class, 'invitacionDos'])->name('invitacionDos.download');
-
-    //**Documentos DOCX */
-    Route::get('/descargar-inv1/{id}', [DOCxController::class, 'invitacion_uno'])->name('descargar-inv1');
-    Route::get('/descargar-inv2/{id}', [DOCxController::class, 'invitacion_dos'])->name('descargar-inv2');
+    Route::get('/invitacion/1/{id}'     , [PDFsController::class, 'invitacionUno'])->name('invitacionUno.download');
+    Route::get('/invitacion/2/{id}'     , [PDFsController::class, 'invitacionDos'])->name('invitacionDos.download');
 });
 
 

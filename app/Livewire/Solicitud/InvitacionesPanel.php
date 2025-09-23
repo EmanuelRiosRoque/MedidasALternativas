@@ -557,7 +557,7 @@ class InvitacionesPanel extends Component
                     $this->solicitud->refresh();
                     $this->tipoProcesoId = 2;
 
-                    return Redirect::route('solicitudes.lista')
+                    return Redirect::route('solicitud.list')
                         ->success('Registrado: Aceptó mediación. El proceso cambió a Mediación.');
 
                     // (código inalcanzable después del return)

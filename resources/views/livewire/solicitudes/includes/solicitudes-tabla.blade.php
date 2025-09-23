@@ -150,47 +150,47 @@
                                             style="display: none;">
                                             <ul class="text-sm text-gray-700 dark:text-gray-200">
                                                 @if ($solicitud->tipo_proceso_id == 2)
-    @if ($solicitud->facilitador_id)
-        <li>
-            <a href="{{ route('solicitud.detalle', $solicitud->id) }}"
-               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                Ver
-            </a>
-        </li>
-    @else
-        <li>
-            <a href="{{ route('calendario.index') }}"
-               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                Asignar
-            </a>
-        </li>
-    @endif
-@else
-    @if ($solicitud->estatus_id != "1")
-        <li>
-            <a href="{{ route('solicitud.detalle', $solicitud->id) }}"
-               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                Ver
-            </a>
-        </li>
-    @endif
+                                                @if ($solicitud->facilitador_id)
+                                                <li>
+                                                    <a href="{{ route('solicitud.show', $solicitud->id) }}"
+                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                        Ver
+                                                    </a>
+                                                </li>
+                                                @else
+                                                <li>
+                                                    <a href="{{ route('calendar.index') }}"
+                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                        Asignar
+                                                    </a>
+                                                </li>
+                                                @endif
+                                                @else
+                                                @if ($solicitud->estatus_id != "1")
+                                                <li>
+                                                    <a href="{{ route('solicitud.show', $solicitud->id) }}"
+                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                        Ver
+                                                    </a>
+                                                </li>
+                                                @endif
 
-    @if ($solicitud->estatus_id == "2")
-        <li>
-            <a href="{{ route('reasignacion.index', ['solicitudID' => $solicitud->id]) }}"
-               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                Reasignar
-            </a>
-        </li>
-    @else
-        <li>
-            <a href="{{ route('calendario.index') }}"
-               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
-                Asignar
-            </a>
-        </li>
-    @endif
-@endif
+                                                @if ($solicitud->estatus_id == "2")
+                                                <li>
+                                                    <a href="{{ route('calendar.reasignacion', ['solicitudID' => $solicitud->id]) }}"
+                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                        Reasignar
+                                                    </a>
+                                                </li>
+                                                @else
+                                                <li>
+                                                    <a href="{{ route('calendar.index') }}"
+                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                        Asignar
+                                                    </a>
+                                                </li>
+                                                @endif
+                                                @endif
 
                                             </ul>
                                         </div>

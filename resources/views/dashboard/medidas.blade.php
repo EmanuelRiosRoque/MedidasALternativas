@@ -45,7 +45,7 @@
 
                     <div class="flex justify-center lg:justify-start gap-4">
                         <a
-                            href="{{ route('convenio.index') }}"
+                            href="{{ route('solicitud.create') }}"
                             class="inline-flex items-center justify-center bg-emerald-700 hover:bg-emerald-900 text-white font-semibold px-6 py-3 mt-5 rounded-lg shadow-lg hover:scale-105 transition-all duration-300 text-sm"
                         >                      
                             @if ($prueba)

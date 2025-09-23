@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             CatDocumentosFamiliarSeeder::class,
             CatTipoProcesoSeeder::class,
             CatCancelacionSeeder::class,
+            CatPoderesJudicialesSeeder::class,
         ]);
     }
 }

@@ -54,6 +54,8 @@ class Convenio extends Component
 
     public int $tab = 1;
 
+public array $docMapCivil = [];      // ['Tipo' => ['Doc1','Doc2',...]]
+public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
     // Input Radios
     public $modalidad;
     public $materia;
@@ -163,6 +165,21 @@ class Convenio extends Component
         $this->ocupaciones   = $this->ocupaciones();
         $this->escolaridades = $this->escolaridades();
         $this->mediosInvitado= $this->mediosDifusion();
+
+         $this->docMapCivil = \App\Models\Catalogos\CatDocumentoCivil::select('tipo','nombre')
+        ->orderBy('tipo')->orderBy('nombre')
+        ->get()
+        ->groupBy('tipo')
+        ->map(fn($g) => $g->pluck('nombre')->values()->all())
+        ->toArray();
+
+    // CARGA FAMILIAR (TODO de una)
+    $this->docMapFamiliar = \App\Models\Catalogos\CatDocumentoFamiliar::select('tema','nombre')
+        ->orderBy('tema')->orderBy('nombre')
+        ->get()
+        ->groupBy('tema')
+        ->map(fn($g) => $g->pluck('nombre')->values()->all())
+        ->toArray();
     }
 
     public function updated($propertyName)
@@ -271,7 +288,7 @@ class Convenio extends Component
             //TODO: Para el rol que registra 
             // return back()->with('success', "¡Solicitud creada exitosamente! Folio: {$folio}");
 
-            return Redirect::route('solicitudes.lista')
+            return Redirect::route('solicitud.list')
                 ->success('Solicitud creada exitosamente !');
 
         } catch (\Throwable $e) {

@@ -7,7 +7,7 @@
             </div>
 
             <div class="inline-flex items-center text-base font-semibold text-neutral-900 dark:text-white">
-                <a href="{{ route('personas.update', ['solicitudId' => $solicitudId]) }}">
+                <a href="{{ route('solicitud.personas', ['solicitudId' => $solicitudId]) }}">
                     <flux:button variant="primary">
                         Ver {{ $titulo }}
                     </flux:button>
