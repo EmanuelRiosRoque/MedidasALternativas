@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 
 use Illuminate\Http\File as HttpFile;
-use Illuminate\Support\Facades\{DB, Storage, Redirect};
+use Illuminate\Support\Facades\{DB, Storage, Redirect, Log};
 
 use Masmerise\Toaster\Toaster;
 
@@ -173,8 +173,8 @@ public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
         ->map(fn($g) => $g->pluck('nombre')->values()->all())
         ->toArray();
 
-    // CARGA FAMILIAR (TODO de una)
-    $this->docMapFamiliar = \App\Models\Catalogos\CatDocumentoFamiliar::select('tema','nombre')
+        // CARGA FAMILIAR (TODO de una)
+        $this->docMapFamiliar = \App\Models\Catalogos\CatDocumentoFamiliar::select('tema','nombre')
         ->orderBy('tema')->orderBy('nombre')
         ->get()
         ->groupBy('tema')
@@ -189,23 +189,9 @@ public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
 
     public function cambiarTab($nuevoTab)
     {
+        // Validar al salir de cada pestaña
         if ($this->tab === 1 && $nuevoTab !== 1) {
-            $rules = [
-                'modalidad'           => 'required',
-                'materia'             => 'required',
-                'derivado_canalizado' => 'required',
-            ];
-
-            if ($this->modalidad === 'linea') {
-                $rules['numero_ticket'] = 'required';
-            }
-
-            if ($this->derivado_canalizado === '1') {
-                $rules['institucion'] = 'required';
-                $rules['oficio']      = 'required';
-            }
-
-            $this->validate($rules);
+            $this->validate($this->rulesTab1());
         }
 
         if ($this->tab === 2 && $nuevoTab === 3) {
@@ -213,7 +199,7 @@ public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
                 Toaster::warning('Debe agregar al menos un solicitante antes de continuar !');
                 return;
             }
-            $this->validate(['acudiran_juntos' => 'required']);
+            $this->validate($this->rulesTab2());
         }
 
         if ($this->tab === 3 && $nuevoTab === 4) {
@@ -223,6 +209,7 @@ public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
             }
         }
 
+        // Limpiar formularios de persona al cambiar entre 2 y 3
         if (in_array($this->tab, [2, 3], true)) {
             $this->limpiarCamposPersona();
         }
@@ -230,72 +217,110 @@ public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
         $this->tab = $nuevoTab;
     }
 
+    private function rulesTab1(): array
+    {
+        $rules = [
+            'modalidad'           => 'required',
+            'materia'             => 'required',
+            'derivado_canalizado' => 'required',
+        ];
+
+        if ($this->modalidad == 2) {
+            $rules['numero_ticket'] = 'required';
+        }
+
+        if ($this->derivado_canalizado == 1) {
+            $rules['institucion'] = 'required';
+            $rules['oficio']      = 'required';
+        }
+
+        return $rules;
+    }
+
+    private function rulesTab2(): array
+    {
+        return [
+            'acudiran_juntos' => 'required',
+        ];
+    }
+
     public function guardado()
     {
         try {
-            DB::beginTransaction();
+            $resultado = DB::transaction(function () {
+                $rutaOficio = $this->guardarDocumentoIndividual(
+                    $this->oficio,
+                    'oficio',
+                    null,
+                    false
+                );
 
-            // 1) Guardar oficio si aplica
-            $rutaOficio = $this->guardarDocumentoIndividual(
-                $this->oficio,
-                'oficio',
-                null,
-                false
-            );
+                $folio = $this->materia === 'familiar'
+                    ? $this->generarFolio('CJA', 'MF', siguienteValorSecuencia('familiar'))
+                    : $this->generarFolio('CJA', 'MCM', siguienteValorSecuencia('civil'));
 
-            // 2) Generar folio según materia
-            $folio = $this->materia === 'familiar'
-                ? $this->generarFolio('CJA', 'MF', siguienteValorSecuencia('familiar'))
-                : $this->generarFolio('CJA', 'MCM', siguienteValorSecuencia('civil'));
+                $solicitud = $this->crearSolicitud($folio, $rutaOficio);
 
-            // 3) Crear solicitud
-            $solicitud = Solicitud::create([
-                "modalidad"           => $this->modalidad,
-                "acudiran_juntos"     => $this->acudiran_juntos,
-                "folio_materia"       => $folio,
-                "estatus_id"          => 1,
-                "materia"             => $this->materia,
-                "derivado_canalizado" => $this->derivado_canalizado,
-                "numero_ticket"       => $this->numero_ticket,
-                "institucion"         => $this->institucion,
-                "oficio"              => $rutaOficio,
-                "cual_otro"           => $this->cual_otro
-            ]);
+                $this->guardarPersonasRelacionadas($solicitud->id);
 
-            // 4) Personas relacionadas
-            foreach ($this->solicitanteArray as $datos) {
-                $this->guardarPersonaRelacionada($solicitud->id, $datos, 'solicitante');
-            }
+                $this->guardarDocumentosSolicitud($solicitud->id);
 
-            foreach ($this->invitadoArray as $datos) {
-                $this->guardarPersonaRelacionada($solicitud->id, $datos, 'invitado');
-            }
-
-            // 5) Documentos generales de la solicitud (UNA sola vez)
-            foreach ($this->guardarArchivos() as $doc) {
-                DocumentoSolicitud::create([
-                    'solicitud_id'    => $solicitud->id,
-                    'tipo'            => $doc['documento'],
-                    'nombre_original' => $doc['nombre_original'],
-                    'ruta'            => $doc['ruta'],
-                    'extension'       => $doc['extension'],
-                    'size'            => $doc['size'],
-                ]);
-            }
-
-            DB::commit();
-
-            //TODO: Para el rol que registra 
-            // return back()->with('success', "¡Solicitud creada exitosamente! Folio: {$folio}");
+                return $solicitud;
+            });
 
             return Redirect::route('solicitud.list')
                 ->success('Solicitud creada exitosamente !');
 
         } catch (\Throwable $e) {
-            DB::rollBack();
-            dd($e); // detiene la ejecución y muestra toda la excepción
+            Log::error('Error al guardar convenio', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+            Toaster::error('Ocurrió un error al guardar. Intente nuevamente.');
+            return back();
         }
 
+    }
+
+    private function crearSolicitud(string $folio, ?string $rutaOficio): Solicitud
+    {
+        return Solicitud::create([
+            "modalidad"           => $this->modalidad,
+            "acudiran_juntos"     => $this->acudiran_juntos,
+            "folio_materia"       => $folio,
+            "estatus_id"          => 1,
+            "materia"             => $this->materia,
+            "derivado_canalizado" => $this->derivado_canalizado,
+            "numero_ticket"       => $this->numero_ticket,
+            "institucion"         => $this->institucion,
+            "oficio"              => $rutaOficio,
+            "cual_otro"           => $this->cual_otro
+        ]);
+    }
+
+    private function guardarPersonasRelacionadas(int $solicitudId): void
+    {
+        foreach ($this->solicitanteArray as $datos) {
+            $this->guardarPersonaRelacionada($solicitudId, $datos, 'solicitante');
+        }
+
+        foreach ($this->invitadoArray as $datos) {
+            $this->guardarPersonaRelacionada($solicitudId, $datos, 'invitado');
+        }
+    }
+
+    private function guardarDocumentosSolicitud(int $solicitudId): void
+    {
+        foreach ($this->guardarArchivos() as $doc) {
+            DocumentoSolicitud::create([
+                'solicitud_id'    => $solicitudId,
+                'tipo'            => $doc['documento'],
+                'nombre_original' => $doc['nombre_original'],
+                'ruta'            => $doc['ruta'],
+                'extension'       => $doc['extension'],
+                'size'            => $doc['size'],
+            ]);
+        }
     }
 
     protected function guardarDocumentoIndividual($archivo, $tipo, $solicitanteId, $guardarDB = true)

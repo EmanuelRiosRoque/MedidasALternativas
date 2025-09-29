@@ -31,9 +31,11 @@
             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200 mb-1">
                 ¿Cómo se enteró?
             </label>
-            <flux:select wire:model="como_se_entero" placeholder="¿Cómo se enteró?">
-                @foreach ($mediosInvitado as $medio)
-                    <flux:select.option :value="$medio">{{ $medio }}</flux:select.option>
+           <flux:select wire:model="como_se_entero" placeholder="¿Cómo se enteró?">
+                @foreach ($mediosInvitado as $id => $nombre)
+                    <flux:select.option value="{{ $id }}">
+                        {{ $nombre }}
+                    </flux:select.option>
                 @endforeach
             </flux:select>
         </div>

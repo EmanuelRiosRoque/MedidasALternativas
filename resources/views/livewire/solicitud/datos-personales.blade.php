@@ -43,7 +43,7 @@
             <flux:label>Escolaridad</flux:label>
             <flux:select wire:model="personaSeleccionada.escolaridad" placeholder="Seleccione...">
                 @foreach ($escolaridades as $escolaridad)
-                <flux:select.option>{{ $escolaridad }}</flux:select.option>
+                <flux:select.option value="{{ $escolaridad->id }}">{{ $escolaridad->nombre }}</flux:select.option>
                 @endforeach
             </flux:select>
         </flux:field>
@@ -52,7 +52,7 @@
             <flux:label>Ocupación</flux:label>
             <flux:select wire:model="personaSeleccionada.ocupacion" placeholder="Seleccione...">
                 @foreach ($ocupaciones as $ocupacion)
-                <flux:select.option>{{ $ocupacion }}</flux:select.option>
+                <flux:select.option value="{{ $ocupacion->id }}">{{ $ocupacion->nombre }}</flux:select.option>
                 @endforeach
             </flux:select>
         </flux:field>
@@ -60,8 +60,8 @@
         <flux:field>
             <flux:label>Nacionalidad</flux:label>
             <flux:select wire:model="personaSeleccionada.nacionalidad" placeholder="Seleccione...">
-                <flux:select.option>Méxicana</flux:select.option>
-                <flux:select.option>Extranjera</flux:select.option>
+                <flux:select.option value="1">Méxicana</flux:select.option>
+                <flux:select.option value="2">Extranjera</flux:select.option>
             </flux:select>
         </flux:field>
     </div>
@@ -119,8 +119,8 @@
         <flux:field>
             <flux:label>Sexo</flux:label>
             <flux:select wire:model="personaSeleccionada.sexo" placeholder="Seleccione...">
-                <flux:select.option>Femenino</flux:select.option>
-                <flux:select.option>Masculino</flux:select.option>
+                <flux:select.option value="1">Femenino</flux:select.option>
+                <flux:select.option value="2">Masculino</flux:select.option>
             </flux:select>
         </flux:field>
 
@@ -140,7 +140,7 @@
             <flux:label>Escolaridad</flux:label>
             <flux:select wire:model="personaSeleccionada.escolaridad" placeholder="Seleccione...">
                 @foreach ($escolaridades as $escolaridad)
-                <flux:select.option>{{ $escolaridad }}</flux:select.option>
+                <flux:select.option value="{{ $escolaridad->id }}">{{ $escolaridad->nombre }}</flux:select.option>
                 @endforeach
             </flux:select>
         </flux:field>
@@ -149,7 +149,7 @@
             <flux:label>Ocupación</flux:label>
             <flux:select wire:model="personaSeleccionada.ocupacion" placeholder="Seleccione...">
                 @foreach ($ocupaciones as $ocupacion)
-                <flux:select.option>{{ $ocupacion }}</flux:select.option>
+                <flux:select.option value="{{ $ocupacion->id }}">{{ $ocupacion->nombre }}</flux:select.option>
                 @endforeach
             </flux:select>
         </flux:field>
@@ -157,8 +157,8 @@
         <flux:field>
             <flux:label>Nacionalidad</flux:label>
             <flux:select wire:model="personaSeleccionada.nacionalidad" placeholder="Seleccione...">
-                <flux:select.option>Méxicana</flux:select.option>
-                <flux:select.option>Extranjera</flux:select.option>
+                <flux:select.option value="1">Méxicana</flux:select.option>
+                <flux:select.option value="2">Extranjera</flux:select.option>
             </flux:select>
         </flux:field>
     </div>

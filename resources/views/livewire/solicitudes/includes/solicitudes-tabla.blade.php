@@ -105,11 +105,11 @@
                                 <td class="px-12 py-4 text-sm whitespace-nowrap">
                                     <div class="
                                         inline px-3 py-1 text-xs font-semibold rounded-full  tracking-wide
-                                        {{ $solicitud->modalidad === 'linea' 
+                                        {{ $solicitud->modalidad == 2 
                                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-800/40 dark:text-blue-300' 
                                             : 'bg-green-100 text-green-700 dark:bg-green-800/40 dark:text-green-300' 
                                         }}">
-                                        {{ $solicitud->modalidad === 'linea' ? 'En Línea' : 'Presencial' }}
+                                        {{ $solicitud->modalidad == 2 ? 'En Línea' : 'Presencial' }}
                                     </div>
                                 </td>
                                 <td class="px-12 py-4 text-sm whitespace-nowrap">

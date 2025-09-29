@@ -3,8 +3,8 @@
     {{-- Radios Livewire (estado en $wire) --}}
     <div class="flex flex-wrap gap-6">
         <flux:radio.group wire:model="modalidad" label="Modalidad">
-            <flux:radio value="presencial" label="Presencial" />
-            <flux:radio value="linea" label="En línea" />
+            <flux:radio value="1" label="Presencial" />
+            <flux:radio value="2" label="En línea" />
         </flux:radio.group>
 
         <flux:radio.group wire:model="materia" label="Materia">
@@ -19,9 +19,9 @@
         </flux:radio.group>
     </div>
 
-    {{-- Ticket SOLO si modalidad === "linea" --}}
+    {{-- Ticket SOLO si modalidad === "2" --}}
     <div
-        x-show="$wire.modalidad === 'linea'"
+        x-show="$wire.modalidad == 2"
         x-transition.opacity.duration.150ms
     >
         <flux:input
@@ -30,7 +30,7 @@
             type="text"
             placeholder="Número de Ticket"
             {{-- opcional: requerido solo cuando se muestra --}}
-            x-bind:required="$wire.modalidad === 'linea'"
+            x-bind:required="$wire.modalidad == 2"
         />
     </div>
 

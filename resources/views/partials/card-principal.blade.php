@@ -305,7 +305,7 @@
             @endif
 
             {{-- ===== EN LÍNEA / PRESENCIAL (formularios normales) ===== --}}
-            @if ($this->modalidad === 'linea')
+            @if ($this->modalidad == 2)
               @if ($this->isPrimera)
                 <div class="grid gap-3 max-w-lg">
                   <flux:input label="Enlace / Liga" placeholder="https://meet.google.com/..." wire:model="enlaceReunion" />

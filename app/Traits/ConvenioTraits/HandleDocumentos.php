@@ -15,26 +15,21 @@ use App\Models\Catalogos\CatMedioDifusion;
 trait HandleDocumentos
 {
 
-    public function ocupaciones(): array
+    public function ocupaciones()
     {
-        return CatOcupacion::orderBy('nombre')
-            ->pluck('nombre')
-            ->toArray();
+        return CatOcupacion::orderBy('nombre')->get(['id','nombre']);   
     }
 
-    public function escolaridades(): array
+    public function escolaridades()
     {
-        return CatEscolaridad::orderBy('nombre')
-            ->pluck('nombre')
-            ->toArray();
+        return CatEscolaridad::orderBy('nombre')->get(['id','nombre']);   
     }
 
-    public function mediosDifusion(): array
+    public function mediosDifusion()
     {
-        return CatMedioDifusion::orderBy('nombre')
-            ->pluck('nombre')
-            ->toArray();
+        return CatMedioDifusion::orderBy('nombre')->get(['id','nombre']);
     }
+
 
 
     public function updatedTipo($value)

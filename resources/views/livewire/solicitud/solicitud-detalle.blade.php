@@ -25,7 +25,7 @@
         {{-- Lista de personas --}}
         @include('livewire.solicitud.includes.listas-personas')
 
-            @if ($solicitud->modalidad === 'presencial')
+            @if ($solicitud->modalidad == 1)
             <div class="max-w-6xl m-auto space-y-3 mt-5 grid grid-cols-2 gap-4 mb-4" x-data="{ medio_envio: 'sepomex' }">
                 {{-- Opciones Presencial --}}
                 <div>

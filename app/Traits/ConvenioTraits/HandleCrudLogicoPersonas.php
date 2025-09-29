@@ -103,11 +103,11 @@ trait HandleCrudLogicoPersonas
         }
 
         // 🔹 3) Reglas adicionales según modalidad
-        if ($this->modalidad === 'presencial') {
+        if ($this->modalidad == 1) {
             // Teléfono obligatorio, correo opcional
             $rules['telefonos'] = 'required|array|min:1';
             // correo puede existir pero no se fuerza
-        } elseif ($this->modalidad === 'linea') {
+        } elseif ($this->modalidad == 2) {
             // Correo obligatorio, teléfono opcional
             $rules['correos'] = 'required|array|min:1';
         }

@@ -58,7 +58,7 @@
                       {{ $this->isPreMediacion ? 'Invitación' : 'Sesión' }}
                     </p>
 
-                    @if($inv->modalidad === 'linea')
+                    @if($inv->modalidad == 2)
                       <span class="text-xs text-neutral-600 dark:text-neutral-300">
                         Fecha de atención:
                         <span class="font-medium">{{ $inv->fecha_atencion ?: $inv->fecha_envio ?: '—' }}</span>
@@ -71,7 +71,7 @@
                     @endif
                   </div>
 
-                  @if ($inv->modalidad === 'linea')
+                  @if ($inv->modalidad == 2)
                     <div class="mt-2 text-sm">
                       <span class="font-medium">URL:</span>
                       @if ($inv->url)
@@ -84,17 +84,17 @@
 
                   <div class="mt-2 text-sm">
                     @if ((int)($inv->acudiran_juntos ?? 1) === 1)
-                      @if ($inv->hora_inicio || $inv->hora_fin || $this->modalidad === 'presencial')
+                      @if ($inv->hora_inicio || $inv->hora_fin || $this->modalidad == 1)
                         <div class="rounded-md border border-neutral-200 dark:border-neutral-700 p-2 inline-block">
                           <p class="text-[11px] text-neutral-500">
-                            {{ $inv->modalidad === 'linea' ? 'Horario (invitación)' : 'Hora envío (capturada)' }}
+                            {{ $inv->modalidad == 2  ? 'Horario (invitación)' : 'Hora envío (capturada)' }}
                           </p>
                           <p class="text-sm font-medium">
                             {{ $inv->hora_inicio ? $this->fmtHora($inv->hora_inicio) : '—' }}
                             @if($inv->hora_fin) - {{ $this->fmtHora($inv->hora_fin) }} @endif
                           </p>
                         </div>
-                      @elseif($this->modalidad === 'linea')
+                      @elseif($this->modalidad == 2)
                         @php($sep = (int)(optional($ev)->opcion_invitacion ?? 1) === 0)
                         @if (!$sep)
                           @if (optional($ev)->hora_inicio && optional($ev)->hora_fin)

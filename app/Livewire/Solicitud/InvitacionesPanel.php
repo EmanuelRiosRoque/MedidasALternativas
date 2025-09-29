@@ -42,11 +42,11 @@ class InvitacionesPanel extends Component
     // Form (1ª o N-ésima)
     public ?string $enlaceReunion = null;     // 1ª en línea
     public ?string $urlNuevaInv   = null;     // N-ésima en línea
-    public ?string $fechaAtencion = '';       // 1ª en línea (lectura)
-    public ?string $fechaNuevaInv = '';       // N-ésima en línea / presencial (N-ésima)
+    public ?string $fechaAtencion = '';       // ✔ Mediación en línea (N-ésima)
+    public ?string $fechaNuevaInv = '';       // Pre en línea / presencial (N-ésima)
     public ?string $fechaEnvio    = '';       // 1ª presencial
 
-    // Horarios
+    // Horarios (inputs)
     public ?string $horaInicio = '';
     public ?string $horaFin = '';
     public ?string $horaInicioInvitado = '';
@@ -67,11 +67,8 @@ class InvitacionesPanel extends Component
     public ?int $aceptoProceso = null;        // Pre: aceptó mediación ; Mediación: hubo acuerdo
     public ?int $motivoCancelacion = null;    // Solo Pre-mediación cuando NO acepta
 
-    /** Tipo de proceso actual */
+    /** Tipo de proceso actual (1=Pre, 2=Mediación) */
     public ?int $tipoProcesoId = null;
-
-    /** Config: máximos por etapa */
-
 
     /** Estatus (solo 5) */
     public array $estatusLabels = [5 => 'Activo'];
@@ -87,6 +84,9 @@ class InvitacionesPanel extends Component
     public $horaFinInvitadoEvento = '';
     public $colorEvento = '';
     public $eventoSegunda = '';
+
+    /** Config máximos */
+    public $maxInvMed = 10; // Mediación (Pre vendrá del trait InvCounters)
 
     protected $rules = [
         'enlaceReunion' => ['nullable', 'url'],
@@ -161,21 +161,12 @@ class InvitacionesPanel extends Component
     private function precargarDesdeEvento(Agenda $ev, bool $tambienFechas = true): void
     {
         // (intencionalmente comentado para no sobreescribir los inputs)
-        if ($tambienFechas) {
-            // $this->fechaAtencion = $ev->fecha ?? null;
-            // $this->fechaEnvio    = $ev->fecha ?? null;
-        }
     }
 
     private function cargarTipoProceso(): void
     {
         $this->tipoProcesoId = Solicitud::whereKey($this->solicitudId)->value('tipo_proceso_id');
         if ($this->tipoProcesoId !== null) $this->tipoProcesoId = (int) $this->tipoProcesoId;
-    }
-
-    private function trimHi(?string $t): ?string
-    {
-        return $t ? substr($t, 0, 5) : null;
     }
 
     private function generarHorarios(string $inicio, string $fin): array
@@ -248,7 +239,7 @@ class InvitacionesPanel extends Component
         return Carbon::parse($inicio)->format('H:i') . ' - ' . Carbon::parse($fin)->format('H:i');
     }
 
-    // === NUEVO: Horarios para correo SIEMPRE desde el EVENTO
+    // === (No es obligatorio, queda por si lo necesitas en el futuro)
     private function horariosEventoParaCorreo(?Agenda $ev, bool $separados): array
     {
         if (!$ev) return ['—', '—'];
@@ -263,220 +254,270 @@ class InvitacionesPanel extends Component
         return [$solicitante, $invitado];
     }
 
-   public function store(string $context = 'primera'): void
-{
-    $this->cargarTipoProceso();
-    $this->solicitud = Solicitud::find($this->solicitudId);
-    if (!$this->solicitud) {
-        Toaster::error('No se encontró la solicitud.');
-        return;
-    }
-
-    // Si no hay etapa, arrancamos en Pre-mediación (1)
-    if ($this->tipoProcesoId === null) {
-        $this->tipoProcesoId = 1;
-        $this->solicitud->update(['tipo_proceso_id' => 1]);
-        $this->solicitud->refresh();
-    }
-
-    $ultima = $this->ultimaInvitacion();
-
-    // 1) Si existe última sin asistencia registrada -> bloquear
-    if ($ultima && is_null($ultima->asistio)) {
-        Toaster::warning("Registra la asistencia de la {$this->etiquetaSing()} #{$ultima->numero_inv} antes de crear una nueva.");
-        return;
-    }
-
-    // 2) Consecutivo por etapa
-    $next = (int)(Invitacion::where('solicitud_id', $this->solicitudId)
-        ->where('tipo_proceso_id', $this->tipoProcesoId)
-        ->max('numero_inv') ?? 0) + 1;
-
-    // 3) Límite por tipo de proceso
-    if ((int)$this->tipoProcesoId === 1 && $next > $this->maxInvPre) {
-        Toaster::warning("En Pre-mediación solo se permiten {$this->maxInvPre} invitaciones.");
-        return;
-    }
-    if ((int)$this->tipoProcesoId === 2 && $next > $this->maxInvMed) {
-        Toaster::warning("En Mediación solo se permiten {$this->maxInvMed} sesiones.");
-        return;
-    }
-
-    // 4) Reglas para 2ª y subsecuentes SOLO en Pre-mediación
-    if ((int)$this->tipoProcesoId === 1 && $next >= 2 && $ultima) {
-        if ($ultima->asistio === 1) {
-            if (is_null($ultima->acepta_proceso)) {
-                Toaster::warning('Confirma si aceptaron mediación antes de crear otra invitación.');
-                return;
-            }
-            if ((int)$ultima->acepta_proceso === 1) {
-                Toaster::warning('Ya aceptaron mediación. No se permiten nuevas invitaciones en esta etapa.');
-                return;
-            }
-        }
-    }
-
-    // 4b) En Mediación: si ya hubo acuerdo, bloquear
-    if ((int)$this->tipoProcesoId === 2 && $ultima && (int)$ultima->acepta_proceso === 1) {
-        Toaster::warning('Ya hubo convenio/acuerdo. No se permiten nuevas sesiones.');
-        return;
-    }
-
-    // ===== Evento fuente CORRECTO según # y etapa =====
-    // Pre: #1 -> $this->evento ; #2 -> $this->eventoSegPreMedicion (si existe; si no, fallback a $this->evento)
-    // Mediación: siempre $this->eventoMediacion
-    if ((int)$this->tipoProcesoId === 1) {
-        $ev = ($next >= 2)
-            ? ($this->eventoSegPreMedicion ?: $this->evento)
-            : $this->evento;
-    } else {
-        $ev = $this->eventoMediacion;
-    }
-
-    // 5) Validación dinámica por modalidad/contexto
-    $rules = [];
-    $opcionSeparados = (int)($ev->opcion_invitacion ?? 1) === 0; // 0=separados, 1=juntos
-
-    if ($this->modalidad === 'linea') {
-        // En línea: URL obligatoria; fecha/horarios salen del EVENTO correcto
-        if ($context === 'nueva') {
-            $rules['urlNuevaInv'] = ['required', 'url'];
-        } else {
-            $rules['enlaceReunion'] = ['required', 'url'];
-        }
-    } else {
-        // Presencial
-        if ($context === 'nueva') {
-            $rules['fechaNuevaInv'] = ['required', 'date'];
-        } else {
-            $rules['fechaEnvio']    = ['required', 'date'];
-        }
-        $rules['horaInicio'] = ['required']; // hora de envío
-    }
-
-    $this->validate($rules);
-
-    // Inputs según modalidad/contexto
-    $url = $this->modalidad === 'linea'
-        ? ($context === 'nueva' ? $this->urlNuevaInv : $this->enlaceReunion)
-        : null;
-
-    // ===== Fechas =====
-    $fechaAtencion = null;
-    $fechaEnvio    = null;
-
-    if ($this->modalidad === 'linea') {
-        // Tomar SIEMPRE del evento correcto; si no hay y es "nueva", usar capturada
-        $fechaAtencion = $ev->fecha ?? null;
-        if (!$fechaAtencion && $context === 'nueva') {
-            $fechaAtencion = $this->fechaNuevaInv ?: null;
-        }
-        if (!$fechaAtencion) {
-            Toaster::warning('La fecha de atención no está definida en el evento ni fue capturada.');
+    public function store(string $context = 'primera'): void
+    {
+        $this->cargarTipoProceso();
+        $this->solicitud = Solicitud::find($this->solicitudId);
+        if (!$this->solicitud) {
+            Toaster::error('No se encontró la solicitud.');
             return;
         }
-    } else {
-        // Presencial
-        $fechaEnvio = ($context === 'nueva')
-            ? ($this->fechaNuevaInv ?: null)
-            : ($this->fechaEnvio ?: null);
 
-        if (!$fechaEnvio) {
-            Toaster::warning('Captura la fecha de envío.');
+        // Si no hay etapa, arrancamos en Pre-mediación (1)
+        if ($this->tipoProcesoId === null) {
+            $this->tipoProcesoId = 1;
+            $this->solicitud->update(['tipo_proceso_id' => 1]);
+            $this->solicitud->refresh();
+        }
+
+        $ultima = $this->ultimaInvitacion();
+
+        // 1) Si existe última sin asistencia registrada -> bloquear
+        if ($ultima && is_null($ultima->asistio)) {
+            Toaster::warning("Registra la asistencia de la {$this->etiquetaSing()} #{$ultima->numero_inv} antes de crear una nueva.");
             return;
         }
-    }
 
-    // FK segura del facilitador
-    $facilitadorId = $this->solicitud->facilitador_id;
-    if ($facilitadorId && !User::whereKey($facilitadorId)->exists()) {
-        $facilitadorId = null;
-    }
+        // 2) Consecutivo por etapa
+        $next = (int)(Invitacion::where('solicitud_id', $this->solicitudId)
+            ->where('tipo_proceso_id', $this->tipoProcesoId)
+            ->max('numero_inv') ?? 0) + 1;
 
-    // ===== Horarios a guardar =====
-    $esSeparados = ($this->modalidad === 'linea') && $opcionSeparados;
-
-    if ($this->modalidad === 'linea') {
-        // SIEMPRE desde el evento correcto
-        $horaInicio          = $ev->hora_inicio ?? null;
-        $horaFin             = $ev->hora_fin ?? null;
-        $horaInicioInvitado  = $opcionSeparados ? ($ev->hora_inicio_invitado ?? null) : null;
-        $horaFinInvitado     = $opcionSeparados ? ($ev->hora_fin_invitado ?? null) : null;
-    } else {
-        // Presencial: hora de envío capturada
-        $horaInicio          = $this->horaInicio ?: null;
-        $horaFin             = $this->horaFin ?: null;
-        $horaInicioInvitado  = null;
-        $horaFinInvitado     = null;
-    }
-
-    // Crear invitación/sesión
-    $inv = Invitacion::create([
-        'modalidad'            => $this->modalidad,
-        'solicitud_id'         => $this->solicitudId,
-        'facilitador_id'       => $facilitadorId,
-        'url'                  => $url,
-        'fecha_envio'          => $fechaEnvio,     // presencial
-        'fecha_atencion'       => $fechaAtencion,  // en línea
-        'hora_inicio'          => $horaInicio,
-        'hora_fin'             => $horaFin,
-        'hora_inicio_invitado' => $horaInicioInvitado,
-        'hora_fin_invitado'    => $horaFinInvitado,
-        'numero_inv'           => $next,
-        'asistio'              => null,
-        'tipo_proceso_id'      => $this->tipoProcesoId,
-        'estatus_id'           => 5,
-        'acudiran_juntos'      => !$esSeparados,
-        'acepta_proceso'       => null,
-    ]);
-
-    // Enlazar evento->invitacion_id
-    if ((int)$this->tipoProcesoId === 1) {
-        if ($next === 1 && $this->evento) {
-            $this->evento->update(['invitacion_id' => $inv->id]);
+        // 3) Límite por tipo de proceso
+        if ((int)$this->tipoProcesoId === 1 && $next > $this->maxInvPre) {
+            Toaster::warning("En Pre-mediación solo se permiten {$this->maxInvPre} invitaciones.");
+            return;
         }
-        if ($next === 2 && $this->eventoSegPreMedicion) {
-            $this->eventoSegPreMedicion->update(['invitacion_id' => $inv->id]);
+        if ((int)$this->tipoProcesoId === 2 && $next > $this->maxInvMed) {
+            Toaster::warning("En Mediación solo se permiten {$this->maxInvMed} sesiones.");
+            return;
         }
-    } elseif ((int)$this->tipoProcesoId === 2 && $this->eventoMediacion && !$this->eventoMediacion->invitacion_id) {
-        $this->eventoMediacion->update(['invitacion_id' => $inv->id]);
+
+        // 4) Reglas para 2ª y subsecuentes SOLO en Pre-mediación
+        if ((int)$this->tipoProcesoId === 1 && $next >= 2 && $ultima) {
+            if ($ultima->asistio === 1) {
+                if (is_null($ultima->acepta_proceso)) {
+                    Toaster::warning('Confirma si aceptaron mediación antes de crear otra invitación.');
+                    return;
+                }
+                if ((int)$ultima->acepta_proceso === 1) {
+                    Toaster::warning('Ya aceptaron mediación. No se permiten nuevas invitaciones en esta etapa.');
+                    return;
+                }
+            }
+        }
+
+        // 4b) En Mediación: si ya hubo acuerdo, bloquear
+        if ((int)$this->tipoProcesoId === 2 && $ultima && (int)$ultima->acepta_proceso === 1) {
+            Toaster::warning('Ya hubo convenio/acuerdo. No se permiten nuevas sesiones.');
+            return;
+        }
+
+        // ===== Evento fuente CORRECTO según # y etapa =====
+        if ((int)$this->tipoProcesoId === 1) {
+            $ev = ($next >= 2)
+                ? ($this->eventoSegPreMedicion ?: $this->evento)
+                : $this->evento;
+        } else {
+            $ev = $this->eventoMediacion;
+        }
+
+        // 5) Validación dinámica por modalidad/contexto
+        $rules = [];
+        $opcionSeparados = (int)($ev->opcion_invitacion ?? 1) === 0; // 0=separados, 1=juntos
+        $isMediacion = ((int)$this->tipoProcesoId === 2);
+
+        if ($this->modalidad == 2) {
+            // En línea: URL obligatoria
+            if ($context === 'nueva') {
+                $rules['urlNuevaInv'] = ['required', 'url'];
+            } else {
+                $rules['enlaceReunion'] = ['required', 'url'];
+            }
+
+            // ✔ NUEVO: en Mediación en línea y 'nueva', exigir fechaAtencion capturada
+            if ($isMediacion && $context === 'nueva') {
+                $rules['fechaAtencion'] = ['required', 'date'];
+            }
+
+            // (Opcional) exigir horario en Mediación
+            // if ($isMediacion) {
+            //     $rules['horaInicio'] = ['required'];
+            //     $rules['horaFin']    = ['required'];
+            //     if ($opcionSeparados) {
+            //         $rules['horaInicioInvitado'] = ['required'];
+            //         $rules['horaFinInvitado']    = ['required'];
+            //     }
+            // }
+        } else {
+            // Presencial
+            if ($context === 'nueva') {
+                $rules['fechaNuevaInv'] = ['required', 'date'];
+            } else {
+                $rules['fechaEnvio']    = ['required', 'date'];
+            }
+            $rules['horaInicio'] = ['required']; // hora de envío
+        }
+
+        $this->validate($rules);
+
+        // Inputs según modalidad/contexto
+        $url = $this->modalidad == 2
+            ? ($context === 'nueva' ? $this->urlNuevaInv : $this->enlaceReunion)
+            : null;
+
+        // ===== Fechas =====
+        $fechaAtencion = null;
+        $fechaEnvio    = null;
+
+        if ($this->modalidad == 2) {
+            if ($isMediacion) {
+                // ✔ Mediación en línea:
+                // 'primera' toma del evento; 'nueva' toma SIEMPRE lo capturado en fechaAtencion
+                $fechaAtencion = ($context === 'nueva')
+                    ? ($this->fechaAtencion ?: null)
+                    : ($ev->fecha ?? null);
+            } else {
+                // Pre en línea: preferir evento; si no hay y es 'nueva', usar fechaNuevaInv
+                $fechaAtencion = $ev->fecha ?? null;
+                if (!$fechaAtencion && $context === 'nueva') {
+                    $fechaAtencion = $this->fechaNuevaInv ?: null;
+                }
+            }
+
+            if (!$fechaAtencion) {
+                Toaster::warning('La fecha de atención no está definida.');
+                return;
+            }
+        } else {
+            // Presencial
+            $fechaEnvio = ($context === 'nueva')
+                ? ($this->fechaNuevaInv ?: null)
+                : ($this->fechaEnvio ?: null);
+
+            if (!$fechaEnvio) {
+                Toaster::warning('Captura la fecha de envío.');
+                return;
+            }
+        }
+
+        // FK segura del facilitador
+        $facilitadorId = $this->solicitud->facilitador_id;
+        if ($facilitadorId && !User::whereKey($facilitadorId)->exists()) {
+            $facilitadorId = null;
+        }
+
+        // ===== Horarios a guardar =====
+        $esSeparados = ($this->modalidad == 2) && $opcionSeparados;
+
+        if ($this->modalidad == 2) {
+            if ($isMediacion) {
+                // En Mediación en línea, usar lo capturado (con fallback al evento)
+                $horaInicio          = $this->horaInicio ?: ($ev->hora_inicio ?? null);
+                $horaFin             = $this->horaFin    ?: ($ev->hora_fin ?? null);
+                $horaInicioInvitado  = $esSeparados ? ($this->horaInicioInvitado ?: ($ev->hora_inicio_invitado ?? null)) : null;
+                $horaFinInvitado     = $esSeparados ? ($this->horaFinInvitado    ?: ($ev->hora_fin_invitado ?? null))    : null;
+            } else {
+                // Pre en línea: desde el evento
+                $horaInicio          = $ev->hora_inicio ?? null;
+                $horaFin             = $ev->hora_fin ?? null;
+                $horaInicioInvitado  = $esSeparados ? ($ev->hora_inicio_invitado ?? null) : null;
+                $horaFinInvitado     = $esSeparados ? ($ev->hora_fin_invitado ?? null) : null;
+            }
+        } else {
+            // Presencial: hora de envío capturada
+            $horaInicio          = $this->horaInicio ?: null;
+            $horaFin             = $this->horaFin ?: null;
+            $horaInicioInvitado  = null;
+            $horaFinInvitado     = null;
+        }
+
+        // Crear invitación/sesión
+        $inv = Invitacion::create([
+            'modalidad'            => $this->modalidad,
+            'solicitud_id'         => $this->solicitudId,
+            'facilitador_id'       => $facilitadorId,
+            'url'                  => $url,
+            'fecha_envio'          => $fechaEnvio,     // presencial
+            'fecha_atencion'       => $fechaAtencion,  // en línea
+            'hora_inicio'          => $horaInicio,
+            'hora_fin'             => $horaFin,
+            'hora_inicio_invitado' => $horaInicioInvitado,
+            'hora_fin_invitado'    => $horaFinInvitado,
+            'numero_inv'           => $next,
+            'asistio'              => null,
+            'tipo_proceso_id'      => $this->tipoProcesoId,
+            'estatus_id'           => 5,
+            'acudiran_juntos'      => !$esSeparados,
+            'acepta_proceso'       => null,
+        ]);
+
+        // Enlazar evento->invitacion_id
+        if ((int)$this->tipoProcesoId === 1) {
+            if ($next === 1 && $this->evento) {
+                $this->evento->update(['invitacion_id' => $inv->id]);
+            }
+            if ($next === 2 && $this->eventoSegPreMedicion) {
+                $this->eventoSegPreMedicion->update(['invitacion_id' => $inv->id]);
+            }
+        } elseif ((int)$this->tipoProcesoId === 2 && $this->eventoMediacion && !$this->eventoMediacion->invitacion_id) {
+            $this->eventoMediacion->update(['invitacion_id' => $inv->id]);
+        }
+
+        // ===== Correos (solo en línea con URL) — usar SIEMPRE lo guardado en la invitación =====
+        if ($this->modalidad == 2 && $url) {
+            $horarioSolic = $this->formatoHorario($inv->hora_inicio, $inv->hora_fin);
+            $horarioInv   = $esSeparados
+                ? $this->formatoHorario($inv->hora_inicio_invitado, $inv->hora_fin_invitado)
+                : $horarioSolic;
+
+            // Fecha preferentemente la que guardaste en la invitación
+            $fechaTxt = $inv->fecha_atencion ?: ($ev->fecha ?? '—');
+
+            foreach ($this->correosSolicitantes as $correo) {
+                Mail::to($correo)->send(
+                    new InvitacionMediacion(
+                        'Solicitante',
+                        $url,
+                        $horarioSolic,
+                        $fechaTxt,
+                        (int)$this->tipoProcesoId === 1 ? $next : null, // numInv solo en Pre
+                        (int)$this->tipoProcesoId                       // 1 o 2
+                    )
+                );
+            }
+
+            foreach ($this->correosInvitados as $correo) {
+                Mail::to($correo)->send(
+                    new InvitacionMediacion(
+                        'Invitado',
+                        $url,
+                        $horarioInv,
+                        $fechaTxt,
+                        (int)$this->tipoProcesoId === 1 ? $next : null,
+                        (int)$this->tipoProcesoId
+                    )
+                );
+            }
+        }
+
+        // Refrescar + limpiar
+        $this->cargarInvitaciones();
+        $this->sincronizarEstadoUI();
+        $this->reset([
+            'enlaceReunion',
+            'urlNuevaInv',
+            'fechaAtencion',
+            'fechaNuevaInv',
+            'fechaEnvio',
+            'horaInicio',
+            'horaFin',
+            'horaInicioInvitado',
+            'horaFinInvitado',
+        ]);
+
+        Toaster::success(($this->tipoProcesoId === 2 ? 'Sesión' : 'Invitación') . " #{$next} guardada.");
     }
-
-    // ===== Correos (solo en línea con URL) — horarios SIEMPRE del EVENTO correcto =====
-    if ($this->modalidad === 'linea' && $url) {
-        $horarioSolic = $this->formatoHorario($ev->hora_inicio ?? null, $ev->hora_fin ?? null);
-        $horarioInv   = $esSeparados
-            ? $this->formatoHorario($ev->hora_inicio_invitado ?? null, $ev->hora_fin_invitado ?? null)
-            : $horarioSolic;
-
-        $fechaTxt = $ev->fecha ?: $fechaAtencion ?: '—';
-
-        foreach ($this->correosSolicitantes as $correo) {
-            Mail::to($correo)->send(new InvitacionMediacion('Solicitante', $url, $horarioSolic, $fechaTxt));
-        }
-        foreach ($this->correosInvitados as $correo) {
-            Mail::to($correo)->send(new InvitacionMediacion('Invitado', $url, $horarioInv, $fechaTxt));
-        }
-    }
-
-    // Refrescar + limpiar
-    $this->cargarInvitaciones();
-    $this->sincronizarEstadoUI();
-    $this->reset([
-        'enlaceReunion',
-        'urlNuevaInv',
-        'fechaAtencion',
-        'fechaNuevaInv',
-        'fechaEnvio',
-        'horaInicio',
-        'horaFin',
-        'horaInicioInvitado',
-        'horaFinInvitado',
-    ]);
-
-    Toaster::success(($this->tipoProcesoId === 2 ? 'Sesión' : 'Invitación') . " #{$next} guardada.");
-}
-
 
     /** Registrar (o cambiar) asistencia en una invitación/sesión */
     public function marcarAsistencia(int $invitacionId, bool $valor): void
@@ -559,9 +600,6 @@ class InvitacionesPanel extends Component
 
                     return Redirect::route('solicitud.list')
                         ->success('Registrado: Aceptó mediación. El proceso cambió a Mediación.');
-
-                    // (código inalcanzable después del return)
-                    // $this->dispatch('proceso-actualizado', id: $this->solicitudId);
                 } else {
                     $this->solicitud->update([
                         'tipo_cancelacion_id' => $this->motivoCancelacion,
@@ -658,7 +696,6 @@ class InvitacionesPanel extends Component
             'invitacion_id'        => null
         ]);
 
-        // CORRECCIÓN: usar solicitudId (antes whereKey($this->solicitud))
         Solicitud::whereKey($this->solicitudId)->update([
             'estatus_id'     => 2,
             'facilitador_id' => $this->facilitador,
@@ -687,3 +724,4 @@ class InvitacionesPanel extends Component
         return view('livewire.solicitud.invitaciones-panel');
     }
 }
+ 

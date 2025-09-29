@@ -87,8 +87,8 @@
         Sexo @if($prefix === 'solicitante') * @endif
       </label>
       <flux:select wire:model="sexo_solicitante" placeholder="Elige sexo...">
-        <flux:select.option>Femenino</flux:select.option>
-        <flux:select.option>Masculino</flux:select.option>
+        <flux:select.option value="1">Femenino</flux:select.option>
+        <flux:select.option value="2">Masculino</flux:select.option>
       </flux:select>
     </div>
 
@@ -127,7 +127,7 @@
       </label>
       <flux:select wire:model="escolaridad_solicitante" placeholder="Elige escolaridad...">
         @foreach ($escolaridades as $escolaridad)
-          <flux:select.option>{{ $escolaridad }}</flux:select.option>
+          <flux:select.option value="{{ $escolaridad->id }}">{{ $escolaridad->nombre }}</flux:select.option>
         @endforeach
       </flux:select>
     </div>
@@ -139,7 +139,7 @@
       </label>
       <flux:select wire:model="ocupacion_solicitante" placeholder="Elige Ocupació...">
         @foreach ($ocupaciones as $ocupacion)
-          <flux:select.option>{{ $ocupacion }}</flux:select.option>
+          <flux:select.option value="{{ $ocupacion->id }}">{{ $ocupacion->nombre }}</flux:select.option>
         @endforeach
       </flux:select>
     </div>
@@ -150,8 +150,8 @@
         Nacionalidad @if($prefix === 'solicitante') * @endif
       </label>
       <flux:select wire:model="nacionalidad_solicitante" placeholder="Elige tipo nacionalidad...">
-        <flux:select.option>Méxicana</flux:select.option>
-        <flux:select.option>Extranjera</flux:select.option>
+        <flux:select.option value="1">Méxicana</flux:select.option>
+        <flux:select.option value="2">Extranjera</flux:select.option>
       </flux:select>
     </div>
   </div>
@@ -179,7 +179,7 @@
       <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
           Correos electrónicos
-          @if (!($modalidad === 'presencial' && $prefix === 'invitado')) * @endif
+          @if (!($modalidad == 1 && $prefix === 'invitado')) * @endif
         </label>
 
         <div class="flex gap-2">
@@ -212,7 +212,7 @@
       <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
           Teléfonos
-          @if (!($modalidad === 'linea' && $prefix === 'invitado')) * @endif
+          @if (!($modalidad == 2 && $prefix === 'invitado')) * @endif
         </label>
 
         <div class="flex gap-2">
