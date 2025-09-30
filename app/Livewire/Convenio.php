@@ -54,8 +54,8 @@ class Convenio extends Component
 
     public int $tab = 1;
 
-public array $docMapCivil = [];      // ['Tipo' => ['Doc1','Doc2',...]]
-public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
+    public array $docMapCivil = [];      // ['Tipo' => ['Doc1','Doc2',...]]
+    public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
     // Input Radios
     public $modalidad;
     public $materia;
@@ -150,6 +150,7 @@ public array $docMapFamiliar = [];   // ['Tema' => ['Doc1','Doc2',...]]
     public $escolaridades;
     public $mediosSolicitante;
     public $mediosInvitado;
+    public $motivosCierre;
 
     public string $correo_temp = '';
     public string $telefono_temp = '';

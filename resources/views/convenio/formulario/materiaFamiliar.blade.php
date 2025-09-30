@@ -1,6 +1,22 @@
 @props(['prefix'])
 
-<div class="gap-4 mt-2 animate__animated animate__fadeIn" wire:key='{{ $key }}'> 
+<div class="gap-4 mt-2 animate__animated animate__fadeIn" wire:key='{{ $key }}'
+
+x-data="{
+    fecha: @entangle('fecha_nacimiento_solicitante').live,
+    setEdad(v) { $wire.set('edad_solicitante', v?.toString() ?? ''); },
+    calcEdad(iso) {
+      if (!iso) return '';
+      const d = new Date(iso + 'T00:00:00'); // evita desfases TZ
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - d.getFullYear();
+      const m = hoy.getMonth() - d.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < d.getDate())) edad--;
+      return (edad >= 0 && edad <= 130) ? edad : '';
+    }
+  }"
+  x-init="$watch('fecha', v => setEdad(calcEdad(v)))"
+> 
 
     <div class="grid grid-cols-3 gap-4">
  {{-- Nombre --}}
@@ -61,6 +77,19 @@
                     .replace(/[ÚÙÛÜ]/g,'U')"
         />
     </div>
+
+    {{-- Fecha de nacimiento (sin oninput innecesario) --}}
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+        Fecha de nacimiento @if($prefix === 'solicitante') * @endif
+      </label>
+      <flux:input
+        wire:model="fecha_nacimiento_solicitante"
+        type="date"
+        required
+      />
+    </div>
+
     {{-- Edad --}}
     <div class="space-y-1">
         <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
@@ -151,7 +180,7 @@
         Nacionalidad @if($prefix === 'solicitante') * @endif
       </label>
       <flux:select wire:model="nacionalidad_solicitante" placeholder="Elige tipo nacionalidad...">
-        <flux:select.option value="1">Méxicana</flux:select.option>
+        <flux:select.option value="1">Mexicana</flux:select.option>
         <flux:select.option value="2">Extranjera</flux:select.option>
       </flux:select>
     </div>
@@ -179,8 +208,8 @@
              <!-- Correos electrónicos -->
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Correos electrónicos
-                    @if ($modalidad == 2 && $prefix === 'invitado')
+                    Correos electrónicos
+                    @if ($prefix === 'solicitante' || ($prefix === 'invitado' && $modalidad == 2))
                         *
                     @endif
                 </label>
@@ -219,24 +248,20 @@
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
                     Teléfonos
-                    @if ($modalidad == 1 && $prefix === 'invitado')
+                    @if ($prefix === 'solicitante' || ($prefix === 'invitado' && $modalidad == 1))
                         *
                     @endif
                 </label>
 
                 <div class="flex gap-2">
                     <flux:input
-                        oninput="this.value = this.value
-                    .toUpperCase()
-                    .replace(/[ÁÀÂÄ]/g,'A')
-                    .replace(/[ÉÈÊË]/g,'E')
-                    .replace(/[ÍÌÎÏ]/g,'I')
-                    .replace(/[ÓÒÔÖ]/g,'O')
-                    .replace(/[ÚÙÛÜ]/g,'U')"
                         wire:model.defer="telefono_temp"
                         type="tel"
                         placeholder="Agregar teléfono"
-                    />                    
+                        inputmode="tel"
+                        maxlength="10"
+                        oninput="this.value = this.value.replace(/\D+/g,'').slice(0,10)"
+                    />                  
                     <x-boton-agregar wire-click="agregarTelefono" />
 
                 </div>

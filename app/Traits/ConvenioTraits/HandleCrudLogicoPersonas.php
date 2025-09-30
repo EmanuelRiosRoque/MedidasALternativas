@@ -3,37 +3,67 @@
 namespace App\Traits\ConvenioTraits;
 
 use Masmerise\Toaster\Toaster;
+use Illuminate\Validation\ValidationException;
 
 trait HandleCrudLogicoPersonas
 {
     /** @var string[] */
     protected array $camposPersona = [
-        'persona', 'representante', 'persona_invitado', 'materia',
-        'nombre_solicitante', 'apellido_p_solicitante', 'apellido_m_solicitante',
-        'sexo_solicitante', 'edad_solicitante', 'fecha_nacimiento_solicitante',
-        'escolaridad_solicitante', 'ocupacion_solicitante', 'nacionalidad_solicitante',
-        'tipo_domicilio_solicitante', 'calle_solicitante', 'colonia', 'colonias',
-        'municipio_solicitante', 'entidad_federativa_solicitante', 'correo_solicitante',
-        'identificacion', 'acta_notarial', 'acta_de_nacimiento', 'resolucion_judicial',
-        'cp_solicitante', 'formato_privacidad', 'como_se_entero',
+        'persona',
+        'representante',
+        'persona_invitado',
+        'materia',
+        'nombre_solicitante',
+        'apellido_p_solicitante',
+        'apellido_m_solicitante',
+        'sexo_solicitante',
+        'edad_solicitante',
+        'fecha_nacimiento_solicitante',
+        'escolaridad_solicitante',
+        'ocupacion_solicitante',
+        'nacionalidad_solicitante',
+        'tipo_domicilio_solicitante',
+        'calle_solicitante',
+        'colonia',
+        'colonias',
+        'municipio_solicitante',
+        'entidad_federativa_solicitante',
+        'correo_solicitante',
+        'identificacion',
+        'acta_notarial',
+        'acta_de_nacimiento',
+        'resolucion_judicial',
+        'titulo_credito', // ⟵ NUEVO: para “Título de crédito y póliza”
+        'cp_solicitante',
+        'formato_privacidad',
+        'como_se_entero',
 
         // Campos para persona moral / familiar
-        'razon_social_solicitante', 'rfc_solicitante', 'instrumento_solicitante',
-        'fecha_instrumento_solicitante', 'telefono_solicitante',
-        'domicilio_solicitante', 'estado_civil_solicitante', 'correos', 'telefonos',
+        'razon_social_solicitante',
+        'rfc_solicitante',
+        'instrumento_solicitante',
+        'fecha_instrumento_solicitante',
+        'telefono_solicitante',
+        'domicilio_solicitante',
+        'estado_civil_solicitante',
+        'correos',
+        'telefonos',
 
         // Representante
-        'nombre_representante', 'apellido_p_representante', 'apellido_m_representante', 'doc_representante',
+        'nombre_representante',
+        'apellido_p_representante',
+        'apellido_m_representante',
+        'doc_representante',
 
         // Otros
         'acudiran_juntos',
     ];
 
     // Constantes para evitar "números mágicos"
-    private const DOC_ACTA_NOTARIAL = 1;
-    private const DOC_ACTA_NACIMIENTO = 2;
-    private const DOC_RESOLUCION_JUDICIAL = 3;
-    private const DOC_CREDITO_POLIZA = 4;
+    private const DOC_ACTA_NOTARIAL    = 1;
+    private const DOC_ACTA_NACIMIENTO  = 2;
+    private const DOC_RESOLUCION_JUD   = 3;
+    private const DOC_CREDITO_POLIZA   = 4;
 
     /** Helpers de contexto */
     protected function esCivilOMercantil(): bool
@@ -61,11 +91,11 @@ trait HandleCrudLogicoPersonas
     {
         // 1) En civil/mercantil, si es solicitante: al menos seleccionar tipo de persona (física/moral)
         if ($tipo === 'solicitante' && $this->esCivilOMercantil()) {
-            $this->validate(['persona' => 'required']);
+            $this->validate(['persona' => 'required'], ['persona.required' => 'Selecciona si es persona física o moral.']);
         }
 
-        // 2) Construimos reglas según combinaciones
-        $rules = [];
+        $rules    = [];
+        $messages = [];
 
         if ($tipo === 'solicitante') {
             $rules = array_merge($rules, $this->rulesSolicitanteBase());
@@ -83,8 +113,43 @@ trait HandleCrudLogicoPersonas
             }
 
             if ((int) $this->representante === 1) {
-                $rules = array_merge($rules, $this->rulesRepresentanteObligatorio());
-                $rules = array_merge($rules, $this->rulesDocumentosRepresentanteCondicionales());
+                if ($this->esCivilOMercantil()) {
+                    // En civil/mercantil: nombres del representante y selección de documentos son OBLIGATORIOS
+                    $rules = array_merge($rules, $this->rulesRepresentanteObligatorio());
+                } else {
+                    // En familiar: la selección de documentos es opcional
+                    $rules['doc_representante'] = 'nullable|array';
+                }
+
+                // ✅ SIEMPRE exigir archivos si seleccionaron documentos, sin importar la materia
+                $docRule = $this->rulesDocumentosRepresentanteCondicionales();
+                $rules   = array_merge($rules, $docRule);
+
+                // Mensajes para cada documento (si fue seleccionado)
+                if (isset($docRule['acta_notarial'])) {
+                    $messages['acta_notarial.required'] = 'Seleccionaste "Instrumento notarial", sube el archivo.';
+                    $messages['acta_notarial.array']    = 'El archivo de "Instrumento notarial" es inválido.';
+                    $messages['acta_notarial.min']      = 'Adjunta al menos un archivo de "Instrumento notarial".';
+                }
+                if (isset($docRule['acta_de_nacimiento'])) {
+                    $messages['acta_de_nacimiento.required'] = 'Seleccionaste "Acta de registro civil", sube el archivo.';
+                    $messages['acta_de_nacimiento.array']    = 'El archivo de "Acta de registro civil" es inválido.';
+                    $messages['acta_de_nacimiento.min']      = 'Adjunta al menos un archivo del "Acta de registro civil".';
+                }
+                if (isset($docRule['resolucion_judicial'])) {
+                    $messages['resolucion_judicial.required'] = 'Seleccionaste "Resolución judicial", sube el archivo.';
+                    $messages['resolucion_judicial.array']    = 'El archivo de "Resolución judicial" es inválido.';
+                    $messages['resolucion_judicial.min']      = 'Adjunta al menos un archivo de "Resolución judicial".';
+                }
+                if (isset($docRule['titulo_credito'])) {
+                    $messages['titulo_credito.required'] = 'Seleccionaste "Título de crédito y póliza", sube el archivo.';
+                    $messages['titulo_credito.array']    = 'El archivo de "Título de crédito y póliza" es inválido.';
+                    $messages['titulo_credito.min']      = 'Adjunta al menos un archivo de "Título de crédito y póliza".';
+                }
+
+                // (Opcional) asegurar valores válidos en el checkbox
+                $rules['doc_representante.*'] = 'in:1,2,3,4';
+                $messages['doc_representante.*.in'] = 'Documento seleccionado inválido.';
             }
         }
 
@@ -102,17 +167,16 @@ trait HandleCrudLogicoPersonas
             }
         }
 
-        // 🔹 3) Reglas adicionales según modalidad
+        // 3) Reglas adicionales según modalidad
         if ($this->modalidad == 1) {
-            // Teléfono obligatorio, correo opcional
             $rules['telefonos'] = 'required|array|min:1';
-            // correo puede existir pero no se fuerza
+            $messages['telefonos.required'] = 'Captura al menos un teléfono.';
         } elseif ($this->modalidad == 2) {
-            // Correo obligatorio, teléfono opcional
             $rules['correos'] = 'required|array|min:1';
+            $messages['correos.required'] = 'Captura al menos un correo electrónico.';
         }
 
-        $this->validate($rules);
+        $this->validate($rules, $messages);
     }
 
 
@@ -146,7 +210,7 @@ trait HandleCrudLogicoPersonas
             'cp_solicitante'                => 'required|string|max:10',
             'colonia'                       => 'required|string|max:255',
             'municipio_solicitante'         => 'required|string|max:255',
-            'entidad_federativa_solicitante'=> 'required|string|max:255',
+            'entidad_federativa_solicitante' => 'required|string|max:255',
             'identificacion'                => 'required|array|min:1',
             'formato_privacidad'            => 'required|array|min:1',
             'como_se_entero'                => 'required',
@@ -168,12 +232,11 @@ trait HandleCrudLogicoPersonas
             'cp_solicitante'                => 'required|string|max:10',
             'colonia'                       => 'required|string|max:255',
             'municipio_solicitante'         => 'required|string|max:255',
-            'entidad_federativa_solicitante'=> 'required|string|max:255',
+            'entidad_federativa_solicitante' => 'required|string|max:255',
             'identificacion'                => 'required|array|min:1',
             'formato_privacidad'            => 'required|array|min:1',
             'representante'                 => 'required',
             'como_se_entero'                => 'required',
-            
         ];
     }
 
@@ -196,7 +259,7 @@ trait HandleCrudLogicoPersonas
             'cp_solicitante'                => 'required|string|max:10',
             'colonia'                       => 'required|string|max:255',
             'municipio_solicitante'         => 'required|string|max:255',
-            'entidad_federativa_solicitante'=> 'required|string|max:255',
+            'entidad_federativa_solicitante' => 'required|string|max:255',
             'identificacion'                => 'required|array|min:1',
             'formato_privacidad'            => 'required|array|min:1',
             'representante'                 => 'required',
@@ -211,8 +274,6 @@ trait HandleCrudLogicoPersonas
             'nombre_solicitante'            => 'required|string|max:255',
             'apellido_p_solicitante'        => 'required|string|max:255',
             'apellido_m_solicitante'        => 'required|string|max:255',
-            // 'telefonos'                     => 'required|array|min:1',
-            // 'correos'                       => 'required|array|min:1',
         ];
     }
 
@@ -223,9 +284,6 @@ trait HandleCrudLogicoPersonas
             'nombre_solicitante'            => 'required|string|max:255',
             'apellido_p_solicitante'        => 'required|string|max:255',
             'apellido_m_solicitante'        => 'required|string|max:255',
-
-            // 'telefonos'                     => 'required|array|min:1',
-            // 'correos'                       => 'required|array|min:1',
         ];
     }
 
@@ -234,10 +292,7 @@ trait HandleCrudLogicoPersonas
     {
         return [
             'razon_social_solicitante'      => 'required',
-            'como_se_entero'         => 'required',
-
-            // 'telefonos'                     => 'required|array|min:1',
-            // 'correos'                       => 'required|array|min:1',
+            'como_se_entero'                => 'required',
         ];
     }
 
@@ -256,26 +311,24 @@ trait HandleCrudLogicoPersonas
     protected function rulesDocumentosRepresentanteCondicionales(): array
     {
         $rules = [];
-        $docs = $this->docRepresentante();
+        // normaliza a enteros por si vienen como strings
+        $docs = array_map('intval', $this->docRepresentante());
 
-        if (in_array(self::DOC_ACTA_NOTARIAL, $docs, true)) {
-            $rules['acta_notarial'] = 'required';
+        if (in_array(self::DOC_ACTA_NOTARIAL, $docs)) {
+            $rules['acta_notarial'] = 'required|array|min:1';
         }
 
-        if (in_array(self::DOC_ACTA_NACIMIENTO, $docs, true)) {
-            $rules['acta_de_nacimiento'] = 'required';
+        if (in_array(self::DOC_ACTA_NACIMIENTO, $docs)) {
+            $rules['acta_de_nacimiento'] = 'required|array|min:1';
         }
 
-        if (in_array(self::DOC_RESOLUCION_JUDICIAL, $docs, true)) {
-            $rules['resolucion_judicial'] = 'required';
+        if (in_array(self::DOC_RESOLUCION_JUD, $docs)) {
+            $rules['resolucion_judicial'] = 'required|array|min:1';
         }
 
-        if (in_array(self::DOC_RESOLUCION_JUDICIAL, $docs, true)) {
-            $rules['resolucion_judicial'] = 'required';
-        }
-        
-        if (in_array(self::DOC_CREDITO_POLIZA, $docs, true)) {
-            $rules['titulo_credito'] = 'required';
+        if (in_array(self::DOC_CREDITO_POLIZA, $docs)) {
+            // ⟵ IMPORTANTE: coincide con tu dropzone: wire:model="titulo_credito"
+            $rules['titulo_credito'] = 'required|array|min:1';
         }
 
         return $rules;
@@ -299,7 +352,14 @@ trait HandleCrudLogicoPersonas
 
     public function agregarPersona(string $tipo = 'solicitante'): void
     {
-        $this->validarPersonaAntesDeAgregar($tipo);
+        try {
+            $this->validarPersonaAntesDeAgregar($tipo);
+        } catch (ValidationException $e) {
+            // Muestra el primer mensaje en Toaster
+            $msg = collect($e->validator->errors()->all())->first() ?? 'Validación inválida';
+            Toaster::error($msg);
+            return;
+        }
 
         $datos = $this->tomarDatosDeFormulario();
 
@@ -398,24 +458,49 @@ trait HandleCrudLogicoPersonas
         }
 
         $this->reset([
-            'modoEdicion', 'representante',
-            'nombre_solicitante', 'apellido_p_solicitante', 'apellido_m_solicitante',
-            'sexo_solicitante', 'edad_solicitante', 'fecha_nacimiento_solicitante',
-            'escolaridad_solicitante', 'ocupacion_solicitante', 'nacionalidad_solicitante',
-            'tipo_domicilio_solicitante', 'calle_solicitante', 'domicilio_solicitante',
-            'municipio_solicitante', 'entidad_federativa_solicitante',
-            'correo_solicitante', 'estado_civil_solicitante',
-            'razon_social_solicitante', 'rfc_solicitante',
-            'instrumento_solicitante', 'fecha_instrumento_solicitante',
-            'telefono_solicitante', 'cp_solicitante', 'colonia', 'colonias',
+            'modoEdicion',
+            'representante',
+            'nombre_solicitante',
+            'apellido_p_solicitante',
+            'apellido_m_solicitante',
+            'sexo_solicitante',
+            'edad_solicitante',
+            'fecha_nacimiento_solicitante',
+            'escolaridad_solicitante',
+            'ocupacion_solicitante',
+            'nacionalidad_solicitante',
+            'tipo_domicilio_solicitante',
+            'calle_solicitante',
+            'domicilio_solicitante',
+            'municipio_solicitante',
+            'entidad_federativa_solicitante',
+            'correo_solicitante',
+            'estado_civil_solicitante',
+            'razon_social_solicitante',
+            'rfc_solicitante',
+            'instrumento_solicitante',
+            'fecha_instrumento_solicitante',
+            'telefono_solicitante',
+            'cp_solicitante',
+            'colonia',
+            'colonias',
             'como_se_entero',
 
             // Documentos / arrays
-            'identificacion', 'acta_notarial', 'acta_de_nacimiento', 'resolucion_judicial',
-            'formato_privacidad', 'doc_representante', 'correos', 'telefonos',
+            'identificacion',
+            'acta_notarial',
+            'acta_de_nacimiento',
+            'resolucion_judicial',
+            'titulo_credito', // ⟵ NUEVO
+            'formato_privacidad',
+            'doc_representante',
+            'correos',
+            'telefonos',
 
             // Representante
-            'nombre_representante', 'apellido_p_representante', 'apellido_m_representante',
+            'nombre_representante',
+            'apellido_p_representante',
+            'apellido_m_representante',
         ]);
     }
 }

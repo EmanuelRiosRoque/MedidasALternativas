@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
 
             $table->string('modalidad')->nullable();
+            $table->text('notas_observaciones')->nullable();
             $table->unsignedBigInteger('solicitud_id')->nullable();
             $table->unsignedBigInteger('facilitador_id')->nullable();
+            
             
             $table->foreignId('tipo_proceso_id')
             ->nullable()

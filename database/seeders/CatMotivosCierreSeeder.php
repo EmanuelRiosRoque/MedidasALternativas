@@ -3,16 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\CatCancelacion;
+use App\Models\Catalogos\CatMotivosCierre;
 
-class CatCancelacionSeeder extends Seeder
+class CatMotivosCierreSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $motivos = [
+        $nombres = [
             'Asunto informativo',
             'Asunto no mediable',
             'A petición del solicitante',
@@ -25,11 +22,8 @@ class CatCancelacionSeeder extends Seeder
             'Otro',
         ];
 
-
-        foreach ($motivos as $motivo) {
-            CatCancelacion::create([
-                'motivo' => $motivo,
-            ]);
+        foreach ($nombres as $nombre) {
+            CatMotivosCierre::firstOrCreate(['nombre' => $nombre]);
         }
     }
 }

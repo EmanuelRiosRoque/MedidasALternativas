@@ -25,8 +25,6 @@
         </flux:tooltip>
         </div>
 
-       
-
         <livewire:dropzone
             wire:model="identificacion"
             :rules="['mimes:pdf','max:10420']"

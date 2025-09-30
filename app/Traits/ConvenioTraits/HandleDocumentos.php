@@ -11,6 +11,7 @@ use App\Models\Catalogos\CatOcupacion;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Catalogos\CatEscolaridad;
 use App\Models\Catalogos\CatMedioDifusion;
+use App\Models\Catalogos\CatMotivosCierre;
 
 trait HandleDocumentos
 {
@@ -29,6 +30,8 @@ trait HandleDocumentos
     {
         return CatMedioDifusion::orderBy('nombre')->get(['id','nombre']);
     }
+
+  
 
 
 

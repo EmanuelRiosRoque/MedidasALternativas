@@ -60,7 +60,7 @@
         <flux:field>
             <flux:label>Nacionalidad</flux:label>
             <flux:select wire:model="personaSeleccionada.nacionalidad" placeholder="Seleccione...">
-                <flux:select.option value="1">Méxicana</flux:select.option>
+                <flux:select.option value="1">Mexicana</flux:select.option>
                 <flux:select.option value="2">Extranjera</flux:select.option>
             </flux:select>
         </flux:field>
@@ -157,7 +157,7 @@
         <flux:field>
             <flux:label>Nacionalidad</flux:label>
             <flux:select wire:model="personaSeleccionada.nacionalidad" placeholder="Seleccione...">
-                <flux:select.option value="1">Méxicana</flux:select.option>
+                <flux:select.option value="1">Mexicana</flux:select.option>
                 <flux:select.option value="2">Extranjera</flux:select.option>
             </flux:select>
         </flux:field>

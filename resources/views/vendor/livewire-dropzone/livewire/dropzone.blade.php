@@ -4,12 +4,13 @@
         _this: @this,
         uuid: @js($uuid),
         multiple: @js($multiple),
-        field: 'upload', // <-- propiedad del componente Livewire (por instancia)
+        field: 'upload',
+        filesModel: @entangle('files').live
     })"
     @dragenter.prevent.document="onDragenter($event)"
     @dragleave.prevent="onDragleave($event)"
     @dragover.prevent="onDragover($event)"
-    @drop.prevent="onDrop"
+    @drop.prevent="onDrop($event)"
     class="w-full"
 >
     {{-- Error minimal + dark --}}
@@ -30,7 +31,7 @@
                 <span class="cursor-pointer font-medium text-emerald-600 underline underline-offset-2">Buscar</span>
             </p>
 
-            {{-- Progreso: determinate (0-100) y luego indeterminate "Procesando…" --}}
+            {{-- Progreso: determinate (0-99) y luego indeterminate "Procesando…" --}}
             <template x-if="isLoading">
                 <div class="mt-4 w-full max-w-xs">
                     <template x-if="!isProcessing">
@@ -38,7 +39,7 @@
                             <div class="h-1 w-full rounded bg-zinc-200 dark:bg-zinc-700">
                                 <div class="h-1 rounded bg-emerald-500 dark:bg-emerald-400 transition-all" :style="`width:${progress}%;`"></div>
                             </div>
-                            <div class="mt-1 text-right text-[11px] text-zinc-500 dark:text-zinc-400" x-text="'Subiendo… ' + progress + '%'"></div>
+                            <div class="mt-2 text-right text-sm sm:text-base font-semibold text-zinc-700 dark:text-zinc-200" x-text="progressLabel"></div>
                         </div>
                     </template>
 
@@ -54,7 +55,7 @@
 
         <input
             x-ref="input"
-            wire:model="upload"  {{-- <-- propiedad real del componente Livewire --}}
+            wire:model="upload"
             type="file"
             class="hidden"
             x-on:livewire-upload-start="
@@ -64,13 +65,15 @@
                 progressLabel = 'Subiendo… 0%';
             "
             x-on:livewire-upload-progress="
-                progress = $event.detail.progress;   // 0–100 exacto
+                progress = Math.min($event.detail.progress, 99);
+                isLoading = true;
+                isProcessing = false;
                 progressLabel = 'Subiendo… ' + progress + '%';
             "
             x-on:livewire-upload-finish="
                 startProcessing();
                 if (!processingFinishTimer) {
-                    processingFinishTimer = setTimeout(() => stopProcessing(), 1200);
+                    processingFinishTimer = setTimeout(() => stopProcessing(true), 15000);
                 }
             "
             x-on:livewire-upload-error="
@@ -105,7 +108,7 @@
         </button>
     </div>
 
-    {{-- Lista de archivos (tu misma UI) --}}
+    {{-- Lista de archivos --}}
     @if(isset($files) && count($files) > 0)
         <div class="mt-3 space-y-2">
             @foreach($files as $file)
@@ -170,7 +173,7 @@
 
     @script
     <script>
-        Alpine.data('dropzone', ({ _this, uuid, multiple, field }) => ({
+        Alpine.data('dropzone', ({ _this, uuid, multiple, field, filesModel }) => ({
             isDragging: false,
             isDropped: false,
             isLoading: false,
@@ -178,11 +181,31 @@
             progress: 0,
             progressLabel: '',
             processingFinishTimer: null,
-            field, // siempre 'upload' en este componente
+            field,
+            filesModel,
+            lastFilesCount: 0,
 
             init() {
-                // Si el servidor emite: $this->dispatchBrowserEvent('dropzone:processed');
-                window.addEventListener('dropzone:processed', () => this.stopProcessing());
+                this.lastFilesCount = Array.isArray(this.filesModel) ? this.filesModel.length : 0;
+
+                // Completar cuando 'files' cambie (aparezcan abajo)
+                this.$watch('filesModel', (val) => {
+                    const len = Array.isArray(val) ? val.length : 0;
+
+                    // Caso múltiple: creció la lista.
+                    // Caso single: basta con que haya >= 1 (aunque se reemplace).
+                    const processed =
+                        (multiple && len > this.lastFilesCount) ||
+                        (!multiple && len >= 1);
+
+                    if (processed && (this.isLoading || this.isProcessing)) {
+                        this.progress = 100;
+                        this.progressLabel = 'Listo';
+                        this.stopProcessing();
+                    }
+
+                    this.lastFilesCount = len;
+                });
             },
 
             onDrop(e) {
@@ -190,16 +213,18 @@
                 this.isDragging = false;
 
                 const finish = () => {
-                    this.startProcessing();
+                    this.startProcessing(); // se queda al 99% hasta que 'files' cambie
                     if (!this.processingFinishTimer) {
-                        this.processingFinishTimer = setTimeout(() => this.stopProcessing(), 1200);
+                        this.processingFinishTimer = setTimeout(() => this.stopProcessing(true), 15000);
                     }
                 };
+
                 const error = () => this.stopProcessing(true);
+
                 const progress = (evt) => {
                     this.isLoading = true;
                     this.isProcessing = false;
-                    this.progress = evt.detail.progress; // 0–100 exacto
+                    this.progress = Math.min(evt.detail.progress, 99);
                     this.progressLabel = 'Subiendo… ' + this.progress + '%';
                 };
 
@@ -217,7 +242,7 @@
             startProcessing() {
                 this.isProcessing  = true;
                 this.isLoading     = true;
-                this.progress      = 100;
+                if (this.progress < 99) this.progress = 99;
                 this.progressLabel = 'Procesando…';
             },
 
@@ -236,8 +261,9 @@
                 this.stopProcessing(true);
             },
 
+            // Sin dispatch: llama a un método Livewire para quitar por tmpFilename
             removeUpload(tmpFilename) {
-                _this.dispatch(uuid + ':fileRemoved', { tmpFilename });
+                _this.call('onFileRemoved', tmpFilename);
             },
         }));
     </script>

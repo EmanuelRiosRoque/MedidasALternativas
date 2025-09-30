@@ -1,6 +1,21 @@
 @props(['prefix'])
 
-<div class="gap-4 mt-2" wire:key="{{ $key }}">
+<div class="gap-4 mt-2" wire:key="{{ $key }}"
+x-data="{
+    fecha: @entangle('fecha_nacimiento_solicitante').live,
+    setEdad(v) { $wire.set('edad_solicitante', v?.toString() ?? ''); },
+    calcEdad(iso) {
+      if (!iso) return '';
+      const d = new Date(iso + 'T00:00:00'); // evita desfases TZ
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - d.getFullYear();
+      const m = hoy.getMonth() - d.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < d.getDate())) edad--;
+      return (edad >= 0 && edad <= 130) ? edad : '';
+    }
+  }"
+  x-init="$watch('fecha', v => setEdad(calcEdad(v)))"
+>
 
   {{-- ================= DATOS PERSONALES ================= --}}
   <div class="grid grid-cols-3 gap-4">
@@ -92,6 +107,19 @@
       </flux:select>
     </div>
 
+
+    {{-- Fecha de nacimiento (sin oninput innecesario) --}}
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+        Fecha de nacimiento @if($prefix === 'solicitante') * @endif
+      </label>
+      <flux:input
+        wire:model="fecha_nacimiento_solicitante"
+        type="date"
+        required
+      />
+    </div>
+
     {{-- Edad (solo dígitos) --}}
     <div class="space-y-1">
       <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
@@ -108,17 +136,7 @@
       />
     </div>
 
-    {{-- Fecha de nacimiento (sin oninput innecesario) --}}
-    <div class="space-y-1">
-      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-        Fecha de nacimiento @if($prefix === 'solicitante') * @endif
-      </label>
-      <flux:input
-        wire:model="fecha_nacimiento_solicitante"
-        type="date"
-        required
-      />
-    </div>
+   
 
     {{-- Escolaridad --}}
     <div>
@@ -150,7 +168,7 @@
         Nacionalidad @if($prefix === 'solicitante') * @endif
       </label>
       <flux:select wire:model="nacionalidad_solicitante" placeholder="Elige tipo nacionalidad...">
-        <flux:select.option value="1">Méxicana</flux:select.option>
+        <flux:select.option value="1">Mexicana</flux:select.option>
         <flux:select.option value="2">Extranjera</flux:select.option>
       </flux:select>
     </div>

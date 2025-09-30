@@ -20,6 +20,7 @@ class EstatusSeeder extends Seeder
             ['nombre' => 'Cancelado'],
             ['nombre' => 'Oculto'],
             ['nombre' => 'Activo'],
+            ['nombre' => 'En Proceso'],
         ]);
     }
 }

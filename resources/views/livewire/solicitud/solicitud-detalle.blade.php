@@ -6,7 +6,10 @@
     <div
         class="relative mt-2 mb-2 z-10 w-full max-w-8xl rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeInUp">
         <x-solicitud.section-header title="Detalles de la Solicitud">
-            Revisa los datos capturados, asigna facilitador y consulta a los participantes.
+            Revisa los datos capturados, asigna facilitador y consulta a los participantes. <br>
+            <p class=" text-emerald-600 font-bold">
+                {{ $solicitud->folio_materia }}
+            </p>
         </x-solicitud.section-header>
 
 
@@ -86,11 +89,11 @@
                                 </flux:button>
                             </a>
     
-                            <a href="{{ route('seguimiento.download',  ['fecha' => $evento->fecha ?? date('Y-m-d')]) }}">
+                            {{-- <a href="{{ route('seguimiento.download',  ['fecha' => $evento->fecha ?? date('Y-m-d')]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
                                     Seguimiento
                                 </flux:button>
-                            </a>
+                            </a> --}}
     
                             <a href="{{ route('sobreSepomex.download', [$solicitudId]) }}">
                                 <flux:button class="w-full" variant="primary" icon="arrow-down-tray">
