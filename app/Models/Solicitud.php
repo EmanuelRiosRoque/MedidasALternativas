@@ -22,7 +22,8 @@ class Solicitud extends Model
         "cual_otro",
         "facilitador_id",
         "folio_materia",
-        "acudiran_juntos"
+        "acudiran_juntos",
+        "notas_observaciones"
     ];
 
     public function personas()
@@ -50,9 +51,14 @@ class Solicitud extends Model
         return $this->belongsTo(CatTipoProceso::class, 'tipo_proceso_id');
     }
 
-public function solicitud()
-{
-    return $this->belongsTo(Solicitud::class, 'solicitud_id');
-}
+    public function solicitud()
+    {
+        return $this->belongsTo(Solicitud::class, 'solicitud_id');
+    }
+
+    public function cancelacion()
+    {
+        return $this->belongsTo(CatCancelacion::class, 'tipo_cancelacion_id');
+    }
 
 }

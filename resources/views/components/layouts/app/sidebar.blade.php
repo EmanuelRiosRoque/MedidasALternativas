@@ -22,6 +22,7 @@
                     {{-- @if($user==="admin") --}}
                     <flux:navlist.item icon="document-plus" :href="route('solicitud.create')" :current="request()->routeIs('solicitud.create')"  wire:navigate>{{ __('Registro solicitud') }}</flux:navlist.item>
                     <flux:navlist.item icon="table-cells" :href="route('solicitud.list')" :current="request()->routeIs('solicitud.list')"  wire:navigate>{{ __('Solicitudes') }}</flux:navlist.item>
+                    <flux:navlist.item icon="chat-bubble-left-ellipsis" :href="route('mediacion.list')" :current="request()->routeIs('mediacion.list')"  wire:navigate>{{ __('Mediaciones') }}</flux:navlist.item>
                     {{-- <flux:navlist.item icon="identification" :href="route('pre-mediacion.index')" :current="request()->routeIs('pre-mediacion.index')"  wire:navigate>{{ __('Registros') }}</flux:navlist.item> --}}
                     {{-- @endif --}}
                     <flux:navlist.item icon="briefcase" :href="route('facilitadores.create')" :current="request()->routeIs('facilitadores.create')"  wire:navigate>{{ __('Nuevo Facilitador') }}</flux:navlist.item> 

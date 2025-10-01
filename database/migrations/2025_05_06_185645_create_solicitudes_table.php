@@ -51,6 +51,8 @@ return new class extends Migration
             $table->string('oficio')->nullable();
             $table->string('cual_otro')->nullable();
             $table->boolean('acudiran_juntos')->nullable();
+            $table->text('notas_observaciones')->nullable();
+
 
             $table->timestamps();
         });

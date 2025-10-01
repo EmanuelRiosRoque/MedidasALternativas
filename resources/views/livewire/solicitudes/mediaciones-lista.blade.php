@@ -3,10 +3,11 @@
     <div class="h-[85vh] flex items-center justify-center overflow-visible z-10 relative px-4">
         <section class="w-full max-w-7xl z-20 animate__animated animate__fadeInUp">
             <!-- Encabezado -->
+          
             <div class="sm:flex sm:items-center sm:justify-between">
                 <div>
                     <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Solicitudes</h2>
+                        <h2 class="text-lg font-medium text-neutral-800 dark:text-white">Mediaciones</h2>
                         <span
                             class="px-3 py-1 text-xs text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300">
                             {{ $numSolicitudes }} {{ $numSolicitudes == 1 ? 'Solicitud' : 'Solicitudes' }}
@@ -14,7 +15,7 @@
                     </div>
                     <p
                         class="mt-1 text-sm text-neutral-500 dark:text-neutral-300 hover:text-emerald-700 transition-all cursor-default">
-                        Cantidad total de solicitudes registradas.
+                        Cantidad total de Mediaciones registradas.
                     </p>
                 </div>
 
@@ -45,6 +46,32 @@
                         class="block w-full py-1.5 pr-5 bg-white border border-neutral-200 rounded-lg md:w-80 placeholder-neutral-400/70 pl-11 dark:bg-neutral-900 text-emerald-700 dark:text-neutral-300 dark:border-neutral-600 focus:border-emerald-400 dark:focus:border-emerald-300 focus:ring-emerald-300 focus:outline-none focus:ring focus:ring-opacity-40">
                 </div>
             </div>
+            <!-- Alerta folio solicitud pasa a mediacion -->
+            @if (session('success'))
+                <div
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    role="alert"
+                    aria-live="polite"
+                    class="p-4 mb-4 mt-4 text-sm rounded-lg border
+                            bg-emerald-50 text-emerald-800 border-emerald-200
+                            dark:bg-emerald-900/20 dark:text-emerald-200 dark:border-emerald-800"
+                    @keydown.escape.window="show = false"  {{-- opcional: cerrar con Esc --}}
+                    >
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                        <span class="font-medium">¡Listo!</span>
+                        <span class="ml-1">{{ session('success') }}</span>
+                        </div>
+                        <button type="button"
+                        class="text-emerald-700/70 hover:text-emerald-800 dark:text-emerald-300/70 dark:hover:text-emerald-200"
+                        @click="show = false" aria-label="Cerrar">
+                        ✕
+                        </button>
+                    </div>
+                </div>
+            @endif
 
             <!-- Tabla -->
             <div class="flex flex-col mt-6">
@@ -106,21 +133,23 @@
                                         </td>
 
                                         <td class="px-12 py-4 text-sm whitespace-nowrap">
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-normal
-      {{ $solicitud->modalidad == 2
-          ? 'text-sky-600 bg-sky-100/70'
-          : 'text-emerald-600 bg-emerald-100/70' }}
-      dark:bg-neutral-800">
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-normal
+                                                {{ $solicitud->modalidad == 2
+                                                    ? 'text-sky-600 bg-sky-100/70'
+                                                    : 'text-emerald-600 bg-emerald-100/70' }}
+                                                dark:bg-neutral-800">
                                                 {{ $solicitud->modalidad == 2 ? 'En línea' : 'Presencial' }}
                                             </span>
                                         </td>
 
                                         <td class="px-12 py-4 text-sm whitespace-nowrap">
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-normal
-      {{ (int)$solicitud->acudiran_juntos === 1
-          ? 'text-emerald-600 bg-emerald-100/70'
-          : 'text-rose-600 bg-rose-100/70' }}
-      dark:bg-neutral-800">
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-normal
+                                                {{ (int)$solicitud->acudiran_juntos === 1
+                                                    ? 'text-emerald-600 bg-emerald-100/70'
+                                                    : 'text-rose-600 bg-rose-100/70' }}
+                                                dark:bg-neutral-800">
                                                 {{ (int)$solicitud->acudiran_juntos === 1 ? 'Sí' : 'No' }}
                                             </span>
                                         </td>
@@ -223,7 +252,7 @@
                                     <tr>
                                         <td colspan="7"
                                             class="px-4 py-4 text-sm text-center text-neutral-500 dark:text-neutral-300">
-                                            No hay solicitudes aún.
+                                            No hay mediaciones aún.
                                         </td>
                                     </tr>
                                     @endforelse

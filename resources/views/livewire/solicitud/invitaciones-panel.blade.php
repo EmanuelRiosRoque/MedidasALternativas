@@ -48,14 +48,17 @@
           @endif
         </div>
 
+
         <div class="flex items-center justify-between mb-2">
           <h3 class="text-base font-semibold text-neutral-800 dark:text-neutral-100">
             @if ($hayCancelacion)
-                Registro cancelado
+            Registro cancelado
             @elseif ($mostrarPreguntaAceptacionVista)
-                Resultado de pre-mediación
+            Resultado de pre-mediación
+            @elseif ($next > $this->maxInvPre)
+            Límite de invitaciones alcanzado
             @else
-                {{ $isPrimera ? "Crear primera {$etqUnidadSing}" : "Crear nueva {$etqUnidadSing} (#{$next})" }}
+            {{ $isPrimera ? "Crear primera {$etqUnidadSing}" : "Crear nueva {$etqUnidadSing} (#{$next})" }}
             @endif
           </h3>
 
@@ -126,7 +129,7 @@
                       viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Generar
+                    Generar Manifestación
                   </a>
                 </div>
 
@@ -428,7 +431,13 @@
         @if($invitaciones->isEmpty())
         <p class="text-sm text-neutral-600 dark:text-neutral-300">Aún no hay {{ $etqUnidadPlural }} registradas.</p>
         @else
-        <div class="relative pl-6">
+        <div class="relative pl-6" x-data="{
+       openIds: [@js(optional($invitaciones->first())->id)],
+       toggle(id) {
+         const i = this.openIds.indexOf(id);
+         if (i > -1) this.openIds.splice(i, 1); else this.openIds.push(id);
+       }
+     }">
           <span class="absolute left-2 top-1 bottom-1 w-px bg-neutral-200 dark:bg-neutral-700"></span>
 
           @foreach($invitaciones as $inv)
@@ -452,22 +461,23 @@
                   @endif
 
                   <button type="button"
-                    class="text-xs px-2 py-1 rounded-md bg-emerald-600 text-white border border-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 transition inline-flex items-center gap-1"
-                    @click="open = !open" :aria-expanded="open.toString()">
-                    <span x-show="!open">Ver detalles</span>
-                    <span x-show="open" x-cloak>Ocultar</span>
+                    class="text-xs px-2 py-1 rounded-xl bg-emerald-600 text-white border border-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 transition inline-flex items-center gap-1"
+                    @click="toggle({{ $inv->id }})"
+                    :aria-expanded="openIds.includes({{ $inv->id }}) ? 'true' : 'false'">
+                    <span x-show="!openIds.includes({{ $inv->id }})">Ver detalle</span>
+                    <span x-show="openIds.includes({{ $inv->id }})" x-cloak>Ocultar</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
                       stroke="currentColor">
-                      <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 9l-7 7-7-7" />
-                      <path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 15l7-7 7 7" />
+                      <path x-show="!openIds.includes({{ $inv->id }})" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                      <path x-show="openIds.includes({{ $inv->id }})" x-cloak stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                     </svg>
                   </button>
                 </div>
               </div>
 
-              <div x-show="open" x-collapse x-cloak>
+              <div x-show="openIds.includes({{ $inv->id }})" x-collapse x-cloak>
                 <div
                   class="mt-3 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-3">
                   <div class="flex items-center justify-between gap-2">
@@ -605,91 +615,148 @@
 
     {{-- Sidebar sticky --}}
     <aside class="md:col-span-4">
-      <div class="md:sticky md:top-4 md:self-start">
-        <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-4 bg-white dark:bg-neutral-900">
-          <div class="text-sm font-semibold mb-2">Resumen</div>
+      <div class="md:sticky md:top-4 md:self-start space-y-4">
+
+        {{-- ==== Card: Resumen ==== --}}
+        <div class="rounded-2xl border border-neutral-200/80 dark:border-neutral-700/80 p-4 bg-white dark:bg-neutral-900
+            shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-3 tracking-wide">
+            Resumen
+          </h3>
+
           <dl class="text-sm space-y-2">
-            <div class="flex justify-between">
+            <div class="flex items-center justify-between">
               <dt class="text-neutral-500">Etapa</dt>
               <dd class="font-medium">Pre-mediación</dd>
             </div>
-            <div class="flex justify-between">
-              <dt class="text-neutral-500">Siguiente #</dt>
-              <dd class="font-medium">#{{ $next }}</dd>
-            </div>
+
             @if(!$isPrimera && $ultima)
-            <div class="flex justify-between">
+            <div class="my-2 h-px bg-neutral-200/80 dark:bg-neutral-700/70"></div>
+
+            <div class="flex items-center justify-between">
               <dt class="text-neutral-500">Última invitación</dt>
-              <dd>#{{ $ultima->numero_inv }}</dd>
+              <dd class="font-medium">#{{ $ultima->numero_inv }}</dd>
             </div>
-            <div class="flex justify-between">
+
+            <div class="flex items-center justify-between">
               <dt class="text-neutral-500">Asistencia</dt>
-              <dd>{{ is_null($ultima->asistio) ? 'Pendiente' : ($ultima->asistio ? 'Sí' : 'No') }}</dd>
+              <dd class="font-medium">
+                {{ is_null($ultima->asistio) ? 'Pendiente' : ($ultima->asistio ? 'Sí' : 'No') }}
+              </dd>
             </div>
+
+            @if($ultima && !is_null($ultima->acepta_proceso))
+            <div class="flex items-center justify-between">
+              <dt class="text-neutral-500">¿Acepto mediación?</dt>
+              <dd class="font-medium">
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                     {{ $ultima->acepta_proceso
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+                          : 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300' }}">
+                  {{ $ultima->acepta_proceso ? 'Acepto' : 'Rechazo' }}
+                </span>
+              </dd>
+            </div>
+            @endif
+
+            @if (trim((string) optional($this->solicitud->cancelacion)->motivo) !== '')
+            <div class="flex items-start justify-between gap-3">
+              <dt class="text-neutral-500 pt-0.5">Motivo</dt>
+              <dd class="font-medium max-w-[48%] text-right">
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                     bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300
+                     max-w-full truncate" title="{{ $this->solicitud->cancelacion->motivo }}">
+                  {{ $this->solicitud->cancelacion->motivo }}
+                </span>
+              </dd>
+            </div>
+            @endif
+
+            @if (trim((string)($this->solicitud->notas_observaciones ?? '')) !== '')
+            <div class="flex flex-col gap-2">
+              <dt class="text-neutral-500 m-0">Notas y observaciones:</dt>
+              <dd class="m-0">
+                <div class="rounded-lg border border-amber-400/60 bg-amber-50 px-3 py-3
+                     text-[13px] text-amber-900 leading-snug text-center
+                     dark:bg-amber-900/20 dark:border-amber-500/40 dark:text-amber-100
+                     break-words">
+                  {{ trim((string)($this->solicitud->notas_observaciones ?? '')) }}
+                </div>
+              </dd>
+            </div>
+            @endif
             @endif
           </dl>
         </div>
 
+
+        {{-- ==== Card: Acciones ==== --}}
         <div
-          class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-4 bg-white dark:bg-neutral-900 space-y-2">
+          class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-4 bg-white dark:bg-neutral-900 flex flex-col gap-3"
+          role="group" aria-label="Acciones de solicitud">
+          {{-- Botón principal --}}
           @if($bloqueoNueva || $mostrarPreguntaAceptacionVista || $bloqueoAsistencia)
           <flux:tooltip content="{{ $tooltipMsg }}">
-            <div>
-              <flux:button class="w-full" disabled variant="primary" icon="lock-closed">{{ $textoBtn }}</flux:button>
-            </div>
+            <flux:button class="w-full" variant="primary" icon="lock-closed" disabled>
+              {{ $textoBtn }}
+            </flux:button>
           </flux:tooltip>
           @else
-          <flux:button class="w-full" wire:click="store('{{ $accionClick }}')" variant="primary"
-            wire:loading.attr="disabled">{{ $textoBtn }}</flux:button>
+          <flux:button class="w-full" variant="primary" wire:click="store('{{ $accionClick }}')"
+            wire:loading.attr="disabled">
+            {{ $textoBtn }}
+          </flux:button>
           @endif
 
-          <div>
-            @if (
-              is_null($solicitud->tipo_cancelacion_id)
-              && (! $ultima || (int)$ultima->acepta_proceso !== 1)
-          )
-            <flux:modal.trigger name="cancelar-registro">
-              <flux:button variant="danger" class=" w-full">
-                Cancelar Registro
-              </flux:button>
-            </flux:modal.trigger>
+          {{-- Botón Cancelar (condicional) --}}
+          @if (is_null($solicitud->tipo_cancelacion_id) && (! $ultima || (int)$ultima->acepta_proceso !== 1))
+          <flux:modal.trigger name="cancelar-registro">
+            <flux:button class="w-full" variant="danger">Cancelar Solicitud</flux:button>
+          </flux:modal.trigger>
           @endif
-          </div>
 
-          <flux:modal name="cancelar-registro" class="min-w-[22rem]">
-            <div class="space-y-6">
-              <div>
-                <flux:heading size="lg">Cancelar registro</flux:heading>
+          {{-- Loader (no ocupa espacio fuera de carga) --}}
+          <div wire:loading wire:target="store" class="text-xs text-neutral-500">Guardando…</div>
+        </div>
 
-                <flux:text class="mt-2">
-                  <p>Está a punto de cancelar este registro.</p>
-                  <p>Esta acción no se puede deshacer y se registrará el motivo de cancelación.</p>
-                </flux:text>
-              </div>
 
+        {{-- ==== Modal: Cancelar ==== --}}
+        <flux:modal name="cancelar-registro" class="min-w-[22rem]">
+          <div class="space-y-6">
+            <div>
+              <flux:heading size="lg">Cancelar solicitud</flux:heading>
+              <flux:text class="mt-2 space-y-1">
+                <p>Está a punto de cancelar esta solicitud.</p>
+                <p>Esta acción no se puede deshacer y se registrará el motivo de cancelación.</p>
+              </flux:text>
+            </div>
+
+            <div>
               <flux:select wire:model="motivoCancelacion" placeholder="Seleccione un motivo...">
                 @foreach ($motivosCierre as $motivos)
                 <flux:select.option value="{{ $motivos->id }}">{{ $motivos->motivo }}</flux:select.option>
                 @endforeach
               </flux:select>
-              @error('motivoCancelacion') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-
-              <div class="flex gap-2">
-                <flux:spacer />
-
-                <flux:modal.close>
-                  <flux:button variant="ghost">Regresar</flux:button>
-                </flux:modal.close>
-
-                <flux:button wire:click='cancelarRegistro' variant="danger">Cancelar</flux:button>
-              </div>
+              @error('motivoCancelacion')
+              <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+              @enderror
             </div>
-          </flux:modal>
 
-          <div wire:loading wire:target="store" class="mt-2 text-xs text-neutral-500">Guardando…</div>
-        </div>
+            <div class="flex justify-end gap-2">
+              <flux:modal.close>
+                <flux:button variant="ghost">Regresar</flux:button>
+              </flux:modal.close>
+
+              <flux:button wire:click="cancelarRegistro" variant="danger">
+                Cancelar Solicitud
+              </flux:button>
+            </div>
+          </div>
+        </flux:modal>
+
       </div>
     </aside>
+
   </div>
   @endif
 </div>

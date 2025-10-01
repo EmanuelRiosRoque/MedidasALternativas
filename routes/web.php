@@ -12,6 +12,7 @@ use App\Http\Controllers\DOCs\DOCxController;
 use App\Http\Controllers\PDFs\PDFsController;
 use App\Livewire\CalendarJs;
 use App\Livewire\Solicitud\SolicitudDetalle;
+use App\Livewire\Solicitudes\MediacionesLista;
 use App\Livewire\Solicitudes\SolicitudesLista;
 
 Route::get('/', function () {
@@ -37,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/list', SolicitudesLista::class)->name('list');
         Route::get('/{solicitudId}', SolicitudDetalle::class)->name('show');
         Route::get('/{solicitudId}/personas', VerPersonas::class)->name('personas');
+    });
+
+    Route::prefix('mediacion')->name('mediacion.')->group(function () {
+        Route::get('/list', MediacionesLista::class)->name('list');     
     });
 
     // === Facilitadiores ===

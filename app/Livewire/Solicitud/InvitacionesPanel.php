@@ -327,7 +327,9 @@ class InvitacionesPanel extends Component
 
         // Acción y texto de botón
         $accionClick = $isPrimera ? 'primera' : 'nueva';
-        $textoBtn    = $isPrimera ? "Enviar invitación" : "Enviar invitación #{$next}";
+        $textoBtn = ($next <= $this->maxInvPre)
+            ? ($isPrimera ? 'Enviar invitación' : "Enviar invitación #{$next}")
+            : 'Límite de invitaciones alcanzado';
 
         // Chips de estado
         $chipProceso = [
@@ -622,6 +624,8 @@ class InvitacionesPanel extends Component
             if ($this->solicitud) {
                 $this->solicitud->update([
                     'tipo_cancelacion_id' => $this->motivoCancelacion,
+                    'notas_observaciones' => $this->notas_observaciones,
+                    'estatus_id' => 4, // Cancelado
                 ]);
                 $this->solicitud->refresh();
                 Toaster::success('Registrado: No aceptó mediación. Motivo guardado.');
@@ -640,15 +644,24 @@ class InvitacionesPanel extends Component
             }
 
             $ultima->update(['acepta_proceso' => $valor]);
-            $ultima->update(['notas_observaciones' => $this->notas_observaciones]);
 
-            if ($this->solicitud) {
+        if ($this->solicitud) {
                 $this->solicitud->update([
                     'tipo_cancelacion_id' => null,
+                    'facilitador_id'      => null,
+                    'tipo_proceso_id'     => 2, // Mediación
+                    'estatus_id'          => 1,
+                    'notas_observaciones' => $this->notas_observaciones,
                 ]);
                 $this->solicitud->refresh();
+
                 Toaster::success('Registrado: Aceptó mediación.');
+
+                return redirect()
+                    ->route('mediacion.list')
+                    ->with('success', "La solicitud {$this->solicitud->folio_materia} pasó a mediación correctamente.");
             }
+
         }
 
         $this->cargarInvitaciones();

@@ -6,7 +6,7 @@ use App\Models\Solicitud;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class SolicitudesLista extends Component
+class MediacionesLista extends Component
 {
     use WithPagination;
 
@@ -23,12 +23,8 @@ class SolicitudesLista extends Component
     {
         $usuario = auth()->user();
 
-        $solicitudesQuery = Solicitud::query()
-            ->whereIn('estatus_id', [1, 2])
-            ->where(function ($q) {
-                $q->whereNull('tipo_proceso_id')
-                ->orWhere('tipo_proceso_id', 1);
-            })
+     $solicitudesQuery = Solicitud::query()
+            ->where('tipo_proceso_id', 2) // ⬅️ delimita a tipo_proceso_id = 2
             ->when(!$usuario->hasRole('admin'), function ($query) use ($usuario) {
                 $query->when($usuario->hasRole('familiar'), function ($q) {
                         $q->where('materia', 'familiar');
@@ -38,21 +34,19 @@ class SolicitudesLista extends Component
                     });
             })
             ->when($this->search, function ($query) {
-                $search = trim($this->search);
+                $search = $this->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('folio_materia', 'like', "%{$search}%")
                     ->orWhere('numero_ticket', 'like', "%{$search}%");
                 });
             });
 
-
-
         // Paginación (ejemplo: 10 por página)
         $solicitudes = $solicitudesQuery->paginate(5);
 
         $this->numSolicitudes = $solicitudes->total();
 
-        return view('livewire.solicitudes.solicitudes-lista', [
+        return view('livewire.solicitudes.mediaciones-lista', [
             'solicitudes' => $solicitudes
         ]);
     }
