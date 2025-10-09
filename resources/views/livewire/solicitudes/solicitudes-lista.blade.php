@@ -107,20 +107,20 @@
 
                                         <td class="px-12 py-4 text-sm whitespace-nowrap">
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-normal
-      {{ $solicitud->modalidad == 2
-          ? 'text-sky-600 bg-sky-100/70'
-          : 'text-emerald-600 bg-emerald-100/70' }}
-      dark:bg-neutral-800">
+                                                {{ $solicitud->modalidad == 2
+                                                    ? 'text-sky-600 bg-sky-100/70'
+                                                    : 'text-emerald-600 bg-emerald-100/70' }}
+                                                dark:bg-neutral-800">
                                                 {{ $solicitud->modalidad == 2 ? 'En línea' : 'Presencial' }}
                                             </span>
                                         </td>
 
                                         <td class="px-12 py-4 text-sm whitespace-nowrap">
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-normal
-      {{ (int)$solicitud->acudiran_juntos === 1
-          ? 'text-emerald-600 bg-emerald-100/70'
-          : 'text-rose-600 bg-rose-100/70' }}
-      dark:bg-neutral-800">
+                                                {{ (int)$solicitud->acudiran_juntos === 1
+                                                    ? 'text-emerald-600 bg-emerald-100/70'
+                                                    : 'text-rose-600 bg-rose-100/70' }}
+                                                dark:bg-neutral-800">
                                                 {{ (int)$solicitud->acudiran_juntos === 1 ? 'Sí' : 'No' }}
                                             </span>
                                         </td>
@@ -156,6 +156,12 @@
                                                     class="absolute right-0 mt-2 w-40 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-md shadow-lg z-50"
                                                     style="display: none;">
                                                     <ul class="text-sm text-gray-700 dark:text-gray-200">
+                                                        <li>
+                                                            <a href="{{ route('solicitud.show', $solicitud->id) }}"
+                                                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                                                Ver
+                                                            </a>
+                                                        </li>
                                                         @if ($solicitud->estatus_id == "7")
                                                         <li>
                                                             <a href="{{ route('solicitud.show', $solicitud->id) }}"
