@@ -31,7 +31,12 @@ return new class extends Migration
                   ->constrained('cat_cancelacion')
                   ->nullOnDelete();
 
-            $table->foreignId('facilitador_id')
+            $table->foreignId('facilitador_solicitante_id')
+                  ->nullable()
+                  ->constrained('facilitadores')
+                  ->nullOnDelete();
+
+            $table->foreignId('facilitador_invitado_id')
                   ->nullable()
                   ->constrained('facilitadores')
                   ->nullOnDelete();

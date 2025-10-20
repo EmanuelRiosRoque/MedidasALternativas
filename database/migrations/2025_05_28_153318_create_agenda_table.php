@@ -23,7 +23,7 @@ return new class extends Migration
 
               $table->foreignId('invitacion_id')
             ->nullable()
-            ->constrained('invitaciones')
+            ->constrained('invitaciones_solicitante')
             ->nullOnDelete();
 
             

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('invitaciones_solicitante', function (Blueprint $table) {
+        Schema::create('invitaciones_invitado', function (Blueprint $table) {
             $table->id();
 
             // Relaciones principales
@@ -21,10 +21,20 @@ return new class extends Migration
             // Control general
             $table->unsignedTinyInteger('numero_inv')->nullable(); // 1 = primera, 2 = segunda
 
-            /** ------------------- SOLICITANTE ------------------- */
-            $table->date('fecha_envio')->nullable();
-            $table->string('medio_envio', 20)->nullable(); // personal | sepomex
-            $table->boolean('acepta_mediacion')->nullable();
+            /** ------------------- INVITADO ------------------- */
+            // Invitado (programación)
+            $table->date('fecha_sele_espera')->nullable(); // Se le espera el día
+            $table->time('hora_sele_espera')->nullable();  // Hora esperada
+            $table->boolean('atendio_sesion')->nullable(); // 1 = sí, 0 = no
+
+            // Invitado (asistencia real)
+            $table->date('fecha_asistencia')->nullable();
+            $table->time('hora_asistencia')->nullable();
+            $table->boolean('acepta_mediacion_inv')->nullable();
+
+            // Datos
+            $table->string('nombre', 255)->nullable();
+
 
             $table->timestamps();
         });
@@ -32,6 +42,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('invitaciones_solicitante');
+        Schema::dropIfExists('invitaciones_invitado');
     }
 };

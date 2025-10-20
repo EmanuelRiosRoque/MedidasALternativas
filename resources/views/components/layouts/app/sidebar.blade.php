@@ -143,7 +143,9 @@
         {{ $slot }}
         @fluxScripts
         @livewireCalendarScripts
-        <x-toaster-hub /> <!-- 👈 -->
-        {{-- {!! ToastMagic::scripts() !!} --}}
+        <x-toaster-hub /> 
+        <!-- Botón Scroll to Top con animación -->
+        <x-button-go-to-top/>
+    
     </body>
 </html>
