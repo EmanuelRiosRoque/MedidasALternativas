@@ -29,7 +29,7 @@
                     <p class="text-sm text-neutral-400"><strong>RFC:</strong> {{ $solicitante['rfc'] }}</p>
                 @else
                     <p class="text-sm text-neutral-400"><strong>Edad:</strong> {{ $solicitante['edad'] }}</p>
-                    <p class="text-sm text-neutral-400"><strong>Sexo:</strong> {{ $solicitante['sexo'] }}</p>
+                    <p class="text-sm text-neutral-400"><strong>Sexo:</strong> {{ $solicitante['sexo'] == 1 ? 'Femenino' : 'Masculino' }}</p>
                 @endif
             </div>
         </div>

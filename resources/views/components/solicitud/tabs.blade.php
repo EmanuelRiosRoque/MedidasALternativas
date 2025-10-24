@@ -17,6 +17,19 @@
                 @click="tab='invitaciones'">
                 Invitaciones / Sesiones
             </button>
+            <button type="button" class="px-4 sm:px-6 py-2 rounded-xl text-sm font-semibold transition" :class="tab==='observaciones'
+            ? 'bg-emerald-600 text-white shadow'
+            : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'"
+                @click="tab='observaciones'">
+                Observaciones
+            </button>
+
+            <button type="button" class="px-4 sm:px-6 py-2 rounded-xl text-sm font-semibold transition" :class="tab==='propuesta'
+            ? 'bg-emerald-600 text-white shadow'
+            : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'"
+                @click="tab='propuesta'">
+                Propuesta Mediación
+            </button>
         </div>
 
         <!-- Botón Documentos (arriba derecha) -->

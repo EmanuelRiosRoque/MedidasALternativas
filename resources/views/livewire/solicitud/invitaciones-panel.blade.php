@@ -37,12 +37,11 @@
     @include('components.invitaciones.invitaciones')
     
     {{-- ===== CJA ===== --}}
-    @include('components.invitaciones.cja-propuesta')
+    {{-- @include('components.invitaciones.cja-propuesta') --}}
     
   </div> 
 
   {{-- ============ OBSERVACIONES (SECCIÓN APARTE) ============ --}}
-  @include('components.invitaciones.observaciones')
 
   {{-- ========================= 
     FECHAS Y DATOS DE "MEDIACION"

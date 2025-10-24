@@ -29,13 +29,14 @@
             {{-- 🌿 Scroll moderno --}}
             <div class="space-y-2 max-h-[242px] overflow-y-auto pr-2
                         scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-transparent
-                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent">
+                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent
+                        focus-within:overflow-visible">
 
                 @foreach ($solicitantes as $s)
                 <div class="rounded-lg border border-blue-200 dark:border-blue-700 bg-white dark:bg-neutral-900 p-4"
                     wire:key="primera-sol-{{ $s->id }}">
                     <p class="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2">
-                        {{ $s->nombre }}
+                        {{ empty($s->nombre)  ? $s->razon_social : $s->nombre }}
                     </p>
 
                     <div class="space-y-4">
@@ -44,9 +45,16 @@
                                 class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
                                 Fecha de envío
                             </label>
-                            <div class="sm:col-span-3">
-                                <flux:input type="date"
-                                    wire:model.defer="primera.detalle_solicitante.{{ $s->id }}.fecha_envio" />
+                            <div class="sm:col-span-3 relative">
+                                <x-datetime-picker
+                                    without-time
+                                    placeholder="dd/mm/aaaa"
+                                    display-format="DD/MM/YYYY"
+                                    parse-format="YYYY-MM-DD"
+                                    :clearable="true"
+                                    class="w-full"
+                                    wire:model.defer="primera.detalle_solicitante.{{ $s->id }}.fecha_envio"
+                                />
                             </div>
                         </div>
 
@@ -98,13 +106,14 @@
             {{-- 🌿 Scroll moderno --}}
             <div class="space-y-3 max-h-[250px] overflow-y-auto pr-2
                         scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-transparent
-                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent">
+                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent
+                        focus-within:overflow-visible">
 
                 @foreach ($invitados as $i)
                 <div class="rounded-lg border border-emerald-200 dark:border-emerald-700 bg-white dark:bg-neutral-900 p-4"
                     wire:key="primera-inv-{{ $i->id }}">
                     <p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-2">
-                        {{ $i->nombre }}
+                        {{ empty($i->nombre)  ? $i->razon_social : $i->nombre }}
                     </p>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -118,11 +127,19 @@
                             <div class="space-y-4">
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">Se
-                                        le espera el día</label>
-                                    <div class="sm:col-span-3">
-                                        <flux:input type="date"
-                                            wire:model.defer="primera.detalle_invitado.{{ $i->id }}.fecha_sele_espera" />
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        Se le espera el día
+                                    </label>
+                                    <div class="sm:col-span-3 relative">
+                                        <x-datetime-picker
+                                            without-time
+                                            placeholder="dd/mm/aaaa"
+                                            display-format="DD/MM/YYYY"
+                                            parse-format="YYYY-MM-DD"
+                                            :clearable="true"
+                                            class="w-full"
+                                            wire:model.defer="primera.detalle_invitado.{{ $i->id }}.fecha_sele_espera"
+                                        />
                                     </div>
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -135,8 +152,9 @@
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">Atendió
-                                        a la 1ra sesión</label>
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        Atendió a la 1ra sesión
+                                    </label>
                                     <div class="sm:col-span-3">
                                         <flux:radio.group
                                             wire:model="primera.detalle_invitado.{{ $i->id }}.atendio_sesion">
@@ -158,11 +176,19 @@
                             <div class="space-y-4">
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">Fecha
-                                        en que asiste</label>
-                                    <div class="sm:col-span-3">
-                                        <flux:input type="date"
-                                            wire:model.defer="primera.detalle_invitado.{{ $i->id }}.fecha_asistencia" />
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        Fecha en que asiste
+                                    </label>
+                                    <div class="sm:col-span-3 relative">
+                                        <x-datetime-picker
+                                            without-time
+                                            placeholder="dd/mm/aaaa"
+                                            display-format="DD/MM/YYYY"
+                                            parse-format="YYYY-MM-DD"
+                                            :clearable="true"
+                                            class="w-full"
+                                            wire:model.defer="primera.detalle_invitado.{{ $i->id }}.fecha_asistencia"
+                                        />
                                     </div>
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -175,8 +201,9 @@
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">¿Acepta
-                                        la mediación?</label>
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        ¿Acepta la mediación?
+                                    </label>
                                     <div class="sm:col-span-3">
                                         <flux:radio.group
                                             wire:model="primera.detalle_invitado.{{ $i->id }}.acepta_mediacion_inv">
@@ -201,7 +228,7 @@
                                 <div class="flex-1 h-px bg-emerald-200/60 dark:bg-emerald-800/40"></div>
                             </div>
                             <div class="text-sm text-neutral-700 dark:text-neutral-300">
-                                <span class="font-medium">Invitado:</span> {{ $i->nombre }}
+                                <span class="font-medium">Invitado:</span> {{ empty($i->nombre)  ? $i->razon_social : $i->nombre }}
                             </div>
                         </div>
                     </div>
@@ -245,14 +272,15 @@
             {{-- 🌿 Scroll moderno --}}
             <div class="space-y-2 max-h-[242px] overflow-y-auto pr-2
                         scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-transparent
-                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent">
+                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent
+                        focus-within:overflow-visible">
 
                 @foreach ($solicitantes as $s)
                 <div class="rounded-xl border border-blue-200/60 dark:border-blue-700/40 bg-white dark:bg-neutral-900 p-4"
                     wire:key="segunda-sol-{{ $s->id }}">
                     <div class="flex items-center justify-between mb-3">
                         <div class="text-sm font-semibold text-blue-700 dark:text-blue-300">
-                            {{ $s->nombre }}
+                            {{ empty($s->nombre)  ? $s->razon_social : $s->nombre }}
                         </div>
                     </div>
 
@@ -261,9 +289,16 @@
                             <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
                                 Fecha de envío
                             </label>
-                            <div class="sm:col-span-3">
-                                <flux:input type="date"
-                                    wire:model.defer="segunda.detalle_solicitante.{{ $s->id }}.fecha_envio" />
+                            <div class="sm:col-span-3 relative">
+                                <x-datetime-picker
+                                    without-time
+                                    placeholder="dd/mm/aaaa"
+                                    display-format="DD/MM/YYYY"
+                                    parse-format="YYYY-MM-DD"
+                                    :clearable="true"
+                                    class="w-full"
+                                    wire:model.defer="segunda.detalle_solicitante.{{ $s->id }}.fecha_envio"
+                                />
                             </div>
                         </div>
 
@@ -312,14 +347,15 @@
             {{-- 🌿 Scroll moderno --}}
             <div class="space-y-3 max-h-[252px] overflow-y-auto pr-2
                         scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-transparent
-                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent">
+                        dark:scrollbar-thumb-neutral-700 dark:scrollbar-track-transparent
+                        focus-within:overflow-visible">
 
                 @foreach ($invitados as $i)
                 <div class="rounded-xl border border-emerald-200/60 dark:border-emerald-700/40 bg-white dark:bg-neutral-900 p-4"
                     wire:key="segunda-inv-{{ $i->id }}">
                     <div class="flex items-center justify-between mb-3">
                         <div class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-                            {{ $i->nombre }}
+                            {{ empty($i->nombre)  ? $i->razon_social : $i->nombre }}
                         </div>
                     </div>
 
@@ -334,11 +370,19 @@
                             <div class="space-y-4">
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">Se
-                                        le espera el día</label>
-                                    <div class="sm:col-span-3">
-                                        <flux:input type="date"
-                                            wire:model.defer="segunda.detalle_invitado.{{ $i->id }}.fecha_sele_espera" />
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        Se le espera el día
+                                    </label>
+                                    <div class="sm:col-span-3 relative">
+                                        <x-datetime-picker
+                                            without-time
+                                            placeholder="dd/mm/aaaa"
+                                            display-format="DD/MM/YYYY"
+                                            parse-format="YYYY-MM-DD"
+                                            :clearable="true"
+                                            class="w-full"
+                                            wire:model.defer="segunda.detalle_invitado.{{ $i->id }}.fecha_sele_espera"
+                                        />
                                     </div>
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -351,8 +395,9 @@
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">Atendió
-                                        a la 2da sesión</label>
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        Atendió a la 2da sesión
+                                    </label>
                                     <div class="sm:col-span-3">
                                         <flux:radio.group
                                             wire:model="segunda.detalle_invitado.{{ $i->id }}.atendio_sesion">
@@ -374,11 +419,19 @@
                             <div class="space-y-4">
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">Fecha
-                                        en que asiste</label>
-                                    <div class="sm:col-span-3">
-                                        <flux:input type="date"
-                                            wire:model.defer="segunda.detalle_invitado.{{ $i->id }}.fecha_asistencia" />
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        Fecha en que asiste
+                                    </label>
+                                    <div class="sm:col-span-3 relative">
+                                        <x-datetime-picker
+                                            without-time
+                                            placeholder="dd/mm/aaaa"
+                                            display-format="DD/MM/YYYY"
+                                            parse-format="YYYY-MM-DD"
+                                            :clearable="true"
+                                            class="w-full"
+                                            wire:model.defer="segunda.detalle_invitado.{{ $i->id }}.fecha_asistencia"
+                                        />
                                     </div>
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -391,8 +444,9 @@
                                 </div>
                                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                     <label
-                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">¿Acepta
-                                        la mediación?</label>
+                                        class="block text-xs font-medium text-neutral-700 dark:text-neutral-200 sm:col-span-2">
+                                        ¿Acepta la mediación?
+                                    </label>
                                     <div class="sm:col-span-3">
                                         <flux:radio.group
                                             wire:model="segunda.detalle_invitado.{{ $i->id }}.acepta_mediacion_inv">
@@ -417,7 +471,7 @@
                                 <div class="flex-1 h-px bg-emerald-200/60 dark:bg-emerald-800/40"></div>
                             </div>
                             <div class="text-sm text-neutral-700 dark:text-neutral-300">
-                                <span class="font-medium">Invitado:</span> {{ $i->nombre }}
+                                <span class="font-medium">Invitado:</span> {{ empty($i->nombre)  ? $i->razon_social : $i->nombre }}
                             </div>
                         </div>
                     </div>

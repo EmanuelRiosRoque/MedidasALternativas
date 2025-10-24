@@ -31,6 +31,15 @@
     <livewire:solicitud.invitaciones-panel :solicitud="$solicitud" />
   </section>
 
+  <section x-show="tab==='observaciones'" x-cloak x-transition.opacity.duration.100ms class="relative mt-2 mb-2 z-10 w-full max-w-8xl rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeInUp">
+    <livewire:solicitud.observaciones :solicitud="$solicitud"/>
+  </section>
+
+  <section x-show="tab==='propuesta'" x-cloak x-transition.opacity.duration.100ms class="relative mt-2 mb-2 z-10 w-full max-w-8xl rounded-2xl shadow-2xl ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8 lg:p-10 animate__animated animate__fadeInUp">
+    <livewire:solicitud.propuesta-mediacion :solicitud="$solicitud"/>
+  </section>
+
+
   {{-- ============ MODALES ============ --}}
   @include('components.solicitud.modales')
 </div>

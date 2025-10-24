@@ -35,6 +35,8 @@ trait HandleCrudLogicoPersonas
         'resolucion_judicial',
         'titulo_credito', // ⟵ NUEVO: para “Título de crédito y póliza”
         'cp_solicitante',
+        'num_int_solicitante',
+        'num_ext_solicitante',
         'formato_privacidad',
         'como_se_entero',
 
@@ -168,13 +170,13 @@ trait HandleCrudLogicoPersonas
         }
 
         // 3) Reglas adicionales según modalidad
-        if ($this->modalidad == 1) {
-            $rules['telefonos'] = 'required|array|min:1';
-            $messages['telefonos.required'] = 'Captura al menos un teléfono.';
-        } elseif ($this->modalidad == 2) {
-            $rules['correos'] = 'required|array|min:1';
-            $messages['correos.required'] = 'Captura al menos un correo electrónico.';
-        }
+        // if ($this->modalidad == 1) {
+        //     $rules['telefonos'] = 'required|array|min:1';
+        //     $messages['telefonos.required'] = 'Captura al menos un teléfono.';
+        // } elseif ($this->modalidad == 2) {
+        //     $rules['correos'] = 'required|array|min:1';
+        //     $messages['correos.required'] = 'Captura al menos un correo electrónico.';
+        // }
 
         $this->validate($rules, $messages);
     }
@@ -207,6 +209,8 @@ trait HandleCrudLogicoPersonas
             'correos'                       => 'required|array|min:1',
             'tipo_domicilio_solicitante'    => 'required|string|max:255',
             'calle_solicitante'             => 'required|string|max:255',
+            'num_int_solicitante'          => 'string',
+            'num_ext_solicitante'          => 'required|string',
             'cp_solicitante'                => 'required|string|max:10',
             'colonia'                       => 'required|string|max:255',
             'municipio_solicitante'         => 'required|string|max:255',
@@ -229,10 +233,12 @@ trait HandleCrudLogicoPersonas
             'correos'                       => 'required|array|min:1',
             'tipo_domicilio_solicitante'    => 'required|string|max:255',
             'calle_solicitante'             => 'required|string|max:255',
+            'num_int_solicitante'           => 'string',
+            'num_ext_solicitante'           => 'required|string',
             'cp_solicitante'                => 'required|string|max:10',
             'colonia'                       => 'required|string|max:255',
             'municipio_solicitante'         => 'required|string|max:255',
-            'entidad_federativa_solicitante' => 'required|string|max:255',
+            'entidad_federativa_solicitante'=> 'required|string|max:255',
             'identificacion'                => 'required|array|min:1',
             'formato_privacidad'            => 'required|array|min:1',
             'representante'                 => 'required',
@@ -256,6 +262,8 @@ trait HandleCrudLogicoPersonas
             'correos'                       => 'required|array|min:1',
             'tipo_domicilio_solicitante'    => 'required|string|max:255',
             'calle_solicitante'             => 'required|string|max:255',
+            'num_int_solicitante'          => 'string',
+            'num_ext_solicitante'          => 'required|string',
             'cp_solicitante'                => 'required|string|max:10',
             'colonia'                       => 'required|string|max:255',
             'municipio_solicitante'         => 'required|string|max:255',
@@ -482,6 +490,8 @@ trait HandleCrudLogicoPersonas
             'fecha_instrumento_solicitante',
             'telefono_solicitante',
             'cp_solicitante',
+            'num_int_solicitante',
+            'num_ext_solicitante',
             'colonia',
             'colonias',
             'como_se_entero',

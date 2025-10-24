@@ -103,7 +103,7 @@
       <a href="{{ route('solicitud.personas', ['solicitudId' => $solicitudId]) }}" class="shrink-0">
         <flux:button size="sm" variant="primary">
           <span class="inline-flex items-center gap-2">
-            Ver Solicitantes
+            Ver detalle de involucrados
             <flux:icon.chevron-right class="size-4" />
           </span>
         </flux:button>

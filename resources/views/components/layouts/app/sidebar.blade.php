@@ -6,6 +6,7 @@
         @endphp --}}
         @include('partials.head')
         {{-- {!! ToastMagic::styles() !!} --}}
+        <wireui:scripts />
 
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
@@ -21,13 +22,13 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     {{-- @if($user==="admin") --}}
                     <flux:navlist.item icon="document-plus" :href="route('solicitud.create')" :current="request()->routeIs('solicitud.create')"  wire:navigate>{{ __('Registro solicitud') }}</flux:navlist.item>
-                    <flux:navlist.item icon="table-cells" :href="route('solicitud.list')" :current="request()->routeIs('solicitud.list')"  wire:navigate>{{ __('Solicitudes') }}</flux:navlist.item>
+                    <flux:navlist.item icon="table-cells" :href="route('solicitud.list')" :current="request()->routeIs('solicitud.list')"  wire:navigate>{{ __('Pre-Mediación') }}</flux:navlist.item>
                     <flux:navlist.item icon="chat-bubble-left-ellipsis" :href="route('mediacion.list')" :current="request()->routeIs('mediacion.list')"  wire:navigate>{{ __('Mediaciones') }}</flux:navlist.item>
                     {{-- <flux:navlist.item icon="identification" :href="route('pre-mediacion.index')" :current="request()->routeIs('pre-mediacion.index')"  wire:navigate>{{ __('Registros') }}</flux:navlist.item> --}}
                     {{-- @endif --}}
                     <flux:navlist.item icon="briefcase" :href="route('facilitadores.create')" :current="request()->routeIs('facilitadores.create')"  wire:navigate>{{ __('Nuevo Facilitador') }}</flux:navlist.item> 
                     <flux:navlist.item icon="user" :href="route('facilitadores.list')" :current="request()->routeIs('facilitadores.list')"  wire:navigate>{{ __('Facilitadores') }}</flux:navlist.item> 
-                    <flux:navlist.item icon="calendar" :href="route('calendar.index')" :current="request()->routeIs('calendar.index')"  wire:navigate>{{ __('Calendario') }}</flux:navlist.item> 
+                    {{-- <flux:navlist.item icon="calendar" :href="route('calendar.index')" :current="request()->routeIs('calendar.index')"  wire:navigate>{{ __('Calendario') }}</flux:navlist.item>  --}}
                 </flux:navlist.group>
                 
             </flux:navlist>
@@ -146,6 +147,5 @@
         <x-toaster-hub /> 
         <!-- Botón Scroll to Top con animación -->
         <x-button-go-to-top/>
-    
     </body>
 </html>

@@ -82,7 +82,7 @@
                 @endif
 
                 @if (!empty($detalleSeleccionado['sexo']))
-                    <p><span class="font-semibold text-neutral-800 dark:text-neutral-100">Sexo:</span> {{ $detalleSeleccionado['sexo'] }}</p>
+                    <p><span class="font-semibold text-neutral-800 dark:text-neutral-100">Sexo:</span> {{ $detalleSeleccionado['sexo']=== 1 ? "Femenino" : "Masculino"  }}</p>
                 @endif
 
                 @if (!empty($detalleSeleccionado['edad']))

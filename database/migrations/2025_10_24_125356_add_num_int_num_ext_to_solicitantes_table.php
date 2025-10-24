@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('solicitantes', function (Blueprint $table) {
+            $table->string('num_ext', 10)->nullable();
+            $table->string('num_int', 10)->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('solicitantes', function (Blueprint $table) {
+            $table->dropColumn(['num_ext', 'num_int']);
+        });
+    }
+};

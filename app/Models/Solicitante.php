@@ -44,6 +44,8 @@ class Solicitante extends Model
         'instrumento',
         'fecha_instrumento',
         'domicilio',
+        'num_int',
+        'num_ext',
         'estado_civil',
         'facilitador_id',
         'estatus_id',

@@ -101,6 +101,8 @@ class Convenio extends Component
     public $nacionalidad_solicitante = '';
     public $tipo_domicilio_solicitante = '';
     public $calle_solicitante = '';
+    public $num_ext_solicitante = '';
+    public $num_int_solicitante = '';
     public $municipio_solicitante = '';
     public $entidad_federativa_solicitante = '';
     public $correo_solicitante = '';
@@ -232,7 +234,11 @@ class Convenio extends Component
 
         if ($this->derivado_canalizado == 1) {
             $rules['institucion'] = 'required';
-            $rules['oficio']      = 'required';
+
+            // Solo si la institución seleccionada es "Otro"
+            if ($this->institucion != 'Otro') {
+                $rules['oficio'] = 'required';
+            }
         }
 
         return $rules;

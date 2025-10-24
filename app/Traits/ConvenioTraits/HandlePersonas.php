@@ -39,6 +39,8 @@ trait HandlePersonas
             'ocupacion'           => $datos['ocupacion'] ?? null,
             'tipo_domicilio'      => $datos['tipo_domicilio'] ?? null,
             'calle'               => $datos['calle'] ?? null,
+            'num_ext'               => $datos['num_ext'] ?? null,
+            'num_int'               => $datos['num_int'] ?? null,
             'colonia'             => $datos['colonia'] ?? null,
             'municipio'           => $datos['municipio'] ?? null,
             'entidad_federativa'  => $datos['entidad_federativa'] ?? null,

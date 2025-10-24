@@ -290,30 +290,30 @@ class InvitacionesPanel extends Component
     /** ==================================================
      *  OBSERVACIONES
      * ================================================== */
-    public function agregarObservacion()
-    {
-        $this->validate([
-            'obs.fecha_observacion' => 'required|date',
-            'obs.observacion'       => 'required|string|max:500',
-        ]);
+    // public function agregarObservacion()
+    // {
+    //     $this->validate([
+    //         'obs.fecha_observacion' => 'required|date',
+    //         'obs.observacion'       => 'required|string|max:500',
+    //     ]);
 
-        Observacion::create([
-            'solicitud_id'      => $this->solicitud_id,
-            'fecha_observacion' => $this->obs['fecha_observacion'],
-            'observacion'       => $this->obs['observacion'],
-        ]);
+    //     Observacion::create([
+    //         'solicitud_id'      => $this->solicitud_id,
+    //         'fecha_observacion' => $this->obs['fecha_observacion'],
+    //         'observacion'       => $this->obs['observacion'],
+    //     ]);
 
-        $this->obs = ['fecha_observacion' => null, 'observacion' => null];
-    }
+    //     $this->obs = ['fecha_observacion' => null, 'observacion' => null];
+    // }
 
-    public function borrarObservacion(int $id): void
-    {
-        Observacion::where('solicitud_id', $this->solicitud_id)
-            ->where('id', $id)
-            ->delete();
+    // public function borrarObservacion(int $id): void
+    // {
+    //     Observacion::where('solicitud_id', $this->solicitud_id)
+    //         ->where('id', $id)
+    //         ->delete();
 
-        Toaster::success('Observación eliminada.');
-    }
+    //     Toaster::success('Observación eliminada.');
+    // }
 
        private function getPersonaIds(int $solicitudId, string $tipo = 'solicitante')
     {
