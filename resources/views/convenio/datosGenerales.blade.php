@@ -1,6 +1,24 @@
-<div x-data x-cloak class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div
+    x-data
+    x-cloak
+    x-init="
+        // Observar cambios en institucion y canalizado
+        $watch('$wire.institucion', value => {
+            if (value !== 'Otro') {
+                $wire.set('cual_otro', '');
+            }
+        });
 
-    {{-- Radios Livewire (estado en $wire) --}}
+        $watch('$wire.derivado_canalizado', value => {
+            if (Number(value) !== 1) {
+                $wire.set('cual_otro', '');
+                $wire.set('institucion', '');
+            }
+        });
+    "
+    class="grid grid-cols-1 sm:grid-cols-2 gap-6"
+>
+    {{-- Radios Livewire --}}
     <div class="flex flex-wrap gap-6">
         <flux:radio.group wire:model="modalidad" label="Modalidad">
             <flux:radio value="1" label="Presencial" />
@@ -20,16 +38,12 @@
     </div>
 
     {{-- Ticket SOLO si modalidad === "2" --}}
-    <div
-        x-show="$wire.modalidad == 2"
-        x-transition.opacity.duration.150ms
-    >
+    <div x-show="$wire.modalidad == 2" x-transition.opacity.duration.150ms>
         <flux:input
             wire:model="numero_ticket"
             :label="__('#Ticket')"
             type="text"
             placeholder="Número de Ticket"
-            {{-- opcional: requerido solo cuando se muestra --}}
             x-bind:required="$wire.modalidad == 2"
         />
     </div>
@@ -56,7 +70,9 @@
         <div>
             <flux:heading class="flex items-center gap-2 mb-1">
                 Oficio
-                <flux:badge color="emerald" size="sm">Obligatorio</flux:badge>
+                @if($institucion !== 'Otro')
+                    <flux:badge color="emerald" size="sm">Obligatorio</flux:badge>
+                @endif
             </flux:heading>
 
             <livewire:dropzone
@@ -68,9 +84,9 @@
         </div>
     </div>
 
-    {{-- Campo "Otro" SOLO si institucion === "Otro" --}}
+    {{-- Campo "Otro" SOLO si derivado_canalizado == 1 e institucion === "Otro" --}}
     <div
-        x-show="$wire.institucion === 'Otro'"
+        x-show="Number($wire.derivado_canalizado) === 1 && $wire.institucion === 'Otro'"
         x-transition.opacity.duration.150ms
     >
         <flux:input
