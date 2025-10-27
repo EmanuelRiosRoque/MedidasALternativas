@@ -25,7 +25,7 @@
 
                     <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
                         ¡Hola, {{ ucwords(strtolower(Auth::user()->name)) }}! <br class="hidden sm:inline" />
-                        Bienvenido al Sistema de Medidas Alternativas
+                        Bienvenido al Sistema de Mecanismos Alternativos
                     </h1>
                     
                     
