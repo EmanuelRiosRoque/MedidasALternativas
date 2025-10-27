@@ -70,9 +70,10 @@
         <div>
             <flux:heading class="flex items-center gap-2 mb-1">
                 Oficio
-                @if($institucion !== 'Otro')
+                {{-- Ahora el badge reacciona con Alpine --}}
+                <template x-if="$wire.institucion !== 'Otro'">
                     <flux:badge color="emerald" size="sm">Obligatorio</flux:badge>
-                @endif
+                </template>
             </flux:heading>
 
             <livewire:dropzone
