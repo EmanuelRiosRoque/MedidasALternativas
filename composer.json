@@ -46,7 +46,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/helpers/consecutivo.php"
+            "app/Helpers/consecutivo.php"
         ]
     },
     "autoload-dev": {
