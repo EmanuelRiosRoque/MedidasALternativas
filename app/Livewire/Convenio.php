@@ -367,7 +367,7 @@ class Convenio extends Component
         $anio = now()->year;
         $folioFormateado = str_pad($folio, 4, '0', STR_PAD_LEFT);
 
-        return ($this->modalidad === 'presencial')
+        return ($this->modalidad == 1)
             ? "$prefijo-$clave-$folioFormateado-$anio"
             : "V-$prefijo-$clave-$folioFormateado-$anio";
     }

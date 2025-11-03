@@ -4,9 +4,9 @@
         {{-- @php
         $user="lector"    
         @endphp --}}
+
         @include('partials.head')
         {{-- {!! ToastMagic::styles() !!} --}}
-        <wireui:scripts />
 
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">

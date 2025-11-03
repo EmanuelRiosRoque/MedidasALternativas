@@ -12,6 +12,8 @@ $user="lector"
 @endphp
 @if ($user === "admin" ) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <wireui:scripts />
+
 {{-- @else
     @vite(['resources/css/appFac.css', 'resources/js/app.js'])
 @endif --}}
