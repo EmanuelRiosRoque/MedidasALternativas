@@ -69,7 +69,7 @@
         wire:model="representante"
         label="{{ $materia === 'familiar' 
             ? '¿Es usted el representante legal o albacea?' 
-            : '¿Es usted el representante legal, albacea,administrador profecional, endosatario en propiedad o endosatario en procuración?' }}"
+            : '¿Es usted el representante legal, albacea, administrador profesional, endosatario en propiedad o endosatario en procuración?' }}"
     >
         <flux:radio value="1" label="Sí" />
         <flux:radio value="0" label="No" />
@@ -99,7 +99,7 @@
     <!-- Opciones de documentos (visible solo si es representante) -->
     <div class="mb-2" x-show="isRep()" x-transition.opacity.duration.150ms>
         <flux:checkbox.group wire:model.live="doc_representante" label="Documento(s)" wire:key="docgrp-{{ $prefix }}">
-            <flux:checkbox label="Intrumento notarial" value="1" :checked="in_array(1, $doc_representante)" />
+            <flux:checkbox label="Instrumento notarial" value="1" :checked="in_array(1, $doc_representante)" />
             <flux:checkbox label="Acta de registro civil (Nacimiento o Matrimonio)" value="2" :checked="in_array(2, $doc_representante)" />
             <flux:checkbox label="Resolución judicial" value="3" :checked="in_array(3, $doc_representante)" />
             
