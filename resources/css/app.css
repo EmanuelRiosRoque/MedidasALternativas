@@ -1,9 +1,9 @@
 
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
-@import '../../vendor/wireui/wireui/ts/global.css';
+/* @import '../../vendor/wireui/wireui/ts/global.css'; */
 
-@source '../../vendor/wireui/wireui';
+/* @source '../../vendor/wireui/wireui'; */
 @source "../../vendor/masmerise/livewire-toaster/resources/views/*.blade.php";
 @source "../../vendor/omnia-digital/livewire-calendar/resources/views/*.blade.php";
 

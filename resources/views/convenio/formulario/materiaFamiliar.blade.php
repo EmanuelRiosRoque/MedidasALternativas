@@ -63,19 +63,10 @@
             </label>
             {{-- <flux:input wire:model="fecha_nacimiento_solicitante" type="date" required /> --}}
             
-                  <div class="sm:col-span-3 relative">
-            <x-datetime-picker
-                without-time
-                placeholder="dd/mm/aaaa"
-                display-format="DD/MM/YYYY"
-                parse-format="YYYY-MM-DD"
-                :clearable="true"
-                :append-to-body="true"
-                position="below"
-                class="w-full"
-                wire:model.defer="fecha_nacimiento_solicitante"
+            <x-ui.date
+                name="fecha_nacimiento_solicitante"
+                wire:model="fecha_nacimiento_solicitante"
             />
-          </div>
         </div>
 
         {{-- Edad --}}

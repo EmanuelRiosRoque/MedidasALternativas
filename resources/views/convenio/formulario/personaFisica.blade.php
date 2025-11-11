@@ -109,30 +109,14 @@ x-data="{
 
 
     {{-- Fecha de nacimiento (sin oninput innecesario) --}}
-    <div class="space-y-1">
-      <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-        Fecha de nacimiento @if($prefix === 'solicitante') * @endif
-      </label>
-      {{-- <flux:input
-        wire:model="fecha_nacimiento_solicitante"
-        type="date"
-        required
-      /> --}}
+   
+<x-ui.date
+    label="Fecha nacimiento"
+    name="fecha_nacimiento_solicitante"
+    wire:model="fecha_nacimiento_solicitante"
+/>
 
-      <div class="sm:col-span-3 relative">
-            <x-datetime-picker
-                without-time
-                placeholder="dd/mm/aaaa"
-                display-format="DD/MM/YYYY"
-                parse-format="YYYY-MM-DD"
-                :clearable="true"
-                :append-to-body="true"
-                position="below"
-                class="w-full"
-                wire:model.defer="fecha_nacimiento_solicitante"
-            />
-          </div>
-    </div>
+
 
     {{-- Edad (solo dígitos) --}}
     <div class="space-y-1">

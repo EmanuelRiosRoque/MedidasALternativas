@@ -21,17 +21,12 @@
                     Fecha de asignación
                 </label>
                 <div class="sm:col-span-3 overflow-visible">
-                    <x-datetime-picker
-                        without-time
-                        placeholder="dd/mm/aaaa"
-                        display-format="DD/MM/YYYY"
-                        parse-format="YYYY-MM-DD"
-                        :clearable="true"
-                        :append-to-body="true"
-                        position="bottom-start"
-                        class="w-full"
-                        wire:model.defer="fechaAsignacionSolicitante"
-                    />
+                  
+
+                     <x-ui.date
+    name="fecha_nacimiento_solicitante"
+    wire:model="fechaAsignacionSolicitante"
+/>
                 </div>
                 @error('fechaAsignacionSolicitante')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -97,17 +92,12 @@
                     Fecha de asignación
                 </label>
                 <div class="sm:col-span-3 overflow-visible">
-                    <x-datetime-picker
-                        without-time
-                        placeholder="dd/mm/aaaa"
-                        display-format="DD/MM/YYYY"
-                        parse-format="YYYY-MM-DD"
-                        :clearable="true"
-                        :append-to-body="true"
-                        position="bottom-start"
-                        class="w-full"
-                        wire:model.defer="fechaAsignacionInvitado"
-                    />
+                    
+
+                    <x-ui.date
+    name="fecha_nacimiento_solicitante"
+    wire:model="fechaAsignacionInvitado"
+/>
                 </div>
                 @error('fechaAsignacionInvitado')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>

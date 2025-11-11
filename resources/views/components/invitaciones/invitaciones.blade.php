@@ -63,10 +63,11 @@
                                             Se le espera el día
                                         </label>
                                         <div class="sm:col-span-3">
-                                            <x-datetime-picker without-time placeholder="dd/mm/aaaa"
-                                                display-format="DD/MM/YYYY" parse-format="YYYY-MM-DD" :clearable="true"
-                                                class="w-full"
-                                                wire:model.defer="primera.detalle_invitado.{{ $i->id }}.fecha_sele_espera" />
+                                          
+                                                <x-ui.date
+                                        name="fecha_nacimiento_solicitante"
+                                        wire:model="primera.detalle_invitado.{{ $i->id }}.fecha_sele_espera"
+                                    />
                                         </div>
                                     </div>
                                     <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -107,11 +108,13 @@
                                             Fecha en que asiste
                                         </label>
                                         <div class="sm:col-span-3">
-                                            <x-datetime-picker without-time placeholder="dd/mm/aaaa"
-                                                display-format="DD/MM/YYYY" parse-format="YYYY-MM-DD" :clearable="true"
-                                                class="w-full"
-                                                wire:model.defer="primera.detalle_invitado.{{ $i->id }}.fecha_asistencia" />
+                                            <x-ui.date
+                                        name="fecha_nacimiento_solicitante"
+                                        wire:model="primera.detalle_invitado.{{ $i->id }}.fecha_asistencia"
+                                    />
                                         </div>
+
+                                          
                                     </div>
                                     <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
                                         <label
@@ -214,9 +217,11 @@
                                     Fecha de envío
                                 </label>
                                 <div class="sm:col-span-3">
-                                    <x-datetime-picker without-time placeholder="dd/mm/aaaa" display-format="DD/MM/YYYY"
-                                        parse-format="YYYY-MM-DD" :clearable="true" class="w-full"
-                                        wire:model.defer="primera.detalle_solicitante.{{ $s->id }}.fecha_envio" />
+                                   
+                                           <x-ui.date
+                                        name="fecha_nacimiento_solicitante"
+                                        wire:model="primera.detalle_solicitante.{{ $s->id }}.fecha_envio"
+                                    />
                                 </div>
                             </div>
 
@@ -334,10 +339,11 @@
                                             Se le espera el día
                                         </label>
                                         <div class="sm:col-span-3">
-                                            <x-datetime-picker without-time placeholder="dd/mm/aaaa"
-                                                display-format="DD/MM/YYYY" parse-format="YYYY-MM-DD" :clearable="true"
-                                                class="w-full"
-                                                wire:model.defer="segunda.detalle_invitado.{{ $i->id }}.fecha_sele_espera" />
+                                          
+                                                <x-ui.date
+                                        name="fecha_nacimiento_solicitante"
+                                        wire:model="segunda.detalle_invitado.{{ $i->id }}.fecha_sele_espera"
+                                    />
                                         </div>
                                     </div>
                                     <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -378,10 +384,11 @@
                                             Fecha en que asiste
                                         </label>
                                         <div class="sm:col-span-3">
-                                            <x-datetime-picker without-time placeholder="dd/mm/aaaa"
-                                                display-format="DD/MM/YYYY" parse-format="YYYY-MM-DD" :clearable="true"
-                                                class="w-full"
-                                                wire:model.defer="segunda.detalle_invitado.{{ $i->id }}.fecha_asistencia" />
+                                         
+                                                <x-ui.date
+                                        name="fecha_nacimiento_solicitante"
+                                        wire:model="segunda.detalle_invitado.{{ $i->id }}.fecha_asistencia"
+                                    />
                                         </div>
                                     </div>
                                     <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-center">
@@ -483,9 +490,10 @@
                                     Fecha de envío
                                 </label>
                                 <div class="sm:col-span-3">
-                                    <x-datetime-picker without-time placeholder="dd/mm/aaaa" display-format="DD/MM/YYYY"
-                                        parse-format="YYYY-MM-DD" :clearable="true" class="w-full"
-                                        wire:model.defer="segunda.detalle_solicitante.{{ $s->id }}.fecha_envio" />
+                                    <x-ui.date
+                                        name="fecha_nacimiento_solicitante"
+                                        wire:model="segunda.detalle_solicitante.{{ $s->id }}.fecha_envio"
+                                    />
                                 </div>
                             </div>
 
