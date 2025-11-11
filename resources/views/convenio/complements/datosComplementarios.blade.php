@@ -69,7 +69,7 @@
         wire:model="representante"
         label="{{ $materia === 'familiar' 
             ? '¿Es usted el representante legal o albacea?' 
-            : '¿Es usted el representante legal, albacea, endosatario en propiedad o endosatario en procuración?' }}"
+            : '¿Es usted el representante legal, albacea,administrador profecional, endosatario en propiedad o endosatario en procuración?' }}"
     >
         <flux:radio value="1" label="Sí" />
         <flux:radio value="0" label="No" />
