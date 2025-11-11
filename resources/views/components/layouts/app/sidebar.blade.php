@@ -6,7 +6,6 @@
         @endphp --}}
 
         @include('partials.head')
-        <wireui:scripts />
 
         {{-- {!! ToastMagic::styles() !!} --}}
 
