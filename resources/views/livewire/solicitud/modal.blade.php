@@ -8,30 +8,27 @@
 
         <flux:select wire:model="facilitadorSolicitanteId" placeholder="Seleccione un facilitador...">
             @forelse ($facilitadores as $fac)
-                <flux:select.option value="{{ $fac->id }}">{{ $fac->nombre }}</flux:select.option>
+            <flux:select.option value="{{ $fac->id }}">{{ $fac->nombre }}</flux:select.option>
             @empty
-                <flux:select.option disabled>No hay facilitadores disponibles</flux:select.option>
+            <flux:select.option disabled>No hay facilitadores disponibles</flux:select.option>
             @endforelse
         </flux:select>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {{-- Fecha --}}
             <div>
                 <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-200 mb-1">
                     Fecha de asignación
                 </label>
                 <div class="sm:col-span-3 overflow-visible">
-                  
 
-                     <x-ui.date
-    name="fecha_nacimiento_solicitante"
-    wire:model="fechaAsignacionSolicitante"
-/>
+
+                    <x-ui.date name="fecha_nacimiento_solicitante" wire:model="fechaAsignacionSolicitante" />
                 </div>
                 @error('fechaAsignacionSolicitante')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                 @enderror
             </div>
+            {{-- Fecha --}}
+           
 
             {{-- Horas --}}
             <div class="grid grid-cols-2 gap-1">
@@ -41,7 +38,7 @@
                     </label>
                     <flux:input type="time" step="60" wire:model="horaInicioSolicitante" />
                     @error('horaInicioSolicitante')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -51,14 +48,13 @@
                     </label>
                     <flux:input type="time" step="60" wire:model="horaFinSolicitante" />
                     @error('horaFinSolicitante')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
-        </div>
 
         @error('facilitadorSolicitanteId')
-            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
         @enderror
 
         <div class="flex justify-end pt-2">
@@ -79,30 +75,26 @@
 
         <flux:select wire:model="facilitadorInvitadoId" placeholder="Seleccione un facilitador...">
             @forelse ($facilitadores as $fac)
-                <flux:select.option value="{{ $fac->id }}">{{ $fac->nombre }}</flux:select.option>
+            <flux:select.option value="{{ $fac->id }}">{{ $fac->nombre }}</flux:select.option>
             @empty
-                <flux:select.option disabled>No hay facilitadores disponibles</flux:select.option>
+            <flux:select.option disabled>No hay facilitadores disponibles</flux:select.option>
             @endforelse
         </flux:select>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {{-- Fecha --}}
-            <div>
-                <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-200 mb-1">
-                    Fecha de asignación
-                </label>
-                <div class="sm:col-span-3 overflow-visible">
-                    
+        <div>
+            <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-200 mb-1">
+                Fecha de asignación
+            </label>
+            <div class="sm:col-span-3 overflow-visible">
 
-                    <x-ui.date
-    name="fecha_nacimiento_solicitante"
-    wire:model="fechaAsignacionInvitado"
-/>
-                </div>
-                @error('fechaAsignacionInvitado')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                @enderror
+
+                <x-ui.date name="fecha_nacimiento_solicitante" wire:model="fechaAsignacionInvitado" />
             </div>
+            @error('fechaAsignacionInvitado')
+            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+            {{-- Fecha --}}
 
             {{-- Horas --}}
             <div class="grid grid-cols-2 gap-3">
@@ -112,7 +104,7 @@
                     </label>
                     <flux:input type="time" step="60" wire:model="horaInicioInvitado" />
                     @error('horaInicioInvitado')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -122,14 +114,13 @@
                     </label>
                     <flux:input type="time" step="60" wire:model="horaFinInvitado" />
                     @error('horaFinInvitado')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
-        </div>
 
         @error('facilitadorInvitadoId')
-            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
         @enderror
 
         <div class="flex justify-end pt-2">
@@ -150,14 +141,14 @@
 
         <flux:select wire:model="coMediadorId" placeholder="Seleccione un co-mediador...">
             @forelse ($facilitadores as $fac)
-                <flux:select.option value="{{ $fac->id }}">{{ $fac->nombre }}</flux:select.option>
+            <flux:select.option value="{{ $fac->id }}">{{ $fac->nombre }}</flux:select.option>
             @empty
-                <flux:select.option disabled>No hay facilitadores disponibles</flux:select.option>
+            <flux:select.option disabled>No hay facilitadores disponibles</flux:select.option>
             @endforelse
         </flux:select>
 
         @error('coMediadorId')
-            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
         @enderror
 
         <div class="flex justify-end pt-2">
